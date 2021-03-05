@@ -1,0 +1,10 @@
+alipay
+360buy
+douban
+jianshu
+iqiyi
+qq
+sina
+sinaimg
+mytube
+qpic

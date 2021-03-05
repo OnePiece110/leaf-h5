@@ -1,0 +1,122 @@
+//
+//  DTTunnelOutbounds.swift
+//  Tunnel
+//
+//  Created by Ye Keyon on 2020/12/28.
+//  Copyright © 2020 dt. All rights reserved.
+//
+
+import UIKit
+import KakaJSON
+
+enum DTOutboundsProtocol:String, ConvertibleEnum {
+    case failover
+    case chain
+    case tls
+    case trojan
+    case v2ray
+    case shadowsocks
+    case vmess
+    case vless
+    case direct
+    case drop
+    case ws
+}
+
+class DTTunnelOutbounds: Convertible {
+    var proto:DTOutboundsProtocol  = .direct
+    var tag = ""
+    var address:String?
+    var port: Int?
+    var settings: DTTunnelSettings?
+    
+    required init() {}
+    
+    init(proto: DTOutboundsProtocol) {
+        
+        if proto == .direct {
+            self.tag = "direct_out"
+        } else if proto == .failover {
+            self.tag = "failover_out"
+        } else if proto == .drop {
+            self.tag = "drop_out"
+        }
+        self.proto = proto
+        switch proto {
+        case .direct:
+            self.tag = "direct_out"
+        case .failover:
+            self.tag = "failover_out"
+        case .drop:
+            self.tag = "drop_out"
+        case .chain:
+            let settings = DTTunnelSettings()
+            settings.actors = [String]()
+            self.settings = settings
+        case .tls:
+            let settings = DTTunnelSettings()
+            settings.alpn = [String]()
+            self.settings = settings
+        case .vless, .trojan, .shadowsocks, .vmess, .ws:
+            let settings = DTTunnelSettings()
+            self.settings = settings
+            
+        default:
+            self.proto = proto
+        }
+    }
+    
+    func configSetting(domain: String, password: String, port: Int) {
+        switch self.proto {
+        case .trojan:
+            self.settings?.address = domain
+            self.settings?.password = password
+            self.settings?.port = port
+        case .vless:
+            self.settings?.address = domain
+            self.settings?.uuid = password
+            self.settings?.port = port
+        case .vmess:
+            self.settings?.address = domain
+            self.settings?.uuid = password
+            self.settings?.port = port
+//            self.settings?.security = "chacha20-ietf-poly1305"
+        default:
+            self.settings?.address = domain
+            self.settings?.password = password
+            self.settings?.port = port
+        }
+    }
+    
+    func kj_JSONKey(from property: Property) -> JSONPropertyKey {
+        switch property.name {
+        case "proto":
+            return "protocol"
+        default:
+            return property.name
+        }
+    }
+    
+    func kj_modelKey(from property: Property) -> ModelPropertyKey {
+        switch property.name {
+        case "proto": return "protocol"
+        default: return property.name
+        }
+    }
+}
+
+class DTTunnelSettings: Convertible {
+    var address: String?
+    var port: Int?
+    var uuid: String?
+    var method: String?
+    var alpn: [String]?
+    var serverName: String?
+    var actors: [String]?
+    var password: String?
+    var security: String?
+    var path: String?
+    var headers: [String: String]?
+    
+    required init() {}
+}

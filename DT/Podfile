@@ -1,0 +1,33 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '13.0'
+use_frameworks!
+
+inhibit_all_warnings!
+
+def dt_main
+  pod 'Alamofire'
+  pod 'SnapKit'
+  pod 'Kingfisher'
+  pod 'IQKeyboardManagerSwift'
+  pod 'TZImagePickerController'
+  pod 'MFSIdentifier'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'GCDWebServer'
+  pod 'GCDWebServer/WebUploader'
+  pod 'RealmSwift'
+end
+
+def common
+  pod 'KakaJSON'
+end
+
+target "DT" do
+  dt_main
+  common
+end
+
+target "Tunnel" do
+  common
+end

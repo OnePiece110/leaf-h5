@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>常见问题</title>
+</head>
+
+<body>
+  <div class="content_wrap">
+    <div class="question_title">有没有免费获取时长的途径？</div>
+    <div class="question_desc">
+      <span class="qiestion_placeholder">这是第一款加入了日历视图的清单应用.这个概念和那些添加任务功能的日历应用不同,它最基本的服务是清单管理,加入日历视图只是为了让每天的任务列表看起来更直观而已.这是第一款加入了日历视图的清单应用.这个概念和那些添加任务功能的日历应用不同,它最基本的服务是清单管理,加入日历视图只是为了让每天的任务列表看起来更直观而已.</span>
+      <span class="question_desc_btn" onclick="showdiv(this)">
+        <span style="color: white;">…</span>展开
+      </span>
+    </div>
+
+    <div class="question_title">哪个节点的速度最好？</div>
+    <div class="question_desc">这是第一款加入了日历视图的清单应用.这个概念和那些添加任务功能的日历应用不同,它最基本的服务是清单管理,加入日历视图只是为了让每天的任务列表看起来更直观而已.<span class="question_desc_btn" onclick="showdiv(this)"><span style="color: white;">…</span>展开</span></div>
+
+    <div class="question_title">我的账号可以分享给别人用吗？？</div>
+    <div class="question_desc">这是第一款加入了日历视图的清单应用.这个概念和那些添加任务功能的日历应用不同,它最基本的服务是清单管理,加入日历视图只是为了让每天的任务列表看起来更直观而已.<span class="question_desc_btn" onclick="showdiv(this)"><span style="color: white;">…</span>展开</span></div>
+
+    <div class="question_title">奈飞无法观看怎么办？</div>
+    <div class="question_desc">这是第一款加入了日历视图的清单应用.这个概念和那些添加任务功能的日历应用不同,它最基本的服务是清单管理,加入日历视图只是为了让每天的任务列表看起来更直观而已.<span class="question_desc_btn" onclick="showdiv(this)"><span style="color: white;">…</span>展开</span></div>
+  </div>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+    console.log('onload');
+  }
+  $(window).resize(function () {
+    console.log('window was resized');
+  });
+  function showdiv(obj) {
+    if (obj.innerHTML == '收起') {
+      obj.parentNode.className = "question_desc"
+      obj.innerHTML = '<span style="color: white;">…</span>展开'
+    } else {
+      obj.parentNode.className = "question_desc question_desc_open"
+      obj.innerHTML = "收起"
+    }
+
+  }
+</script>
+
+</html>
