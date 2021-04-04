@@ -46,7 +46,7 @@ struct APPColor {
 }
 struct APPSystem {
     
-    var kStatusBarHeight: CGFloat {
+    static var kStatusBarHeight: CGFloat {
         var kStatusBarHeight: CGFloat = 0
         if #available(iOS 13.0, *) {
             let window = UIApplication.dt.currentWindow()
@@ -57,11 +57,14 @@ struct APPSystem {
         return kStatusBarHeight
     }
     
-    let kNaviBarHeight:CGFloat = 44.0
+    static let kNaviBarHeight:CGFloat = 44.0
     
-    var kTopLayoutGuideHeight: CGFloat {
+    static var kTopLayoutGuideHeight: CGFloat {
         return kNaviBarHeight + kStatusBarHeight
     }
+    
+    static let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+    static let infoDictionary : Dictionary = Bundle.main.infoDictionary!
 }
 
 struct DTConstantsKey {
@@ -72,7 +75,7 @@ struct DTConstantsKey {
 #endif
 
 let baseUrl = "https://api-dev.mytube.vip/"
-let downloadUrl = "https://wiki.mytube.vip/rules/"
+let downloadUrl = "https://api-dev.mytube.vip/rules/"
 
 let appGroup = "group.com.alphaWisdom.gft"
 let DTUserDefaults = UserDefaults(suiteName: appGroup)
@@ -86,18 +89,31 @@ let kScreentHeight = UIScreen.main.bounds.height
 enum API:String {
     case serverList = "lighthouse/server/list"
     case serverConnect = "lighthouse/server/connect"
+    case serverDisconnect = "lighthouse/server/disconnect"
     case smsCode = "lighthouse/sms/country_code"
     case validateSend = "lighthouse/sms/validate_code/send"
     case register = "ighthouse/user/register"
-    case login = "lighthouse/user/login"
-    case modify = "lighthouse/passwd/modify"
+    case login = "lighthouse/user/join"
+    case modify = "lighthouse/user/passwd/modify"
+    case mobileQuery = "lighthouse/user/mobile/query"
+    case mobileCheck = "lighthouse/user/mobile/check"
+    case codeCheck = "lighthouse/sms/validata_code/check"
+    case mobileBind = "lighthouse/user/mobile/bind"
+    case messageList = "lighthouse/msg/list"
+    case smartConnect = "lighthouse/server/smart/connect"
+    case versionCheck = "lighthouse/init/version/check"
+    case feedback = "lighthouse/feedback/save"
+    case anonymous = "lighthouse/user/anonymous/join"
 }
 
 //MARK: -- 常量
-let DTUserProfile = "DT_User_Profile"
-let DTSelectRouter = "DTSelectRouter "
-let DTWKURL = "url"
-let DTWKTitle = "title"
-let DTProxyModeKey = "DT_PROXY_MODE"
+let DTUserProfile: String = "DT_User_Profile"
+let DTSelectRouter: String = "DTSelectRouter"
+let DTSelectProtocolDetail: String = "DTSelectProtocolDetail"
+let DTWKURL: String = "url"
+let DTWKTitle: String = "title"
+let DTProxyModeKey: String = "DT_PROXY_MODE"
+let kLaunchScreenVersion: String = "kLaunchScreenVersion"
+let kLaunchScreenVersionNumber:Int = 5
 //MARK: -- 通知
-let LOGOUT_Notification = "DT_LOGOUT_Notification"
+let LOGOUT_Notification: String = "DT_LOGOUT_Notification"

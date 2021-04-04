@@ -22,8 +22,14 @@ class DTServerDetailData:Convertible {
     var passwd = ""
     var ip = ""
     var path = ""
-    var testProto = ""
     var host = ""
+    var sni = ""
+    var algorithm = ""
+    var h2Path = ""
+    var h2Host = ""
+    var uuid = ""
+    var security = ""
+    var securityPassword = ""
     
     required init() {
     }

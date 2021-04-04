@@ -65,4 +65,18 @@ class DTConstants {
         }
         return nil
     }
+    
+    public class func checkValidText(textField:UITextField) -> (Bool, String) {
+        if let text = textField.text, !text.isVaildEmpty() {
+            return (true, text)
+        }
+        return (false, "")
+    }
+    
+    public class func checkValidText(textView:UITextView) -> (Bool, String) {
+        if !textView.text.isVaildEmpty() {
+            return (true, textView.text)
+        }
+        return (false, "")
+    }
 }

@@ -1,40 +1,54 @@
 //
-//  DTPhoneRegisterViewController.swift
+//  DTMobileQueryViewController.swift
 //  DT
 //
-//  Created by Ye Keyon on 2021/2/11.
+//  Created by Ye Keyon on 2021/3/23.
 //  Copyright © 2021 dt. All rights reserved.
 //
 
 import UIKit
+import RxSwift
 
-class DTPhoneRegisterViewController: DTBaseViewController, Routable {
-    
+class DTMobileQueryViewController: DTBaseViewController, Routable {
+
     static func initWithParams(params: [String : Any]?) -> UIViewController {
-        let vc = DTPhoneRegisterViewController()
+        let vc = DTMobileQueryViewController()
         return vc
     }
     
-    private weak var popupView: DTAlertBaseView?
-
+    private var viewModel = DTMobileQueryViewModel()
+    private let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "注册"
+        self.title = "忘记密码"
         configSubView()
-        configEvents()
-        phoneTextField.placeholder = "请输入手机号"
-    }
-    
-    private func configEvents() {
-        nextButton.dt.target(add: self, action: #selector(nextButtonClick))
-    }
-    
-    @objc private func startNetwork() {
-        popupView?.alertManager?.dimiss()
+        phoneTextField.placeholder = "请输入用户名"
     }
     
     @objc func nextButtonClick() {
-        Router.routeToClass(DTVerifyCodeViewController.self)
+        let (isValid, nickName) = DTConstants.checkValidText(textField: self.phoneTextField.textField)
+        if !isValid {
+            DTProgress.showError(in: self, message: "请输入用户名")
+            return
+        }
+        DTProgress.showProgress(in: self)
+        self.viewModel.mobileQuery(nickName: nickName).subscribe { [weak self] (json) in
+            guard let weakSelf = self else { return }
+            DTProgress.dismiss(in: weakSelf)
+            let mobile = weakSelf.viewModel.mobile
+            if mobile.isVaildEmpty() {
+                Router.routeToClass(DTAddPhoneViewController.self, params: ["nickName": nickName])
+            } else {
+                Router.routeToClass(DTMobileCheckViewController.self, params: ["nickName": nickName, "mobile": weakSelf.viewModel.mobile])
+            }
+            
+        } onError: { [weak self] (error) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "请求失败")
+        }.disposed(by: disposeBag)
+
+//        self.viewModel.mo
+        
     }
     
     private func configSubView() {
@@ -68,7 +82,7 @@ class DTPhoneRegisterViewController: DTBaseViewController, Routable {
     }
     
     // MARK: -- UI
-    private lazy var accountTopView = DTLoginProfileView(title: "手机号")
+    private lazy var accountTopView = DTLoginProfileView(title: "用户名")
     private lazy var phoneTextField: DTPaddingTextField = {
         let phoneTextField = DTPaddingTextField(padding: 15)
         phoneTextField.layer.cornerRadius = 10
@@ -81,10 +95,11 @@ class DTPhoneRegisterViewController: DTBaseViewController, Routable {
             .font(UIFont.dt.Font(16))
             .title("下一步")
             .titleColor(APPColor.colorWhite)
+            .target(add: self, action: #selector(nextButtonClick))
             .build
         button.layer.cornerRadius = 25
         button.layer.masksToBounds = true
         return button
     }()
-    
+
 }

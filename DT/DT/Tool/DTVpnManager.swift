@@ -105,7 +105,7 @@ extension DTVpnManager {
                 protocolConfiguration.providerConfiguration = ["host": data.ip]
             }
             manager.isEnabled = true
-            manager.localizedDescription = "DT VPN"
+            manager.localizedDescription = "YINLI VPN"
             manager.protocolConfiguration?.serverAddress = "127.0.0.1:1080"
             manager.isOnDemandEnabled = true
             manager.saveToPreferences {

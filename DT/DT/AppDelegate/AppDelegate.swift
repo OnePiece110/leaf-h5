@@ -10,6 +10,7 @@ import UIKit
 import IQKeyboardManagerSwift
 import Alamofire
 import RxSwift
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enableAutoToolbar = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         
         if let userProfile = DTUserDefaults?.object(forKey: DTUserProfile) as? String {
@@ -43,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
+        
+        self.clearLaunchScreenCache()
         
         net?.startListening(onUpdatePerforming: { [weak self] (status) in
             guard let weakSelf = self else { return }
@@ -62,14 +65,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        let tabBarVC = DTTabBarViewController()
-        self.window?.rootViewController = tabBarVC
-        self.window?.makeKeyAndVisible()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+            let tabBarVC = DTTabBarViewController()
+            self.window?.rootViewController = tabBarVC
+            self.window?.makeKeyAndVisible()
+        }
         
         CrashEye.shareInstance.add(delegate: self)
         
+        let config = Realm.Configuration(
+            schemaVersion: 1,
+            migrationBlock: { migration, oldSchemaVersion in
+                // We haven’t migrated anything yet, so oldSchemaVersion == 0
+                if (oldSchemaVersion < 1) {
+                    // Nothing to do!
+                    // Realm will automatically detect new properties and removed properties
+                    // And will update the schema on disk automatically
+                }
+            })
+
+        // Tell Realm to use this new configuration object for the default Realm
+        Realm.Configuration.defaultConfiguration = config
+        
         return true
+    }
+    
+    
+    func clearLaunchScreenCache() {
+        do {
+            try FileManager.default.removeItem(atPath: NSHomeDirectory()+"/Library/SplashBoard")
+        } catch {
+            print("Failed to delete launch screen cache: \(error)")
+        }
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {

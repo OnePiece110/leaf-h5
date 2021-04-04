@@ -35,7 +35,7 @@ class DTLoginProfileView: UIView {
     }
     
     //MARK: --UI
-    lazy var titleLabel:UILabel = {
+    private lazy var titleLabel:UILabel = {
         let titleLabel = UILabel().dt
             .font(UIFont.dt.Font(14))
             .textColor(APPColor.colorWhite)
@@ -43,7 +43,7 @@ class DTLoginProfileView: UIView {
         return titleLabel
     }()
     
-    lazy var errorLabel:UILabel = {
+    private lazy var errorLabel:UILabel = {
         let errorLabel = UILabel().dt
             .font(UIFont.dt.Bold_Font(14))
             .textColor(APPColor.colorError)
@@ -59,6 +59,17 @@ class DTLoginProfileView: UIView {
         set {
             _title = newValue
             self.titleLabel.text = newValue
+        }
+    }
+    
+    private var _errString = ""
+    var errString:String {
+        get {
+            return _errString
+        }
+        set {
+            _errString = newValue
+            self.errorLabel.text = newValue
         }
     }
 }

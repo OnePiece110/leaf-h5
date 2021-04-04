@@ -38,6 +38,7 @@ struct DTUserProfileRowModel {
     var path = ""
     var buttonText = ""
     var height:CGFloat = 50
+    var isEnable = true
 }
 
 class DTUserProfileViewModel {
@@ -65,28 +66,29 @@ class DTUserProfileViewModel {
         username.descText = DTUser.sharedUser.nickName
         username.bottomLeftRadius = 10
         username.bottomRightRadius = 10
+        username.isEnable = false
         rowDataTwo.append(username)
         
         let sectionTwo = DTUserProfileSectionModel(rowData: rowDataTwo)
         
-        var rowDataThree = [DTUserProfileRowModel]()
-        var bindInvite = DTUserProfileRowModel(title: "绑定手机号", type: .bindInvite)
-        bindInvite.topLeftRadius = 10
-        bindInvite.topRightRadius = 10
-        bindInvite.buttonText = "首次绑定送时长"
-        rowDataThree.append(bindInvite)
+//        var rowDataThree = [DTUserProfileRowModel]()
+//        var bindInvite = DTUserProfileRowModel(title: "绑定手机号", type: .bindInvite)
+//        bindInvite.topLeftRadius = 10
+//        bindInvite.topRightRadius = 10
+//        bindInvite.buttonText = "首次绑定送时长"
+//        rowDataThree.append(bindInvite)
+//
+//        var password = DTUserProfileRowModel(title: "设置密码", type: .password)
+//        password.bottomLeftRadius = 10
+//        password.bottomRightRadius = 10
+//        rowDataThree.append(password)
         
-        var password = DTUserProfileRowModel(title: "设置密码", type: .password)
-        password.bottomLeftRadius = 10
-        password.bottomRightRadius = 10
-        rowDataThree.append(password)
-        
-        var sectionThree = DTUserProfileSectionModel(rowData: rowDataThree)
-        sectionThree.sectionHeight = 10
+//        var sectionThree = DTUserProfileSectionModel(rowData: rowDataThree)
+//        sectionThree.sectionHeight = 10
         
 //        tableData.append(sectionOne)
         tableData.append(sectionTwo)
-        tableData.append(sectionThree)
+//        tableData.append(sectionThree)
     }
     
     func createAttributeMain(_ string:String) -> NSAttributedString {

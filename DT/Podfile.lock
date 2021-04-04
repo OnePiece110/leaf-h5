@@ -7,23 +7,24 @@ PODS:
     - GCDWebServer/Core
   - IQKeyboardManagerSwift (6.5.6)
   - KakaJSON (1.1.2)
-  - Kingfisher (6.0.1)
+  - Kingfisher (6.2.1)
   - MFSCache (2.0.1):
     - MFSJSONEntity
   - MFSIdentifier (1.0.2):
     - MFSCache
   - MFSJSONEntity (1.0.6)
-  - Realm (10.5.1):
-    - Realm/Headers (= 10.5.1)
-  - Realm/Headers (10.5.1)
-  - RealmSwift (10.5.1):
-    - Realm (= 10.5.1)
-  - RxCocoa (6.0.0):
-    - RxRelay (= 6.0.0)
-    - RxSwift (= 6.0.0)
-  - RxRelay (6.0.0):
-    - RxSwift (= 6.0.0)
-  - RxSwift (6.0.0)
+  - MJRefresh (3.5.0)
+  - Realm (10.7.2):
+    - Realm/Headers (= 10.7.2)
+  - Realm/Headers (10.7.2)
+  - RealmSwift (10.7.2):
+    - Realm (= 10.7.2)
+  - RxCocoa (6.1.0):
+    - RxRelay (= 6.1.0)
+    - RxSwift (= 6.1.0)
+  - RxRelay (6.1.0):
+    - RxSwift (= 6.1.0)
+  - RxSwift (6.1.0)
   - SnapKit (5.0.1)
   - TZImagePickerController (3.5.8)
 
@@ -35,6 +36,7 @@ DEPENDENCIES:
   - KakaJSON
   - Kingfisher
   - MFSIdentifier
+  - MJRefresh
   - RealmSwift
   - RxCocoa
   - RxSwift
@@ -51,6 +53,7 @@ SPEC REPOS:
     - MFSCache
     - MFSIdentifier
     - MFSJSONEntity
+    - MJRefresh
     - Realm
     - RealmSwift
     - RxCocoa
@@ -64,18 +67,19 @@ SPEC CHECKSUMS:
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
   KakaJSON: cc5ff50a8c1cfbb09413db8496cb709a209e6137
-  Kingfisher: adde87a4f74f6a3845395769354efff593581740
+  Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   MFSCache: 76baaca48f2283669709771967caedb8d0edb4c7
   MFSIdentifier: abc345c0ae150e00856f3e3bcedcafb257e26c4b
   MFSJSONEntity: 87c9404c87cb499de26b061f3c985eb7808bef73
-  Realm: 77fcb4e0b9f2963ea06f584749a0d7dc9cab95e1
-  RealmSwift: 6abe6aa6cd8b70cc1a87afcb9232cabea74ff1ac
-  RxCocoa: 3f79328fafa3645b34600f37c31e64c73ae3a80e
-  RxRelay: 8d593be109c06ea850df027351beba614b012ffb
-  RxSwift: c14e798c59b9f6e9a2df8fd235602e85cc044295
+  MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
+  Realm: e523da9ade306c5ae87e85dc09fdef148d3e1cc1
+  RealmSwift: 4f6758c3adbdcc87f7b7777107226532a077f61c
+  RxCocoa: 5c51f02d562cbd94629f6c26cf0c80fe4ab8d343
+  RxRelay: 483e1a19fad961b41f0b0c0bee506f46c1ae14fe
+  RxSwift: a834e5c538e89eca0cae86f403f4fbf0336786ce
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   TZImagePickerController: 7fd9702897ef8c0b7c951e5463f4bcf398296f9e
 
-PODFILE CHECKSUM: 05fa003b194e7985fddb9c2ac8b74d5155fc781e
+PODFILE CHECKSUM: f91957365d982e2306f8ee6197c0aaa55637a1ab
 
 COCOAPODS: 1.10.1

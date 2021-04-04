@@ -21,6 +21,19 @@ enum DTOutboundsProtocol:String, ConvertibleEnum {
     case direct
     case drop
     case ws
+    case h2
+    
+    static func matchPtotocol(proto: Int) -> DTOutboundsProtocol {
+        if proto == 20 || proto == 21 {
+            return .trojan
+        } else if  proto == 22 || proto == 23 {
+            return .vless
+        } else if proto == 24 {
+            return .vmess
+        } else {
+            return .shadowsocks
+        }
+    }
 }
 
 class DTTunnelOutbounds: Convertible {
@@ -57,7 +70,7 @@ class DTTunnelOutbounds: Convertible {
             let settings = DTTunnelSettings()
             settings.alpn = [String]()
             self.settings = settings
-        case .vless, .trojan, .shadowsocks, .vmess, .ws:
+        case .vless, .trojan, .shadowsocks, .vmess, .ws, .h2:
             let settings = DTTunnelSettings()
             self.settings = settings
             
@@ -66,25 +79,25 @@ class DTTunnelOutbounds: Convertible {
         }
     }
     
-    func configSetting(domain: String, password: String, port: Int) {
+    func configSetting(model: DTServerDetailData) {
         switch self.proto {
         case .trojan:
-            self.settings?.address = domain
-            self.settings?.password = password
-            self.settings?.port = port
+            self.settings?.address = model.domain
+            self.settings?.password = model.passwd
+            self.settings?.port = model.port
         case .vless:
-            self.settings?.address = domain
-            self.settings?.uuid = password
-            self.settings?.port = port
+            self.settings?.address = model.domain
+            self.settings?.uuid = model.uuid
+            self.settings?.port = model.port
         case .vmess:
-            self.settings?.address = domain
-            self.settings?.uuid = password
-            self.settings?.port = port
-//            self.settings?.security = "chacha20-ietf-poly1305"
+            self.settings?.address = model.domain
+            self.settings?.uuid = model.uuid
+            self.settings?.port = model.port
+            self.settings?.method = model.algorithm
         default:
-            self.settings?.address = domain
-            self.settings?.password = password
-            self.settings?.port = port
+            self.settings?.address = model.domain
+            self.settings?.password = model.passwd
+            self.settings?.port = model.port
         }
     }
     
@@ -117,6 +130,8 @@ class DTTunnelSettings: Convertible {
     var security: String?
     var path: String?
     var headers: [String: String]?
+    var host: String?
+    var security_password: String?
     
     required init() {}
 }

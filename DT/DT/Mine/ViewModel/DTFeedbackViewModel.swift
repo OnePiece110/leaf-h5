@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Photos
+import RxSwift
 
 enum DTFeedbackType {
     case add
@@ -15,6 +17,8 @@ enum DTFeedbackType {
 
 class DTFeedbackModel {
     var image:UIImage?
+    var asset: PHAsset?
+    var requestId: PHImageRequestID?
     var type:DTFeedbackType
     var url = ""
     
@@ -36,6 +40,10 @@ class DTFeedbackViewModel {
     
     init() {
         dataSource.append(DTFeedbackModel(image: nil, type: .add))
+    }
+    
+    func feedback(imgs: String, feedback: String) -> Observable<DTBaseResult> {
+        return DTMineSchedule.feedback(imgs: imgs, feedback: feedback)
     }
     
 }

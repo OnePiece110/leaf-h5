@@ -105,11 +105,11 @@ extension DTSettingViewController:UITableViewDelegate {
             break
         case .privacyPolicy:
             debugPrint("privacyPolicy")
-            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://wiki.mytube.vip/web/PrivacyPolicy/PrivacyPolicy.html"])
+            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://api-dev.mytube.vip/h5/PrivacyPolicy/PrivacyPolicy.html"])
             break
         case .serverTerms:
             debugPrint("serverTerms")
-            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://wiki.mytube.vip/web/TermsService/TermsService.html"])
+            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://api-dev.mytube.vip/h5/TermsService/TermsService.html"])
             break
         }
     }

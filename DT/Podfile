@@ -17,6 +17,7 @@ def dt_main
   pod 'GCDWebServer'
   pod 'GCDWebServer/WebUploader'
   pod 'RealmSwift'
+  pod 'MJRefresh'
 end
 
 def common

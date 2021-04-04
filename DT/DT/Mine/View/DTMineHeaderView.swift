@@ -25,7 +25,7 @@ class DTMineHeaderView: UIView {
         }
         
         nickNameLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(avaterImageView.snp.top)
+            make.centerY.equalTo(self.avaterImageView)
             make.left.equalTo(avaterImageView.snp.right).offset(15)
             make.right.lessThanOrEqualTo(self.snp.right).offset(-15).priority(999)
             make.height.equalTo(25)
@@ -54,18 +54,37 @@ class DTMineHeaderView: UIView {
     
     func reloadData() {
         self.nickNameLabel.text = DTUser.sharedUser.isLogin ? DTUser.sharedUser.nickName : "登录/注册"
+        //第一版本不需要
+//        self.routeNameLabel.isHidden = !DTUser.sharedUser.isLogin
+//        self.dateNameLabel.isHidden = !DTUser.sharedUser.isLogin
+        self.routeNameLabel.isHidden = true
+        self.dateNameLabel.isHidden = true
+//        if DTUser.sharedUser.isLogin {
+//            nickNameLabel.snp.remakeConstraints { (make) in
+//                make.top.equalTo(avaterImageView.snp.top)
+//                make.left.equalTo(avaterImageView.snp.right).offset(15)
+//                make.right.lessThanOrEqualTo(self.snp.right).offset(-15).priority(999)
+//                make.height.equalTo(25)
+//            }
+//        } else {
+//            nickNameLabel.snp.remakeConstraints { (make) in
+//                make.centerY.equalTo(self.avaterImageView)
+//                make.left.equalTo(avaterImageView.snp.right).offset(15)
+//                make.right.lessThanOrEqualTo(self.snp.right).offset(-15).priority(999)
+//                make.height.equalTo(25)
+//            }
+//        }
     }
     
-    @objc func avaterImageViewClick() {
+    @objc private func avaterImageViewClick() {
         if let vc = DTConstants.currentTopViewController() {
             if vc.dt.theClassName != "DTUserProfileViewController" {
-                Router.routeToClass(DTUserProfileViewController.self, params: nil, isCheckLogin: false)
 //                Router.routeToClass(DTUserProfileViewController.self, params: nil, isCheckLogin: true)
             }
         }
     }
     
-    lazy var avaterImageView: UIImageView = {
+    private lazy var avaterImageView: UIImageView = {
         let avaterImageView = UIImageView()
         avaterImageView.image = UIImage(named: "icon_avatar_default")
         avaterImageView.isUserInteractionEnabled = true
@@ -74,15 +93,16 @@ class DTMineHeaderView: UIView {
         return avaterImageView
     }()
     
-    lazy var nickNameLabel: UILabel = {
+    private lazy var nickNameLabel: UILabel = {
         let nickNameLabel = UILabel()
         nickNameLabel.text = "登录/注册"
         nickNameLabel.textColor = APPColor.colorWhite
         nickNameLabel.font = UIFont.dt.Bold_Font(18)
+        nickNameLabel.dt.viewTarget(add: self, action: #selector(avaterImageViewClick))
         return nickNameLabel
     }()
     
-    lazy var routeNameLabel: UILabel = {
+    private lazy var routeNameLabel: UILabel = {
         let routeNameLabel = UILabel()
         routeNameLabel.text = "普通路线"
         routeNameLabel.textColor = APPColor.colorWhite
@@ -90,7 +110,7 @@ class DTMineHeaderView: UIView {
         return routeNameLabel
     }()
     
-    lazy var dateNameLabel: UILabel = {
+    private lazy var dateNameLabel: UILabel = {
         let dateNameLabel = UILabel()
         dateNameLabel.text = "2020.12.23 13:42:28 到期"
         dateNameLabel.textColor = APPColor.colorWhite

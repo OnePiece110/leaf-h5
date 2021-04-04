@@ -25,6 +25,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
     private var viewModel = DTRouteSelectViewModel()
     private let disposeBag = DisposeBag()
     weak var delegate:DTRouteSelectViewControllerDelegate?
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.separatorStyle = .none
@@ -47,7 +48,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         self.configureData()
     }
     
-    func configRightItems() {
+    private func configRightItems() {
         let button = UIButton(type: .custom)
         button.addTarget(self, action: #selector(rightItemClick(button:)), for: .touchUpInside)
         button.frame = CGRect(x: 0, y: 0, width: 72, height: 44)
@@ -57,7 +58,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         self.navigationItem.rightBarButtonItems = [rightItem]
     }
     
-    func configSubView() {
+    private func configSubView() {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.view.addSubview(self.tableView)
@@ -71,7 +72,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         }
     }
     
-    func configureData() {
+    private func configureData() {
         DTProgress.showProgress(in: self)
         self.viewModel.list().subscribe(onNext: { [weak self] (json) in
             guard let weakSelf = self else { return }
@@ -84,12 +85,12 @@ class DTVPNListViewController: DTBaseViewController, Routable {
     }
     
     //MARK: -- action
-    @objc func rightItemClick(button: UIButton) {
+    @objc private func rightItemClick(button: UIButton) {
         button.isSelected = !button.isSelected
         closeOrShowItems(isShow: button.isSelected)
     }
     
-    func closeOrShowItems(isShow: Bool) {
+    private func closeOrShowItems(isShow: Bool) {
         for item in self.viewModel.normalSectionList {
             item.isOpen = isShow
         }
@@ -150,7 +151,8 @@ extension DTVPNListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sectionModel = self.viewModel.normalSectionList[indexPath.section]
         if sectionModel.groupId == -1 {
-            
+            self.popSelf()
+            self.delegate?.smartConnect()
         } else if indexPath.row == 0 {
             sectionModel.isOpen = !sectionModel.isOpen
             self.tableView.reloadData()

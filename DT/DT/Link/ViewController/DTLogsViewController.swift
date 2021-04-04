@@ -32,7 +32,6 @@ class DTLogsViewController: DTBaseViewController, Routable {
         if wifiManager.start() {
             self.wifi = "网页输入这个地址\nhttp://\(wifiManager.ip):\(wifiManager.port)/"
         }
-        
     }
 
     func configureSubViews() {

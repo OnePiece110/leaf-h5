@@ -13,41 +13,30 @@ class DTVerifyCodeViewController: DTBaseViewController, Routable {
 
     static func initWithParams(params: [String : Any]?) -> UIViewController {
         let vc = DTVerifyCodeViewController()
+        if let nickName = params?["nickName"] as? String, let mobile = params?["mobile"] as? String {
+            vc.viewModel.mobile = mobile
+            vc.viewModel.nickName = nickName
+        }
         return vc
     }
     
     private let disposeBag = DisposeBag()
     private weak var popupView: DTAlertBaseView?
+    private var viewModel = DTVerifyCodeViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         verifyCodeTextField.placeholder = "请输入验证码"
         codeView.setTitle("获取验证码")
         configSubView()
-        configEvents()
+        DispatchQueue.main.async {
+            self.codeView.isUserInteractionEnabled = false
+            self.startCutDown()
+        }
     }
     
-    @objc private func startCutDown() {
-        self.codeView.isUserInteractionEnabled = false
-        DTLoginSchedule.timer(duration: 60).subscribe(onNext: { [weak self] (second) in
-            guard let weakSelf = self else { return }
-            weakSelf.codeView.setTitle("重新发送（\(second)）")
-        }, onError: { [weak self] (error) in
-            guard let weakSelf = self else { return }
-            weakSelf.codeView.setTitle("获取验证码")
-            weakSelf.codeView.isUserInteractionEnabled = true
-        }, onCompleted: { [weak self] in
-            guard let weakSelf = self else { return }
-            weakSelf.codeView.setTitle("获取验证码")
-            weakSelf.codeView.isUserInteractionEnabled = true
-        }).disposed(by: disposeBag)
-    }
-    
-    private func configEvents() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(startCutDown))
-        codeView.addGestureRecognizer(tap)
-        
-        registerButton.dt.target(add: self, action: #selector(registerButtonClick))
+    @objc private func changePhoneButtonClick() {
+        Router.routeToClass(DTAddPhoneViewController.self, params: ["nickName": viewModel.nickName])
     }
     
     @objc private func startNetwork() {
@@ -55,12 +44,31 @@ class DTVerifyCodeViewController: DTBaseViewController, Routable {
     }
     
     @objc private func registerButtonClick() {
-        let popupView = DTAlertBaseView(frame: .zero)
-        popupView.readData(icon: UIImage(named: "icon_login_password"), title: "注册成功", message: "获取30天免费连接时长")
-        popupView.addGradientAction("智能连接,开始上网", titleColor: APPColor.colorWhite, direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170], target: self, selector: #selector(startNetwork))
-        popupView.finish()
-        popupView.alertManager?.show()
-        self.popupView = popupView
+        
+        let (isValid, value) = DTConstants.checkValidText(textField: self.verifyCodeTextField.textField)
+        if !isValid {
+            DTProgress.showError(in: self, message: "请输入验证码")
+            return
+        }
+        DTProgress.showProgress(in: self)
+        self.viewModel.codeCheck(validateCode: value).subscribe { [weak self] (json) in
+            guard let weakSelf = self else { return }
+            if weakSelf.viewModel.isCheckSuccess {
+                Router.routeToClass(DTResetPasswordViewController.self, params: ["nickName": weakSelf.viewModel.nickName, "mobile": weakSelf.viewModel.mobile, "validateCode": value])
+            } else {
+                DTProgress.showError(in: weakSelf, message: "验证失败")
+            }
+        } onError: { [weak self] (err) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "请求失败")
+        }.disposed(by: disposeBag)
+        
+//        let popupView = DTAlertBaseView(frame: .zero)
+//        popupView.readData(icon: UIImage(named: "icon_login_password"), title: "注册成功", message: "获取30天免费连接时长")
+//        popupView.addGradientAction("智能连接,开始上网", titleColor: APPColor.colorWhite, direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170], target: self, selector: #selector(startNetwork))
+//        popupView.finish()
+//        popupView.alertManager?.show()
+//        self.popupView = popupView
     }
     
     private func configSubView() {
@@ -94,6 +102,8 @@ class DTVerifyCodeViewController: DTBaseViewController, Routable {
             make.right.equalTo(-22)
             make.height.equalTo(50)
         }
+        
+        titleLabel.text = "已向您的手机\(viewModel.mobile)发送验证码"
     }
     
     override func viewDidLayoutSubviews() {
@@ -122,18 +132,44 @@ class DTVerifyCodeViewController: DTBaseViewController, Routable {
         let codeView = DTCutDownView(frame: .zero)
         codeView.layer.cornerRadius = 25
         codeView.layer.masksToBounds = true
+        codeView.delegate = self
         return codeView
     }()
     
     private lazy var registerButton: UIButton = {
         let button = UIButton(type: .custom).dt
             .font(UIFont.dt.Font(16))
-            .title("注册")
+            .title("确定")
             .titleColor(APPColor.colorWhite)
+            .target(add: self, action: #selector(registerButtonClick))
             .build
         button.layer.cornerRadius = 25
         button.layer.masksToBounds = true
         return button
     }()
+    
+    private lazy var changePhoneButton:UIButton = {
+        let forgetAccountButton = UIButton(type: .custom).dt
+            .title("点击换个手机")
+            .font(UIFont.dt.Font(14))
+            .titleColor(APPColor.color36BDB8)
+            .target(add: self, action: #selector(changePhoneButtonClick))
+            .build
+        return forgetAccountButton
+    }()
+}
 
+
+extension DTVerifyCodeViewController: DTCutDownViewDelegate {
+    func startCutDown() {
+        DTProgress.showProgress(in: self)
+        viewModel.sendCode(mobile: viewModel.mobile, countryCode: viewModel.countryCode).subscribe { [weak self] (json) in
+            guard let weakSelf = self else { return }
+            DTProgress.dismiss(in: weakSelf)
+            weakSelf.codeView.startCutDownAction()
+        } onError: { [weak self] (err) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "请求失败")
+        }.disposed(by: disposeBag)
+    }
 }

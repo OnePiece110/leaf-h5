@@ -15,7 +15,13 @@ class DTNoticeCell: DTBaseTableViewCell {
         configSubViews()
     }
     
-    func configSubViews() {
+    func readData(model: DTNoticeItemModel) {
+        self.titleLabel.text = model.title
+        self.contentLabel.text = model.content
+        self.dateLabel.text = model.pubTime
+    }
+    
+    private func configSubViews() {
         self.contentView.addSubview(bgView)
         bgView.addSubview(iconIamgeView)
         bgView.addSubview(titleLabel)
@@ -59,7 +65,7 @@ class DTNoticeCell: DTBaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var bgView: UIView = {
+    private lazy var bgView: UIView = {
         let bgView = UIView()
         bgView.backgroundColor = APPColor.colorSubBgView
         bgView.layer.masksToBounds = true
@@ -67,12 +73,12 @@ class DTNoticeCell: DTBaseTableViewCell {
         return bgView
     }()
     
-    lazy var iconIamgeView: UIImageView = {
+    private lazy var iconIamgeView: UIImageView = {
         let iconIamgeView = UIImageView(image: UIImage(named: "icon_mine_notice"))
         return iconIamgeView
     }()
     
-    lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.dt.Bold_Font(16)
         titleLabel.text = "系统通知"
@@ -80,7 +86,7 @@ class DTNoticeCell: DTBaseTableViewCell {
         return titleLabel
     }()
     
-    lazy var dateLabel: UILabel = {
+    private lazy var dateLabel: UILabel = {
         let dateLabel = UILabel()
         dateLabel.font = UIFont.dt.Font(14)
         dateLabel.text = "2020.06.14 18:42"
@@ -88,7 +94,7 @@ class DTNoticeCell: DTBaseTableViewCell {
         return dateLabel
     }()
     
-    lazy var contentLabel: UILabel = {
+    private lazy var contentLabel: UILabel = {
         let contentLabel = UILabel()
         contentLabel.font = UIFont.dt.Font(14)
         contentLabel.text = "The 1896 Cedar Keys hurricane was a powerful tropical cyclone that devastated much of the East Coast of the United States, starting with Florida's Cedar Keys, near the end of September."

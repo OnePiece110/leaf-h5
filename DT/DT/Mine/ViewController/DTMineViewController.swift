@@ -7,19 +7,21 @@
 //
 
 import UIKit
+import RxSwift
 
 class DTMineViewController: DTBaseViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    let viewModel = DTMineViewModel()
-    var headerView:DTMineHeaderView?
+    private let viewModel = DTMineViewModel()
+    private var headerView:DTMineHeaderView?
     private weak var popupView: DTAlertBaseView?
+    private let disposeBag = DisposeBag()
     
-    //test
-    private var testNum = 0
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.viewModel.reloadData()
         self.headerView?.reloadData()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -115,7 +117,7 @@ extension DTMineViewController:UITableViewDelegate {
             debugPrint("advertisement")
             break
         case .question:
-            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://wiki.mytube.vip/web/question/question.html"])
+            Router.routeToClass(DTWebViewController.self, params: [DTWKURL: "https://api-dev.mytube.vip/h5/question/question.html"])
             break
         case .tool:
             debugPrint("tool")
@@ -125,19 +127,25 @@ extension DTMineViewController:UITableViewDelegate {
             commentPopup.alertManager?.show()
             break
         case .update:
-            let updatePopup = DTAlertBaseView()
-            updatePopup.readData(icon: UIImage(named: "icon_login_password"), title: "发现新版本", message: "发现了灯塔加速器最新的v2.0版本\n我们强烈建议您进行更新，是否立即更新？")
-            updatePopup.addGradientAction("立即更新", titleColor: APPColor.colorWhite, direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170], target: self, selector: #selector(startUpdate))
-            if testNum % 2 == 0 {
-                updatePopup.addDesc("不更新则无法继续使用本APP", titleColor: APPColor.color36BDB8)
-            } else {
-                updatePopup.addAction("暂不更新", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(cancelUpdate))
-            }
-            updatePopup.finish()
-            updatePopup.alertManager?.show()
-            self.popupView = updatePopup
-            
-            testNum += 1
+            DTProgress.showProgress(in: self)
+            self.viewModel.versionCheck().subscribe { [weak self] (json) in
+                guard let weakSelf = self else { return }
+                DTProgress.dismiss(in: weakSelf)
+                if weakSelf.viewModel.isNeedUpdate {
+                    weakSelf.openPopup()
+                } else {
+                    let updatePopup = DTAlertBaseView()
+                    updatePopup.alertManager?.isDimissTapBgView = false
+                    updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "无新版本", message: "")
+                    updatePopup.addAction("已是最新版本", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: weakSelf, selector: #selector(weakSelf.cancelUpdate))
+                    updatePopup.finish()
+                    updatePopup.alertManager?.show()
+                    weakSelf.popupView = updatePopup
+                }
+            } onError: { [weak self] (error) in
+                guard let weakSelf = self else { return }
+                DTProgress.showError(in: weakSelf, message: "请求失败")
+            }.disposed(by: disposeBag)
             break
         case .feedback:
             Router.routeToClass(DTFeedbackViewController.self, params: nil)
@@ -146,7 +154,18 @@ extension DTMineViewController:UITableViewDelegate {
             logOutView.alertManager?.show()
             logOutView.delegate = self
         }
-        
+    }
+    
+    private func openPopup() {
+        let updatePopup = DTAlertBaseView()
+        updatePopup.alertManager?.isDimissTapBgView = false
+        updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "发现新版本", message: "发现了引力加速器最新的v2.0版本\n我们强烈建议您进行更新，是否立即更新？")
+        updatePopup.addGradientAction("立即更新", titleColor: APPColor.colorWhite, direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170], target: self, selector: #selector(startUpdate))
+//        updatePopup.addDesc("不更新则无法继续使用本APP", titleColor: APPColor.color36BDB8)
+        updatePopup.addAction("暂不更新", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(cancelUpdate))
+        updatePopup.finish()
+        updatePopup.alertManager?.show()
+        self.popupView = updatePopup
     }
 }
 
@@ -176,6 +195,9 @@ extension DTMineViewController: DTMineTopUpCellDelegate {
 extension DTMineViewController: DTLogOutPopupViewDelegate {
     func sureButtonClick() {
         DTUser.sharedUser.clearData()
+        self.viewModel.reloadData()
+        self.headerView?.reloadData()
+        tableView.reloadData()
     }
     
     func cancelButtonClick() {

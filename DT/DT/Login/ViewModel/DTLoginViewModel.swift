@@ -9,10 +9,18 @@
 import UIKit
 import RxSwift
 
-class DTLoginViewModel: NSObject {
+class DTLoginViewModel {
     
-    func login(password:String, mobile:String, countryCode:String, validateCode:String?) -> Observable<DTLoginResult> {
-        return DTLoginSchedule.login(password: password, mobile: mobile, countryCode: countryCode, validateCode: validateCode).do(onNext: { (json) in
+    func sendCode(mobile:String, countryCode:String) -> Observable<DTBaseResult> {
+        return DTLoginSchedule.sendCode(mobile: mobile, countryCode: countryCode)
+    }
+    
+    func login(password: String?,
+                     mobile: String?,
+                     nickName: String?,
+                     countryCode: String?,
+                     validateCode: String?) -> Observable<DTLoginResult> {
+        return DTLoginSchedule.login(password: password, mobile: mobile, nickName: nickName, countryCode: countryCode, validateCode: validateCode).do(onNext: { (json) in
             let jsonString = json.entry.kj.JSONString()
             debugPrint(jsonString)
             DTUserDefaults?.set(jsonString, forKey: DTUserProfile)

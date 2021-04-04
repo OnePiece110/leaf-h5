@@ -63,7 +63,7 @@ class DTFeedbackCell: UICollectionViewCell {
     
     lazy var contentImageView:UIImageView = {
         let contentImageView = UIImageView()
-        contentImageView.backgroundColor = APPColor.color26344F
+        contentImageView.backgroundColor = APPColor.color3E5E77
         contentImageView.layer.cornerRadius = 13
         contentImageView.layer.masksToBounds = true
         contentImageView.contentMode = .scaleAspectFill

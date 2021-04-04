@@ -26,17 +26,10 @@ class DTLoginSchedule: NSObject {
     }
     
     @discardableResult
-    class func sendCode<T: BaseResult>(accountId:Int?,mobile:String?,countryCode:String?) -> Observable<T> {
+    class func sendCode<T: BaseResult>(mobile:String,countryCode:String) -> Observable<T> {
         var params = [String:Any]()
-        if let accountId = accountId {
-            params["accountId"] = accountId
-        }
-        if let mobile = mobile {
-            params["mobile"] = mobile
-        }
-        if let countryCode = countryCode {
-            params["countryCode"] = countryCode
-        }
+        params["mobile"] = mobile
+        params["countryCode"] = countryCode
         return DTHttp.share.post(url: API.validateSend.rawValue, parameters: params)
     }
     
@@ -58,9 +51,18 @@ class DTLoginSchedule: NSObject {
         return DTHttp.share.post(url: API.register.rawValue, parameters: params)
     }
     
-    class func login<T: BaseResult>(password:String, mobile:String?, countryCode:String?, validateCode:String?) -> Observable<T> {
+    class func login<T: BaseResult>(password: String?,
+                                    mobile: String?,
+                                    nickName: String?,
+                                    countryCode: String?,
+                                    validateCode: String?) -> Observable<T> {
         var params = [String:Any]()
-        params["passwd"] = password
+        if let password = password {
+            params["passwd"] = password
+        }
+        if let nickName = nickName {
+            params["nickName"] = nickName
+        }
         if let mobile = mobile {
             params["mobile"] = mobile
         }
@@ -85,6 +87,45 @@ class DTLoginSchedule: NSObject {
         if let validateCode = validateCode {
             params["validateCode"] = validateCode
         }
+        return DTHttp.share.post(url: API.modify.rawValue, parameters: params)
+    }
+    
+    class func mobileQuery<T: BaseResult>(nickName: String) -> Observable<T> {
+        var params = [String:Any]()
+        params["nickName"] = nickName
+        return DTHttp.share.get(url: API.mobileQuery.rawValue, parameters: params)
+    }
+    
+    class func mobileCheck<T: BaseResult>(nickName: String, mobile: String, countryCode: String) -> Observable<T> {
+        var params = [String:Any]()
+        params["nickName"] = nickName
+        params["mobile"] = mobile
+        params["countryCode"] = countryCode
+        return DTHttp.share.post(url: API.mobileCheck.rawValue, parameters: params)
+    }
+    
+    class func codeCheck<T: BaseResult>(mobile:String, countryCode:String, validateCode:String) -> Observable<T> {
+        var params = [String:Any]()
+        params["mobile"] = mobile
+        params["validateCode"] = validateCode
+        params["countryCode"] = countryCode
+        return DTHttp.share.post(url: API.codeCheck.rawValue, parameters: params)
+    }
+    
+    class func mobileBind<T: BaseResult>(mobile:String, countryCode:String, validateCode:String, nickName: String) -> Observable<T> {
+        var params = [String:Any]()
+        params["mobile"] = mobile
+        params["validateCode"] = validateCode
+        params["countryCode"] = countryCode
+        params["nickName"] = nickName
+        return DTHttp.share.post(url: API.mobileBind.rawValue, parameters: params)
+    }
+    
+    class func passwordModify<T: BaseResult>(mobile:String, countryCode:String, validateCode:String) -> Observable<T> {
+        var params = [String:Any]()
+        params["mobile"] = mobile
+        params["validateCode"] = validateCode
+        params["countryCode"] = countryCode
         return DTHttp.share.post(url: API.modify.rawValue, parameters: params)
     }
 }

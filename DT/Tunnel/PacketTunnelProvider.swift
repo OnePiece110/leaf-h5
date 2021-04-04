@@ -29,10 +29,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             
             newSettings.ipv4Settings = NEIPv4Settings(addresses: ["240.0.0.1"], subnetMasks: ["255.255.255.0"])
             newSettings.ipv4Settings?.includedRoutes = [NEIPv4Route.default()]
-            
+            newSettings.ipv4Settings?.excludedRoutes = [NEIPv4Route(destinationAddress: host, subnetMask: "255.255.255.255")]
             newSettings.proxySettings = nil
             
-            newSettings.dnsSettings = NEDNSSettings(servers: ["233.5.5.5", "114.114.114.114"])
+            newSettings.dnsSettings = NEDNSSettings(servers: ["114.114.114.114", "233.5.5.5", "8.8.8.8"])
             newSettings.mtu = 1500
             setTunnelNetworkSettings(newSettings) { [weak self] error in
                 guard error == nil else {
@@ -100,7 +100,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Add code here to wake up.
     }
     
-    /// 监听网络状态，切换不同的网络的时候，需要重新连接vpn
+    /// 监听网络状态，切换不同的网络的时候，需要重新连接
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "defaultPath") {
             if self.defaultPath?.status == .satisfied && self.defaultPath != self.lastPath {

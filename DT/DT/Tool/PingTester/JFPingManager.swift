@@ -1,6 +1,6 @@
 //
 //  JFPingManager.swift
-//  WindSpeedVPN
+//  WindSpeed
 //
 //  Created by zhoujianfeng on 2016/11/25.
 //  Copyright © 2016年 zhoujianfeng. All rights reserved.
@@ -39,7 +39,7 @@ class JFPingManager: NSObject {
         for address in addressList {
             
             group.enter()
-            pingServicesDict[address] = JFPingServices.start(hostName: address, count: 1, pingCallback: { (pingItem) in
+            pingServicesDict[address] = JFPingServices.start(hostName: address, count: 3, pingCallback: { (pingItem) in
                 switch pingItem.status! {
                 case .didStart:
                     break

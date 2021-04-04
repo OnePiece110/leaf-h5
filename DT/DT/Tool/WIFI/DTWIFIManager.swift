@@ -24,7 +24,7 @@ class DTWIFIManager:NSObject, GCDWebUploaderDelegate {
                 webServer.allowHiddenItems = true
                 webServer.title = "WIFI"
                 webServer.prologue = "欢迎使用WIFI管理平台"
-                webServer.epilogue = "KongFuVPN"
+                webServer.epilogue = "引力"
                 if webServer.start() {
                     self.ip = IPHelper.deviceIPAdress()
                     self.port = "\(webServer.port)"

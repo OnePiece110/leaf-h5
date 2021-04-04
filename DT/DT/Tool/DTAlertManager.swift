@@ -20,7 +20,7 @@ class DTAlertManager: NSObject,UIGestureRecognizerDelegate {
     var isFull = false
 	private weak var view:UIView!
 	private var type:animationType!
-	private var isDimissTapBgView:Bool = true
+	var isDimissTapBgView:Bool = true
 	private var bgView = UIView()
 	private let kAnimationKey_FadeInAlertViewScale = "AnimationKey_FadeInAlertViewScale";
 	private let kAnimationKey_FadeOutAlertViewScale = "AnimationKey_FadeOutAlertViewScale";

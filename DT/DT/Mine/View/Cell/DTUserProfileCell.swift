@@ -28,6 +28,21 @@ class DTUserProfileCell: DTBaseTableViewCell {
                 paddingLabel.title(model.buttonText)
                 paddingLabel.isHidden = !(model.buttonText.count > 0)
             }
+            
+            arrowImageView.isHidden = !model.isEnable
+            if model.isEnable {
+                arrowImageView.snp.remakeConstraints { (make) in
+                    make.centerY.equalTo(radiusView)
+                    make.size.equalTo(CGSize(width: 7, height: 10))
+                    make.right.equalTo(-10)
+                }
+            } else {
+                arrowImageView.snp.remakeConstraints { (make) in
+                    make.centerY.equalTo(radiusView)
+                    make.size.equalTo(CGSize(width: 0, height: 0))
+                    make.right.equalTo(0)
+                }
+            }
         }
     }
     
@@ -68,8 +83,7 @@ class DTUserProfileCell: DTBaseTableViewCell {
         
         arrowImageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(radiusView)
-            make.width.equalTo(7)
-            make.height.equalTo(10)
+            make.size.equalTo(CGSize(width: 7, height: 10))
             make.right.equalTo(-10)
         }
         

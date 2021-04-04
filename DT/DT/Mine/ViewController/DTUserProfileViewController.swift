@@ -110,6 +110,9 @@ extension DTUserProfileViewController:UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = viewModel.tableData[indexPath.section].rowData[indexPath.row]
+        if !model.isEnable {
+            return
+        }
         switch model.type {
         case .bindInvite:
             debugPrint("bindInvite")

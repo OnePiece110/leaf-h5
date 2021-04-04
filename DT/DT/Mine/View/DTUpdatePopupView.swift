@@ -96,7 +96,7 @@ class DTUpdatePopupView: UIView {
     private lazy var descLabel: UILabel = {
         let descLabel = UILabel()
         descLabel.lineBreakMode = .byCharWrapping
-        descLabel.text = "发现了灯塔加速器最新的v2.0版本\n我们强烈建议您进行更新，是否立即更新？"
+        descLabel.text = "发现了引力加速器最新的v2.0版本\n我们强烈建议您进行更新，是否立即更新？"
         descLabel.font = UIFont.dt.Font(14)
         descLabel.textColor = APPColor.colorF6F6F6
         descLabel.numberOfLines = 0

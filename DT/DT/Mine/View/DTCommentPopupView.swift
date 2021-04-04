@@ -91,7 +91,7 @@ class DTCommentPopupView: UIView {
     private var iconImageView = UIImageView(image: UIImage(named: "icon_star_popup"))
     private lazy var titleLabel: DTGranibleLabel = {
         let titleLabel = DTGranibleLabel()
-        titleLabel.text = "喜欢灯塔VPN吗?"
+        titleLabel.text = "喜欢引力加速器吗?"
         titleLabel.font = UIFont.dt.Bold_Font(24)
         titleLabel.direction = .left
         titleLabel.colors = [APPColor.color36BDB8, APPColor.color00B170]
@@ -101,7 +101,7 @@ class DTCommentPopupView: UIView {
     private lazy var descLabel: UILabel = {
         let descLabel = UILabel()
         descLabel.lineBreakMode = .byCharWrapping
-        descLabel.text = "如果您喜欢灯塔VPN，请给我们5星鼓励哦～好评截图发到example@gamil.com可以获得3天奖励，感谢您的支持"
+        descLabel.text = "如果您喜欢引力加速器，请给我们5星鼓励哦～好评截图发到example@gamil.com可以获得3天奖励，感谢您的支持"
         descLabel.font = UIFont.dt.Font(14)
         descLabel.textColor = APPColor.colorF6F6F6
         descLabel.numberOfLines = 0

@@ -76,7 +76,60 @@ class DTAlertBaseView: UIView {
         addLabel(label: label)
     }
     
-    func addButton(button: UIButton) {
+    func addTwoButton(titleOne: String,
+                      titleTwo: String,
+                      descTwo: String,
+                      target: Any,
+                      selectorOne: Selector,
+                      selectorTwo: Selector) {
+        guard let lastView = lastView else {
+            return
+        }
+        let bgView = UIView()
+        addSubview(bgView)
+        
+        let button = UIButton(type: .custom).dt
+            .title(titleOne)
+            .font(UIFont.dt.Font(14))
+            .titleColor(APPColor.color36BDB8)
+            .target(add: target, action: selectorOne)
+            .backgroundColor(UIColor.clear)
+            .build
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = APPColor.color36BDB8.cgColor
+        button.layer.cornerRadius = 21
+        
+        let customButton = DTAlertCustomButton(frame: .zero)
+        customButton.read(title: "手机号注册", desc: "可得30天使用时长", target: self, selector: selectorTwo)
+        customButton.layer.cornerRadius = 21
+        customButton.layer.masksToBounds = true
+        
+        bgView.addSubview(button)
+        bgView.addSubview(customButton)
+        
+        bgView.snp.makeConstraints { (make) in
+            make.top.equalTo(lastView.snp.bottom).offset(15)
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.height.equalTo(59)
+        }
+        
+        button.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(0)
+            make.left.equalTo(0)
+        }
+        
+        customButton.snp.makeConstraints { (make) in
+            make.top.bottom.equalTo(0)
+            make.right.equalTo(0)
+            make.left.equalTo(button.snp.right).offset(13)
+            make.width.equalTo(button.snp.width)
+        }
+        
+        self.lastView = bgView
+    }
+    
+    private func addButton(button: UIButton) {
         guard let lastView = lastView else {
             return
         }
@@ -93,7 +146,7 @@ class DTAlertBaseView: UIView {
         self.lastView = button
     }
     
-    func addLabel(label: UILabel) {
+    private func addLabel(label: UILabel) {
         guard let lastView = lastView else {
             return
         }

@@ -18,7 +18,9 @@ class DTUser:Convertible {
     private(set) var countryCode: String = ""
     private(set) var mobile: String = ""
     private(set) var token: String = ""
-    
+    private(set) var remian: UInt64 = 0
+    private(set) var endTime: UInt64 = 0
+ 
     func kj_modelKey(from property: Property) -> ModelPropertyKey {
         switch property.name {
         case "accountId":
@@ -42,6 +44,8 @@ class DTUser:Convertible {
         self.countryCode = model.countryCode
         self.mobile = model.mobile
         self.token = model.token
+        self.remian = model.remian
+        self.endTime = model.endTime
         if self.accountId > 0 {
             self.isLogin = true
         } else {
@@ -56,6 +60,8 @@ class DTUser:Convertible {
         self.countryCode = ""
         self.mobile = ""
         self.token = ""
+        self.remian = 0
+        self.endTime = 0
     }
     
     public func clearData() {
@@ -68,5 +74,9 @@ class DTUser:Convertible {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: LOGOUT_Notification), object: nil)
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: LOGOUT_Notification), object: nil)
     }
 }

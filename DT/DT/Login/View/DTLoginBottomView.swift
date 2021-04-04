@@ -19,14 +19,11 @@ class DTLoginBottomView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configSubView()
-        configEvents()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
     
     private func configSubView() {
         addSubview(bottomTitleLabel)
@@ -50,10 +47,6 @@ class DTLoginBottomView: UIView {
             make.centerY.equalTo(self)
             make.right.equalTo(-15)
         }
-    }
-    
-    private func configEvents() {
-        registerButton.dt.target(add: self, action: #selector(registerButtonClick))
     }
     
     @objc func registerButtonClick() {
@@ -89,6 +82,7 @@ class DTLoginBottomView: UIView {
             .title("立即注册")
             .titleColor(APPColor.colorWhite)
             .font(UIFont.dt.Bold_Font(16))
+            .target(add: self, action: #selector(registerButtonClick))
             .build
         registerButton.layer.cornerRadius = 14
         registerButton.layer.masksToBounds = true

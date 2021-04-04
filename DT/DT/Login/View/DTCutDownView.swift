@@ -7,12 +7,40 @@
 //
 
 import UIKit
+import RxSwift
+
+protocol DTCutDownViewDelegate:class {
+    func startCutDown()
+}
 
 class DTCutDownView: UIView {
 
+    weak var delegate:DTCutDownViewDelegate?
+    let disposeBag = DisposeBag()
     override init(frame: CGRect) {
         super.init(frame: frame)
         configSubView()
+        self.dt.viewTarget(add: self, action: #selector(startCutDown))
+    }
+    
+    @objc private func startCutDown() {
+        self.delegate?.startCutDown()
+        self.isUserInteractionEnabled = false
+    }
+    
+    public func startCutDownAction() {
+        DTLoginSchedule.timer(duration: 60).subscribe(onNext: { [weak self] (second) in
+            guard let weakSelf = self else { return }
+            weakSelf.setTitle("重新发送（\(second)）")
+        }, onError: { [weak self] (error) in
+            guard let weakSelf = self else { return }
+            weakSelf.setTitle("获取验证码")
+            weakSelf.isUserInteractionEnabled = true
+        }, onCompleted: { [weak self] in
+            guard let weakSelf = self else { return }
+            weakSelf.setTitle("获取验证码")
+            weakSelf.isUserInteractionEnabled = true
+        }).disposed(by: disposeBag)
     }
     
     override func layoutSubviews() {
@@ -33,6 +61,7 @@ class DTCutDownView: UIView {
     
     private lazy var codeLabel: UILabel = {
         let codeLabel = UILabel().dt
+            .text("获取验证码")
             .font(UIFont.dt.Font(14))
             .textColor(APPColor.colorWhite)
             .build

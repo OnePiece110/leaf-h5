@@ -40,7 +40,7 @@ class DTServerGroupData:Convertible {
     }
 }
 
-class DTServerVOItemData:NSObject,Convertible {
+class DTServerVOItemData: NSObject, Convertible {
     var color:String = ""
     var name:String = ""
     var desc:String = ""

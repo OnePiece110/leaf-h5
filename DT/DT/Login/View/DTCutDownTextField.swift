@@ -21,34 +21,34 @@ class DTCutDownTextField: UIView {
         configureSubViews()
         self.iconName = iconName
         self.placeHolder = placeHolder
-        self.verifyButton.addTarget(self, action: #selector(countDonwClick), for: .touchUpInside)
-    }
-    
-    @objc func countDonwClick() {
-        self.delegate?.countDownClick()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func startCutDownAction() {
+        self.codeView.startCutDownAction()
+    }
+    
     private func configureSubViews() {
-        radiusView.backgroundColor = APPColor.color26344F
+        radiusView.backgroundColor = APPColor.color3E5E77
         radiusView.corner = 10
         self.addSubview(radiusView)
         radiusView.addSubview(leftView)
         leftView.addSubview(titleLabel)
         leftView.addSubview(iconImageView)
         radiusView.addSubview(textFied)
-        radiusView.addSubview(verifyButton)
+        self.addSubview(codeView)
         
         radiusView.snp.makeConstraints { (make) in
-            make.edges.equalTo(0)
+            make.left.top.bottom.equalTo(0)
+            make.right.equalTo(-127)
         }
         
         leftView.snp.makeConstraints { (make) in
             make.left.top.bottom.equalTo(0)
-            make.width.equalTo(60)
+            make.width.equalTo(57)
         }
         
         iconImageView.snp.makeConstraints { (make) in
@@ -60,15 +60,15 @@ class DTCutDownTextField: UIView {
             make.centerX.centerY.equalTo(leftView)
         }
         
-        verifyButton.snp.makeConstraints { (make) in
-            make.top.right.bottom.equalTo(0)
-            make.width.equalTo(110)
-        }
-        
         textFied.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(0)
-            make.right.equalTo(verifyButton.snp.left)
+            make.right.equalTo(codeView.snp.left).offset(-10)
             make.left.equalTo(leftView.snp.right)
+        }
+        
+        codeView.snp.makeConstraints { (make) in
+            make.top.right.bottom.equalTo(0)
+            make.width.equalTo(117)
         }
     }
 
@@ -77,15 +77,15 @@ class DTCutDownTextField: UIView {
     private lazy var leftView = UIView()
     private lazy var iconImageView = UIImageView()
     
-    lazy var verifyButton:UIButton = {
-        let verifyButton = UIButton(type: .custom)
-        verifyButton.setTitle("获取验证码", for: .normal)
-        verifyButton.titleLabel?.font = UIFont.dt.Bold_Font(14)
-        verifyButton.setTitleColor(APPColor.sub, for: .normal)
-        return verifyButton
+    private lazy var codeView: DTCutDownView = {
+        let codeView = DTCutDownView(frame: .zero)
+        codeView.layer.cornerRadius = 22
+        codeView.layer.masksToBounds = true
+        codeView.delegate = self
+        return codeView
     }()
     
-    lazy var titleLabel:UILabel = {
+    private lazy var titleLabel:UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.dt.Bold_Font(12)
         titleLabel.textColor = UIColor.white.withAlphaComponent(0.4)
@@ -120,5 +120,11 @@ class DTCutDownTextField: UIView {
             _placeHolder = newValue
             textFied.attributedPlaceholder = placeHolder.font(UIFont.dt.Bold_Font(14)).color(UIColor.white.withAlphaComponent(0.2))
         }
+    }
+}
+
+extension DTCutDownTextField: DTCutDownViewDelegate {
+    func startCutDown() {
+        self.delegate?.countDownClick()
     }
 }

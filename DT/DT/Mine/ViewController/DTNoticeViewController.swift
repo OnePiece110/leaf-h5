@@ -9,6 +9,8 @@
 import UIKit
 import SnapKit
 import ObjectiveC
+import MJRefresh
+import RxSwift
 
 class DTNoticeViewController: DTBaseViewController,Routable {
 
@@ -17,10 +19,15 @@ class DTNoticeViewController: DTBaseViewController,Routable {
         return vc
     }
     
+    private let viewModel = DTNoticeViewModel()
+    private var tableView: UITableView?
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "消息中心"
         createTableView()
+        self.tableView?.mj_header?.beginRefreshing()
     }
     
     func createTableView() {
@@ -34,6 +41,30 @@ class DTNoticeViewController: DTBaseViewController,Routable {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
         tableView.register(DTNoticeCell.self, forCellReuseIdentifier: "DTNoticeCell")
+        let header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
+            guard let weakSelf = self else { return }
+            weakSelf.viewModel.refresh().subscribe { (json) in
+                tableView.reloadData()
+                tableView.mj_header?.endRefreshing()
+            } onError: { (error) in
+                tableView.mj_header?.endRefreshing()
+            }.disposed(by: weakSelf.disposeBag)
+        })
+        header.stateLabel?.textColor = .white
+        header.lastUpdatedTimeLabel?.textColor = .white
+        tableView.mj_header = header
+        
+        let footer = MJRefreshBackNormalFooter(refreshingBlock: { [weak self] in
+            guard let weakSelf = self else { return }
+            weakSelf.viewModel.loadMore().subscribe { (json) in
+                tableView.reloadData()
+                tableView.mj_footer?.endRefreshing()
+            } onError: { (error) in
+                tableView.mj_footer?.endRefreshing()
+            }.disposed(by: weakSelf.disposeBag)
+        })
+        footer.stateLabel?.textColor = .white
+        tableView.mj_footer = footer
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
             make.left.top.right.equalTo(0)
@@ -43,28 +74,31 @@ class DTNoticeViewController: DTBaseViewController,Routable {
                 make.bottom.equalTo(0)
             }
         }
+        
+        self.tableView = tableView
     }
 
 }
 
 extension DTNoticeViewController:UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.viewModel.dataSource.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DTNoticeCell", for: indexPath) as! DTNoticeCell
+        cell.readData(model: self.viewModel.dataSource[indexPath.row])
         return cell
     }
 }
 
-extension DTNoticeViewController:UITableViewDelegate {
+extension DTNoticeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Router.routeToClass(DTSettingViewController.self, params: nil)
+        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

@@ -28,7 +28,6 @@ class DTLogOutPopupView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configSubView()
-        configEvent()
     }
     
     func configSubView() {
@@ -64,11 +63,6 @@ class DTLogOutPopupView: UIView {
             make.bottom.right.equalTo(0)
             make.height.width.equalTo(sureButton)
         }
-    }
-    
-    func configEvent() {
-        sureButton.addTarget(self, action: #selector(sureClick), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelClick), for: .touchUpInside)
     }
     
     @objc func sureClick() {
@@ -113,6 +107,7 @@ class DTLogOutPopupView: UIView {
             .title("确定")
             .titleColor(APPColor.colorWhite)
             .font(UIFont.dt.Font(14))
+            .target(add: self, action: #selector(sureClick))
             .backgroundColor(.clear)
             .build
         return sureButton
@@ -123,6 +118,7 @@ class DTLogOutPopupView: UIView {
             .title("取消")
             .titleColor(APPColor.color36BDB8)
             .font(UIFont.dt.Font(14))
+            .target(add: self, action: #selector(cancelClick))
             .backgroundColor(.clear)
             .build
         return cancelButton

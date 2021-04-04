@@ -44,7 +44,7 @@ class DTAlertTopView: UIView {
     }
     
     private var iconImageView: UIImageView = {
-        let iconImageView = UIImageView()
+        let iconImageView = UIImageView(image: UIImage(named: "icon_logo"))
         iconImageView.backgroundColor = APPColor.colorWhite
         iconImageView.layer.cornerRadius = 10
         iconImageView.layer.masksToBounds = true

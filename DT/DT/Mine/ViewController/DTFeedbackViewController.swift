@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import TZImagePickerController
+import Photos
 
 class DTFeedbackViewController: DTBaseViewController,Routable {
 
@@ -17,10 +18,9 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         return vc
     }
     
-    var sendButton:UIButton?
     let disposeBag = DisposeBag()
     let viewModel = DTFeedbackViewModel()
-    let itemWidth = (kScreentWidth - 20 * 2 - 10 * 3) / 3
+    let itemWidth = (kScreentWidth - 10 * 2 - 5 * 3) / 4
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +28,11 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         
         contentTextView.rx.text.orEmpty.asObservable().subscribe { [weak self] (e) in
             guard let weakSelf = self else { return }
-            if let sendButton = weakSelf.sendButton,let s = e.element {
+            if let s = e.element {
                 if s.count > 300 {
                     weakSelf.contentTextView.deleteBackward()
                     return
                 }
-                sendButton.isSelected = !s.isVaildEmpty()
                 weakSelf.countLabel.text = "\(s.count)/300"
             }
         }.disposed(by: disposeBag)
@@ -41,11 +40,6 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     
     func configureSubViews() {
         self.navigationItem.title = "意见反馈"
-        let sendButton = self.addRightBarButtonItem(rightText: "发送")
-        sendButton.setTitleColor(APPColor.sub, for: .selected)
-        sendButton.setTitleColor(UIColor.white.withAlphaComponent(0.2), for: .normal)
-        sendButton.addTarget(self, action: #selector(sendClick), for: .touchUpInside)
-        self.sendButton = sendButton
         
         contentTextView.placeholder = "请输入问题描述"
         contentTextView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -53,70 +47,135 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         contentTextView.textColor = .white
         contentTextView.font = UIFont.dt.Bold_Font(16)
         
-        self.view.addSubview(self.contentTextView)
-        self.view.addSubview(countLabel)
-        self.view.addSubview(self.lineView)
+        let textViewBgView = UIView()
+        textViewBgView.backgroundColor = APPColor.color3E5E77
+        textViewBgView.layer.cornerRadius = 10
+        textViewBgView.layer.masksToBounds = true
+        self.view.addSubview(textViewBgView)
+        textViewBgView.addSubview(self.contentTextView)
+        textViewBgView.addSubview(self.countLabel)
         self.view.addSubview(self.contactInformationTextField)
         self.view.addSubview(self.collectionView)
-        self.view.addSubview(self.contactInfoLabel)
         self.view.addSubview(self.contactInformationTextField)
+        self.view.addSubview(self.sendButton)
         
-        self.countLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(contentTextView.snp.bottom).offset(2)
-            make.right.equalTo(contentTextView.snp.right)
+        textViewBgView.snp.makeConstraints { (make) in
+            make.left.top.equalTo(10)
+            make.right.equalTo(-10)
+            make.height.equalTo(240)
         }
         
-        self.lineView.snp.makeConstraints { (make) in
-            make.left.equalTo(20)
-            make.right.equalTo(-20)
-            make.height.equalTo(1)
-            make.top.equalTo(self.countLabel.snp.bottom).offset(10)
+        self.countLabel.snp.makeConstraints { (make) in
+            make.height.equalTo(20)
+            make.bottom.equalTo(-10)
+            make.right.equalTo(-15)
         }
         
         self.contentTextView.snp.makeConstraints { (make) in
-            make.left.equalTo(20)
-            make.top.equalTo(26)
-            make.right.equalTo(-20)
-            make.height.equalTo(200)
+            make.left.top.equalTo(15)
+            make.right.equalTo(-15)
+            make.bottom.equalTo(self.countLabel.snp.top).offset(-10)
         }
         
         self.collectionView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.lineView.snp.bottom).offset(26)
-            make.left.equalTo(20)
-            make.right.equalTo(-20)
+            make.top.equalTo(textViewBgView.snp.bottom).offset(10)
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
             make.height.equalTo(itemWidth)
         }
         
-        self.contactInfoLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(self.collectionView.snp.bottom).offset(26)
-            make.left.equalTo(20)
-        }
-        
         self.contactInformationTextField.snp.makeConstraints { (make) in
-            make.centerY.equalTo(self.contactInfoLabel)
-            make.left.equalTo(self.contactInfoLabel.snp.right).offset(13)
-            make.right.equalTo(-20)
-            make.height.equalTo((21))
+            make.left.equalTo(10)
+            make.right.equalTo(-10)
+            make.top.equalTo(self.collectionView.snp.bottom).offset(10)
+            make.height.equalTo(50)
         }
         
-        self.contactInfoLabel.setContentHuggingPriority(.required, for: .horizontal)
-        self.contactInfoLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        self.contactInformationTextField.setContentCompressionResistancePriority(.required - 1, for: .horizontal)
-        self.contactInformationTextField.setContentHuggingPriority(.required - 1, for: .horizontal)
+        self.sendButton.snp.makeConstraints { (make) in
+            make.left.equalTo(10)
+            make.top.equalTo(self.contactInformationTextField.snp.bottom).offset(10)
+            make.right.equalTo(-10)
+            make.height.equalTo(50)
+        }
     }
     
-    @objc func sendClick() {
+    @objc private func sendButtonClick() {
         DTProgress.showProgress(in: self)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            DTProgress.showSuccess(in: self, message: "反馈成功")
-            self.popSelf()
+        
+        var signals = [Observable<Data>]()
+        for item in self.viewModel.dataSource {
+            if let asset = item.asset, item.url.isEmpty, item.type != .add {
+                let signal = DTPHAssetsLoadingManager.default.requestImageData(asset: asset)
+                signals.append(signal)
+            }
         }
+        if signals.count > 0 {
+            Observable.zip(signals).subscribe { [weak self] (datas) in
+                guard let weakSelf = self else { return }
+                let imageSources = weakSelf.viewModel.dataSource.filter{ $0.type != .add}
+                if datas.count == imageSources.count {
+                    weakSelf.uploadItems(datas: datas)
+                } else {
+                    DTProgress.showError(in: weakSelf, message: "上传图片失败")
+                }
+            } onError: { [weak self] (err) in
+                guard let weakSelf = self else { return }
+                DTProgress.showError(in: weakSelf, message: "上传图片失败")
+            }.disposed(by: disposeBag)
+        } else {
+            let (valid, text) = DTConstants.checkValidText(textView: self.contentTextView)
+            if valid {
+                self.feedbackAction(imgs: "imgs", text: text)
+            } else {
+                DTProgress.showError(in: self, message: "请输入问题描述")
+            }
+        }
+        
+    }
+    
+    private func uploadItems(datas: [Data]) {
+        var signals = [Observable<DTUploadModel>]()
+        for (index, imageData) in datas.enumerated() {
+            let uploadSignal: Observable<DTUploadModel> = DTHttp.share.uploadImage(imageData) { [weak self] (json, err) in
+                guard let weakSelf = self else { return }
+                if let json = json {
+                    weakSelf.viewModel.dataSource[index].url = json.entry
+                }
+            }
+            signals.append(uploadSignal)
+        }
+        Observable.zip(signals).subscribe { [weak self] (datas) in
+            guard let weakSelf = self else { return }
+            let imgs = weakSelf.viewModel.dataSource.map{ $0.url }.joined(separator: ",")
+            let (valid, text) = DTConstants.checkValidText(textView: weakSelf.contentTextView)
+            if valid {
+                weakSelf.feedbackAction(imgs: imgs, text: text)
+            } else {
+                DTProgress.showError(in: weakSelf, message: "请输入问题描述")
+            }
+            
+        } onError: { [weak self] (err) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "上传图片失败")
+        }.disposed(by: disposeBag)
+    }
+    
+    private func feedbackAction(imgs: String, text: String) {
+        self.viewModel.feedback(imgs: imgs, feedback: text).subscribe { (json) in
+            if let status = json.status, status {
+                DTProgress.showSuccess(in: self, message: "反馈成功")
+                self.popSelf()
+            }
+        } onError: { [weak self] (err) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "反馈失败")
+        }.disposed(by: disposeBag)
     }
     
     func calculateCollectionViewHeight() {
-        let column = self.viewModel.dataSource.count / 3
+        let column = self.viewModel.dataSource.count / 4
         
-        let collectionHeight = CGFloat((self.viewModel.dataSource.count % 3 > 0) ? 1 + column : column) * itemWidth + CGFloat(column * 10)
+        let collectionHeight = CGFloat((self.viewModel.dataSource.count % 4 > 0) ? 1 + column : column) * itemWidth + CGFloat(column * 5)
         
         self.collectionView.reloadData()
         self.collectionView.snp.updateConstraints { (make) in
@@ -124,26 +183,26 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         }
     }
     
-    lazy var contentTextView = DTTextView()
-    lazy var countLabel:UILabel = {
+    private lazy var contentTextView: DTTextView = {
+        let contentTextView = DTTextView()
+        contentTextView.backgroundColor = APPColor.colorSubBgView
+        return contentTextView
+    }()
+    
+    private lazy var countLabel:UILabel = {
         let countLabel = UILabel()
         countLabel.text = "0/300"
         countLabel.textColor = UIColor.white.withAlphaComponent(0.2)
         countLabel.font = UIFont.dt.Font(14)
         return countLabel
     }()
-    lazy var lineView:UIView = {
-        let lineView = UIView()
-        lineView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
-        return lineView
-    }()
     
-    lazy var collectionView:UICollectionView = {
+    private lazy var collectionView:UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth)
-        flowLayout.minimumLineSpacing = 10
-        flowLayout.minimumInteritemSpacing = 10
+        flowLayout.minimumLineSpacing = 5
+        flowLayout.minimumInteritemSpacing = 5
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = .clear
         collectionView.delegate = self
@@ -152,21 +211,16 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         return collectionView
     }()
     
-    lazy var contactInformationTextField:UITextField = {
-        let contactInformationTextField = UITextField()
-        contactInformationTextField.borderStyle = .none
-        contactInformationTextField.attributedPlaceholder = "QQ/邮箱/手机".font(UIFont.dt.Bold_Font(16)).color(UIColor.white.withAlphaComponent(0.2))
-        contactInformationTextField.font = UIFont.dt.Bold_Font(16)
-        contactInformationTextField.textColor = .white
-        return contactInformationTextField
+    private lazy var sendButton: DTCustomButton = {
+        let sendButton = DTCustomButton(type: .custom)
+        sendButton.layer.cornerRadius = 25
+        sendButton.layer.masksToBounds = true
+        sendButton.setTitle("提交", for: .normal)
+        sendButton.addTarget(self, action: #selector(sendButtonClick), for: .touchUpInside)
+        return sendButton
     }()
-    lazy var contactInfoLabel:UILabel = {
-        let contactInfoLabel = UILabel()
-        contactInfoLabel.text = "联系方式"
-        contactInfoLabel.textColor = .white
-        contactInfoLabel.font = UIFont.dt.Bold_Font(16)
-        return contactInfoLabel
-    }()
+    
+    private lazy var contactInformationTextField: DTTextFieldView = DTTextFieldView(code: "联系方式", placeHolder: "QQ或电报号", corner: 10)
 }
 
 extension DTFeedbackViewController: TZImagePickerControllerDelegate {
@@ -181,8 +235,12 @@ extension DTFeedbackViewController: TZImagePickerControllerDelegate {
             self.viewModel.dataSource.removeLast()
         }
         
-        for photo in photos {
-            self.viewModel.dataSource.append(DTFeedbackModel(image: photo, type: .image))
+        for (index, photo) in photos.enumerated() {
+            let model = DTFeedbackModel(image: photo, type: .image)
+            if let asset = assets[index] as? PHAsset {
+                model.asset = asset
+            }
+            self.viewModel.dataSource.append(model)
         }
 
         if self.viewModel.dataSource.count < self.viewModel.maxImageCount {

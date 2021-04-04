@@ -20,7 +20,7 @@ class DTMineCell: DTBaseTableViewCell {
             titleLabel.text = model.title
             let checkType = model.type != .update
             descLabel.isHidden = checkType
-            descImageView.isHidden = checkType
+            descImageView.isHidden = true
         }
     }
     
@@ -90,39 +90,39 @@ class DTMineCell: DTBaseTableViewCell {
     
     private let radiusView = DTCustomRadiusView()
     
-    private lazy var iconImageView:UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         return iconImageView
     }()
     
-    private lazy var titleLabel:UILabel = {
+    private lazy var titleLabel: UILabel = {
        let titleLabel = UILabel()
         titleLabel.font = UIFont.dt.Font(14)
         titleLabel.textColor = .white
         return titleLabel
     }()
     
-    private lazy var descImageView:UIImageView = {
+    private lazy var descImageView: UIImageView = {
         let descImageView = UIImageView(image: UIImage(named: "icon_mine_update_small"))
         return descImageView
     }()
     
-    private lazy var descLabel:UILabel = {
+    private lazy var descLabel: UILabel = {
        let descLabel = UILabel()
         descLabel.font = UIFont.dt.Font(14)
-        descLabel.text = "V2.6"
+        descLabel.text = APPSystem.currentVersion
         descLabel.textColor = APPColor.colorWhite
         return descLabel
     }()
     
-    private lazy var arrowImageView:UIImageView = {
+    private lazy var arrowImageView: UIImageView = {
         let image = UIImage(named: "icon_link_button_arrow")?.withRenderingMode(.alwaysTemplate)
         let arrowImageView = UIImageView(image: image)
         arrowImageView.tintColor = .white
         return arrowImageView
     }()
     
-    private lazy var lineView:UIView = {
+    private lazy var lineView: UIView = {
        let lineView = UIView()
         lineView.backgroundColor = APPColor.color235476
         return lineView

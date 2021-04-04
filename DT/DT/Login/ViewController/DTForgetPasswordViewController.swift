@@ -24,7 +24,6 @@ class DTForgetPasswordViewController: DTBaseViewController,Routable {
         super.viewDidLoad()
         self.title = "设置密码"
         configureSubViews()
-        configureEvents()
     }
     
     @objc func forgetPasswordButtonClick() {
@@ -59,12 +58,6 @@ class DTForgetPasswordViewController: DTBaseViewController,Routable {
         logOutView.titleLabel.text = "你的账号当前已绑定手机号，可以通过短信验证码重置密码。\n是否发送验证码到*********16？"
         logOutView.alertManager?.show()
         logOutView.delegate = self
-    }
-    
-    func configureEvents() {
-        self.accountTextField.delegate = self
-        self.verifyTextField.delegate = self
-        self.finishButton.dt.target(add: self, action: #selector(finishButtonClick))
     }
     
     func checkValidText(textField:UITextField) -> Bool {
@@ -155,7 +148,11 @@ class DTForgetPasswordViewController: DTBaseViewController,Routable {
         return bgView
     }()
     
-    private lazy var accountTextField = DTTextFieldView(code: "账号/用户名", placeHolder: "请输入账号/用户名", corner: 0)
+    private lazy var accountTextField: DTTextFieldView = {
+        let accountTextField = DTTextFieldView(code: "账号/用户名", placeHolder: "请输入账号/用户名", corner: 0)
+        accountTextField.delegate = self
+        return accountTextField
+    }()
     private lazy var oldPasswordTextField = DTTextFieldView(code: "原密码", placeHolder: "请填写原密码", corner: 0)
     private lazy var newPasswordTextField = DTTextFieldView(code: "新密码", placeHolder: "请填写新密码", corner: 0)
     private lazy var checkPasswordTextField = DTTextFieldView(code: "确认密码", placeHolder: "请再次输入新密码", corner: 0)
@@ -178,13 +175,18 @@ class DTForgetPasswordViewController: DTBaseViewController,Routable {
     }()
     lazy var passwordTextField = DTTextFieldView(iconName: "icon_login_password", placeHolder: "请输入密码", isSecureTextEntry: true)
     lazy var verifyTopView = DTLoginProfileView(title: "验证码")
-    lazy var verifyTextField = DTCutDownTextField(iconName: "icon_login_verify_phone", placeHolder: "请输入手机验证码")
+    lazy var verifyTextField:DTCutDownTextField = {
+        let verifyTextField = DTCutDownTextField(iconName: "icon_login_verify_phone", placeHolder: "请输入手机验证码")
+        verifyTextField.delegate = self
+        return verifyTextField
+    }()
     
     lazy var finishButton:UIButton = {
         let finishButton = UIButton(type: .custom).dt
             .font(UIFont.dt.Bold_Font(16))
             .title("完成")
             .titleColor(APPColor.colorWhite)
+            .target(add: self, action: #selector(finishButtonClick))
             .build
         finishButton.layer.cornerRadius = 25
         finishButton.layer.masksToBounds = true
@@ -213,29 +215,13 @@ extension DTForgetPasswordViewController: DTCutDownTextFieldDelegate {
         }
         let mobile = self.getValidText(textField: self.accountTextField.textFied)
         DTProgress.showProgress(in: self)
-        self.viewModel.sendCode(accountId: nil, mobile: mobile, countryCode: self.accountTextField.code).subscribe(onNext: { [weak self] (json) in
+        self.viewModel.sendCode(mobile: mobile, countryCode: self.accountTextField.code).subscribe(onNext: { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.showSuccess(in: weakSelf, message: "请求成功")
-            weakSelf.startCutDown()
+            weakSelf.verifyTextField.startCutDownAction()
         }, onError: { [weak self] (error) in
             guard let weakSelf = self else { return }
             DTProgress.showError(in: weakSelf, message: "请求失败")
-        }).disposed(by: disposeBag)
-    }
-    
-    func startCutDown() {
-        self.verifyTextField.verifyButton.isEnabled = false
-        DTLoginSchedule.timer(duration: 60).subscribe(onNext: { [weak self] (second) in
-            guard let weakSelf = self else { return }
-            weakSelf.verifyTextField.verifyButton.setTitle("\(second)s", for: .normal)
-        }, onError: { [weak self] (error) in
-            guard let weakSelf = self else { return }
-            weakSelf.verifyTextField.verifyButton.setTitle("获取验证码", for: .normal)
-            weakSelf.verifyTextField.verifyButton.isEnabled = true
-        }, onCompleted: { [weak self] in
-            guard let weakSelf = self else { return }
-            weakSelf.verifyTextField.verifyButton.setTitle("获取验证码", for: .normal)
-            weakSelf.verifyTextField.verifyButton.isEnabled = true
         }).disposed(by: disposeBag)
     }
 }

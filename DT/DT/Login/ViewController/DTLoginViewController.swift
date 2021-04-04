@@ -41,7 +41,7 @@ class DTLoginViewController: DTBaseViewController,Routable {
         let closeButton = addLeftBarButtonItem(imageName: "icon_common_close")
         closeButton.addTarget(self, action: #selector(closeClick), for: .touchUpInside)
         configureSubViews()
-        configureEvents()
+        accountLoginButtonClick(sender: self.accountLoginButton)
     }
     
     @objc func closeClick() {
@@ -49,20 +49,40 @@ class DTLoginViewController: DTBaseViewController,Routable {
     }
     
     @objc func forgetAccountClick() {
-        Router.routeToClass(DTForgetPasswordViewController.self, params: nil)
+        Router.routeToClass(DTMobileQueryViewController.self, params: nil)
     }
     
     @objc func accountLoginButtonClick(sender: UIButton) {
+        accountTextField.textFied.placeholder = "用户名/手机号"
+        accountTopView.title = "账号"
+        passwordTopView.title = "密码"
+        passwordTextField.isHidden = false;
+        codeTextField.isHidden = true
+        forgetAccountButton.isHidden = false
         noSecretButton.isSelected = false
         accountLoginButton.isSelected = true
     }
     
     @objc func noSecretButtonClick(sender: UIButton) {
+        accountTextField.textFied.placeholder = "请输入手机号"
+        accountTopView.title = "手机号"
+        passwordTopView.title = "验证码"
+        passwordTextField.isHidden = true
+        codeTextField.isHidden = false
+        forgetAccountButton.isHidden = true
         noSecretButton.isSelected = true
         accountLoginButton.isSelected = false
     }
     
     @objc func loginClick() {
+        if noSecretButton.isSelected {
+            self.loginPhone()
+        } else {
+            self.loginAccount()
+        }
+    }
+    
+    private func loginAccount() {
         if !self.checkValidText(textField: self.accountTextField.textFied) {
             DTProgress.showError(in: self, message: "请输入手机号")
             return
@@ -71,17 +91,40 @@ class DTLoginViewController: DTBaseViewController,Routable {
             DTProgress.showError(in: self, message: "请输入密码")
             return
         }
-        let mobile = self.getValidText(textField: self.accountTextField.textFied)
+        let account = self.getValidText(textField: self.accountTextField.textFied)
         let password = self.getValidText(textField: self.passwordTextField.textFied)
         DTProgress.showProgress(in: self)
-        self.viewModel.login(password: password, mobile: mobile, countryCode: self.accountTextField.code, validateCode: nil).subscribe(onNext: { [weak self] (json) in
+        self.viewModel.login(password: password, mobile: nil, nickName: account, countryCode: nil, validateCode: nil).subscribe { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.showSuccess(in: weakSelf, message: "登录成功")
             weakSelf.dismiss(animated: true, completion: nil)
-        }, onError: { [weak self] (error) in
+        } onError: { [weak self] (error) in
             guard let weakSelf = self else { return }
             DTProgress.showError(in: weakSelf, message: "请求失败")
-        }).disposed(by: disposeBag)
+        }.disposed(by: disposeBag)
+    }
+    
+    private func loginPhone() {
+        if !self.checkValidText(textField: self.accountTextField.textFied) {
+            DTProgress.showError(in: self, message: "请输入手机号")
+            return
+        }
+        if !self.checkValidText(textField: self.codeTextField.textFied) {
+            DTProgress.showError(in: self, message: "请输入密码")
+            return
+        }
+        let mobile = self.getValidText(textField: self.accountTextField.textFied)
+        let code = self.getValidText(textField: self.codeTextField.textFied)
+        DTProgress.showProgress(in: self)
+        // countryCode暂时写死
+        self.viewModel.login(password: nil, mobile: mobile, nickName: nil, countryCode: "+86", validateCode: code).subscribe { [weak self] (json) in
+            guard let weakSelf = self else { return }
+            DTProgress.showSuccess(in: weakSelf, message: "登录成功")
+            weakSelf.dismiss(animated: true, completion: nil)
+        } onError: { [weak self] (error) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "请求失败")
+        }.disposed(by: disposeBag)
     }
     
     func checkValidText(textField:UITextField) -> Bool {
@@ -98,15 +141,6 @@ class DTLoginViewController: DTBaseViewController,Routable {
         return text
     }
     
-    func configureEvents() {
-        self.forgetAccountButton.addTarget(self, action: #selector(forgetAccountClick), for: .touchUpInside)
-        self.loginButton.addTarget(self, action: #selector(loginClick), for: .touchUpInside)
-        self.accountLoginButton.dt.target(add: self, action: #selector(accountLoginButtonClick(sender:)))
-        self.noSecretButton.dt.target(add: self, action: #selector(noSecretButtonClick(sender:)))
-        self.accountTextField.delegate = self
-        self.bottomView.delegate = self
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         loginButton.dt.addGradient(GradientLayer(direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170]))
@@ -120,9 +154,9 @@ class DTLoginViewController: DTBaseViewController,Routable {
         bgView.addSubview(accountTextField)
         bgView.addSubview(passwordTopView)
         bgView.addSubview(passwordTextField)
+        bgView.addSubview(codeTextField)
         bgView.addSubview(forgetAccountButton)
         self.view.addSubview(loginButton)
-        self.view.addSubview(bottomView)
         
         bgView.snp.makeConstraints { (make) in
             make.top.left.equalTo(10)
@@ -163,6 +197,12 @@ class DTLoginViewController: DTBaseViewController,Routable {
             make.height.equalTo(44)
         }
         
+        codeTextField.snp.makeConstraints { (make) in
+            make.top.equalTo(passwordTopView.snp.bottom).offset(6)
+            make.left.right.equalTo(passwordTopView)
+            make.height.equalTo(44)
+        }
+        
         forgetAccountButton.snp.makeConstraints { (make) in
             make.left.equalTo(10)
             make.bottom.equalTo(-10)
@@ -174,13 +214,6 @@ class DTLoginViewController: DTBaseViewController,Routable {
             make.height.equalTo(50)
             make.left.right.equalTo(bgView)
             make.top.equalTo(bgView.snp.bottom).offset(50)
-        }
-        
-        bottomView.snp.makeConstraints { (make) in
-            make.left.equalTo(10)
-            make.right.equalTo(-10)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            make.height.equalTo(62)
         }
         
     }
@@ -198,9 +231,10 @@ class DTLoginViewController: DTBaseViewController,Routable {
     private lazy var accountLoginButton: UIButton = {
         let button = UIButton(type: .custom).dt
             .title("账号登录")
-            .background(UIImage.dt.imageWithColor(color: .clear), for: .normal)
-            .background(UIImage.dt.imageWithColor(color: APPColor.color3E617D), for: .selected)
+            .background(UIImage.dt.imageWithColor(color: .clear), for: .selected)
+            .background(UIImage.dt.imageWithColor(color: APPColor.color3E617D), for: .normal)
             .font(UIFont.dt.Bold_Font(16))
+            .target(add: self, action: #selector(accountLoginButtonClick(sender:)))
             .isSelected(true)
             .build
         return button
@@ -209,9 +243,10 @@ class DTLoginViewController: DTBaseViewController,Routable {
     private lazy var noSecretButton: UIButton = {
         let button = UIButton(type: .custom).dt
             .title("免密登录")
-            .background(UIImage.dt.imageWithColor(color: .clear), for: .normal)
-            .background(UIImage.dt.imageWithColor(color: APPColor.color3E617D), for: .selected)
+            .background(UIImage.dt.imageWithColor(color: .clear), for: .selected)
+            .background(UIImage.dt.imageWithColor(color: APPColor.color3E617D), for: .normal)
             .font(UIFont.dt.Bold_Font(16))
+            .target(add: self, action: #selector(noSecretButtonClick(sender:)))
             .build
         return button
     }()
@@ -221,32 +256,36 @@ class DTLoginViewController: DTBaseViewController,Routable {
             .title("忘记密码？")
             .font(UIFont.dt.Font(14))
             .titleColor(APPColor.color36BDB8)
+            .target(add: self, action: #selector(forgetAccountClick))
             .build
         return forgetAccountButton
     }()
     
     private lazy var loginButton:UIButton = {
         let loginButton = UIButton(type: .custom).dt
-            .title("登录")
+            .title("登录/注册")
             .font(UIFont.dt.Bold_Font(16))
             .titleColor(APPColor.colorWhite)
+            .target(add: self, action: #selector(loginClick))
             .build
         loginButton.layer.cornerRadius = 25
         loginButton.layer.masksToBounds = true
         return loginButton
     }()
     
-    private lazy var bottomView: DTLoginBottomView = {
-        let bottomView = DTLoginBottomView()
-        bottomView.layer.cornerRadius = 10
-        bottomView.layer.masksToBounds = true
-        return bottomView
+    private lazy var accountTopView = DTLoginProfileView(title: "账号")
+    private lazy var accountTextField: DTTextFieldView = {
+        let accountTextField = DTTextFieldView(iconName: "icon_login_password", placeHolder: "用户名/手机号")
+        accountTextField.delegate = self
+        return accountTextField
     }()
-    
-    lazy var accountTopView = DTLoginProfileView(title: "账号")
-    lazy var accountTextField = DTTextFieldView(iconName: "icon_login_password", placeHolder: "用户名/手机号")
-    lazy var passwordTopView = DTLoginProfileView(title: "密码")
-    lazy var passwordTextField = DTTextFieldView(iconName: "icon_login_password", placeHolder: "请输入密码", isSecureTextEntry: true)
+    private lazy var passwordTopView = DTLoginProfileView(title: "密码")
+    private lazy var passwordTextField = DTTextFieldView(iconName: "icon_login_password", placeHolder: "请输入密码", isSecureTextEntry: true)
+    private lazy var codeTextField: DTCutDownTextField = {
+        let codeTextField = DTCutDownTextField(iconName: "icon_login_verify_code", placeHolder: "请输入验证码")
+        codeTextField.delegate = self
+        return codeTextField
+    }()
 
 }
 
@@ -262,9 +301,21 @@ extension DTLoginViewController: DTSelectCountryViewControllerDelegate {
     }
 }
 
-extension DTLoginViewController: DTLoginBottomViewDelegate {
-    func registerButtonClick() {
-        Router.routeToClass(DTPhoneRegisterViewController.self)
-//        Router.routeToClass(DTCreateAccountViewController.self, params: nil)
+extension DTLoginViewController: DTCutDownTextFieldDelegate {
+    func countDownClick() {
+        if !self.checkValidText(textField: self.accountTextField.textFied) {
+            DTProgress.showError(in: self, message: "请输入手机号")
+            return
+        }
+        let mobile = self.getValidText(textField: self.accountTextField.textFied)
+        self.viewModel.sendCode(mobile: mobile, countryCode: "+86").subscribe(onNext: { [weak self] (json) in
+            guard let weakSelf = self else { return }
+            DTProgress.showSuccess(in: weakSelf, message: "请求成功")
+            weakSelf.codeTextField.startCutDownAction()
+        }, onError: { [weak self] (error) in
+            guard let weakSelf = self else { return }
+            DTProgress.showError(in: weakSelf, message: "请求失败")
+        }).disposed(by: disposeBag)
+
     }
 }

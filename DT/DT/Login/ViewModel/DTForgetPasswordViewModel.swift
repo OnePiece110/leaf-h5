@@ -9,10 +9,10 @@
 import UIKit
 import RxSwift
 
-class DTForgetPasswordViewModel: NSObject {
+class DTForgetPasswordViewModel {
     
-    func sendCode(accountId:Int?, mobile:String?, countryCode:String?) -> Observable<DTBaseResult> {
-        return DTLoginSchedule.sendCode(accountId: accountId, mobile: mobile, countryCode: countryCode)
+    func sendCode(mobile:String, countryCode:String) -> Observable<DTBaseResult> {
+        return DTLoginSchedule.sendCode(mobile: mobile, countryCode: countryCode)
     }
     
     func modify(password:String, mobile:String, countryCode:String, validateCode:String?) -> Observable<DTBaseResult> {

@@ -14,7 +14,7 @@ class DTTunnelConfig: Convertible {
     var dns: DTTunnelDNS = DTTunnelDNS()
     var inbounds = [DTTunnelInbounds]()
     var outbounds = [DTTunnelOutbounds]()
-    var rules = [DTTunnelRule]()
+    var rules: [DTTunnelRule]?
     
     required init() {
         

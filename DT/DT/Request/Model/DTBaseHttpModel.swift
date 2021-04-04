@@ -19,5 +19,6 @@ public protocol BaseCommonResult {
 class DTBaseResult:BaseResult {
     var isHasNext: Bool?
     var status: Bool?
+    var totalRecordSize: Int?
     required init() {}
 }

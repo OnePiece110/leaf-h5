@@ -1,6 +1,6 @@
 //
 //  JFPingServices.swift
-//  WindSpeedVPN
+//  WindSpeed
 //
 //  Created by zhoujianfeng on 2016/12/3.
 //  Copyright © 2016年 zhoujianfeng. All rights reserved.
