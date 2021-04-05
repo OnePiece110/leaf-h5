@@ -308,7 +308,7 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     private lazy var rippleView:DTRippleView = {
-        let rippleView = DTRippleView(frame: CGRect(x: 0, y: 0, width: 225, height: 225))
+        let rippleView = DTRippleView(frame: CGRect(x: 0, y: 0, width: 255, height: 255))
         rippleView.delegate = self
         return rippleView
     }()

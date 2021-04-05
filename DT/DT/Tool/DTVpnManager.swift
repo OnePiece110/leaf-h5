@@ -31,8 +31,8 @@ class DTVpnManager {
     }
     
     fileprivate init() {
-        loadProviderManager { [weak self] in
-            if let manager = $0 {//$0就是闭包的第一个参数
+        loadProviderManager { [weak self] (manager) in
+            if let manager = manager {
                 self?.updateVPNStatus(manager)
             }
         }
@@ -48,9 +48,9 @@ class DTVpnManager {
         if observerDidAdd {
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name.NEVPNStatusDidChange, object: nil)
         }
-        loadProviderManager { [weak self] in
+        loadProviderManager { [weak self] (manager) in
             guard let weakSelf = self else { return }
-            if let manager = $0 {
+            if let manager = manager {
                 weakSelf.observerDidAdd = true
                 NotificationCenter.default.addObserver(forName: NSNotification.Name.NEVPNStatusDidChange, object: manager.connection, queue: OperationQueue.main, using: { [weak self] (notification) -> Void in
                     self?.updateVPNStatus(manager)
@@ -108,9 +108,8 @@ extension DTVpnManager {
             manager.isEnabled = true
             manager.localizedDescription = "YINLI VPN"
             manager.protocolConfiguration?.serverAddress = "127.0.0.1:1080"
-            manager.isOnDemandEnabled = true
-            manager.saveToPreferences {
-                if let error = $0 {
+            manager.saveToPreferences { error in
+                if let error = error {
                     complete(nil, error)
                 } else {
                     manager.loadFromPreferences(completionHandler: { (error) -> Void in
@@ -145,8 +144,8 @@ extension DTVpnManager {
 extension DTVpnManager {
     
     public func isVPNStarted(_ complete: @escaping (Bool, NETunnelProviderManager?) -> Void) {
-        loadProviderManager {
-            if let manager = $0 {
+        loadProviderManager { manager in
+            if let manager = manager {
                 complete(manager.connection.status == .connected, manager)
             } else {
                 complete(false, nil)
@@ -186,8 +185,8 @@ extension DTVpnManager {
     
     public func stopVPN() {
         // Stop provider
-        loadProviderManager {
-            guard let manager = $0 else {
+        loadProviderManager { manager in
+            guard let manager = manager else {
                 return
             }
             manager.connection.stopVPNTunnel()
