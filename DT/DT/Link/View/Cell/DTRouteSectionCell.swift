@@ -14,6 +14,8 @@ class DTRouteSectionCell: DTBaseTableViewCell {
         
     lazy var iconImageView:UIImageView = {
         let iconImageView = UIImageView()
+        iconImageView.layer.cornerRadius = 17
+        iconImageView.layer.masksToBounds = true
         return iconImageView
     }()
     
