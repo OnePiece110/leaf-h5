@@ -102,6 +102,17 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     @objc private func sendButtonClick() {
         DTProgress.showProgress(in: self)
         
+        let (contentValid, content) = DTConstants.checkValidText(textView: self.contentTextView)
+        guard contentValid else {
+            DTProgress.showError(in: self, message: "请输入问题描述")
+            return
+        }
+        let (contactValid, contact) = DTConstants.checkValidText(textField: self.contactInformationTextField.textFied)
+        guard contactValid else {
+            DTProgress.showError(in: self, message: "请输入联系方式")
+            return
+        }
+        
         var signals = [Observable<Data>]()
         for item in self.viewModel.dataSource {
             if let asset = item.asset, item.url.isEmpty, item.type != .add {
@@ -114,7 +125,7 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
                 guard let weakSelf = self else { return }
                 let imageSources = weakSelf.viewModel.dataSource.filter{ $0.type != .add}
                 if datas.count == imageSources.count {
-                    weakSelf.uploadItems(datas: datas)
+                    weakSelf.uploadItems(datas: datas, content: content, contact: contact)
                 } else {
                     DTProgress.showError(in: weakSelf, message: "上传图片失败")
                 }
@@ -123,17 +134,12 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
                 DTProgress.showError(in: weakSelf, message: "上传图片失败")
             }.disposed(by: disposeBag)
         } else {
-            let (valid, text) = DTConstants.checkValidText(textView: self.contentTextView)
-            if valid {
-                self.feedbackAction(imgs: "imgs", text: text)
-            } else {
-                DTProgress.showError(in: self, message: "请输入问题描述")
-            }
+            self.feedbackAction(imgs: "imgs", content: content, contact: contact)
         }
         
     }
     
-    private func uploadItems(datas: [Data]) {
+    private func uploadItems(datas: [Data], content: String, contact: String) {
         var signals = [Observable<DTUploadModel>]()
         for (index, imageData) in datas.enumerated() {
             let uploadSignal: Observable<DTUploadModel> = DTHttp.share.uploadImage(imageData) { [weak self] (json, err) in
@@ -147,12 +153,7 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         Observable.zip(signals).subscribe { [weak self] (datas) in
             guard let weakSelf = self else { return }
             let imgs = weakSelf.viewModel.dataSource.map{ $0.url }.joined(separator: ",")
-            let (valid, text) = DTConstants.checkValidText(textView: weakSelf.contentTextView)
-            if valid {
-                weakSelf.feedbackAction(imgs: imgs, text: text)
-            } else {
-                DTProgress.showError(in: weakSelf, message: "请输入问题描述")
-            }
+            weakSelf.feedbackAction(imgs: imgs, content: content, contact: contact)
             
         } onError: { [weak self] (err) in
             guard let weakSelf = self else { return }
@@ -160,8 +161,8 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         }.disposed(by: disposeBag)
     }
     
-    private func feedbackAction(imgs: String, text: String) {
-        self.viewModel.feedback(imgs: imgs, feedback: text).subscribe { [weak self] (json) in
+    private func feedbackAction(imgs: String, content: String, contact: String) {
+        self.viewModel.feedback(imgs: imgs, feedback: content, contact: contact).subscribe { [weak self] (json) in
             guard let weakSelf = self else { return }
             if let status = json.status, status {
                 DTProgress.showSuccess(in: weakSelf, message: "反馈成功")

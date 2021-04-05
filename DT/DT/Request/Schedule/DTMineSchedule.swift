@@ -16,10 +16,11 @@ class DTMineSchedule {
         return DTHttp.share.get(url: API.versionCheck.rawValue, parameters: param)
     }
     
-    class func feedback<T: BaseResult>(imgs: String, feedback: String) -> Observable<T> {
+    class func feedback<T: BaseResult>(imgs: String, feedback: String, contact: String) -> Observable<T> {
         var param = [String: Any]()
         param["imgs"] = imgs
         param["feedback"] = feedback
+        param["contact"] = contact
         return DTHttp.share.post(url: API.feedback.rawValue, parameters: param)
     }
 }

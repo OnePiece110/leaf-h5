@@ -42,8 +42,8 @@ class DTFeedbackViewModel {
         dataSource.append(DTFeedbackModel(image: nil, type: .add))
     }
     
-    func feedback(imgs: String, feedback: String) -> Observable<DTBaseResult> {
-        return DTMineSchedule.feedback(imgs: imgs, feedback: feedback)
+    func feedback(imgs: String, feedback: String, contact: String) -> Observable<DTBaseResult> {
+        return DTMineSchedule.feedback(imgs: imgs, feedback: feedback, contact: contact)
     }
     
 }
