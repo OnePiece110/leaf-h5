@@ -29,7 +29,7 @@ class DTRippleView: UIView {
     private var iconImageView = UIImageView(image: UIImage(named: "icon_link_unLink"))
     private var animateColor = UIColor.white
     
-    lazy var titleLabel:UILabel = {
+    lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.dt.Bold_Font(16)
         titleLabel.textColor = APPColor.colorWhite
@@ -104,7 +104,7 @@ class DTRippleView: UIView {
             pulsingLayer.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
             pulsingLayer.borderColor = animateColor.cgColor
             pulsingLayer.borderWidth = 1
-            pulsingLayer.cornerRadius = 112.5
+            pulsingLayer.cornerRadius = 127.5
             
             let defaultCurve = CAMediaTimingFunction(name: CAMediaTimingFunctionName.default)
             

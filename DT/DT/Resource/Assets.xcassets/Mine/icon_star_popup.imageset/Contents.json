@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "icon_star_popup@2x.png",
+      "filename" : "评分icon@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon_star_popup@3x.png",
+      "filename" : "评分icon@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.4.1)
+  - Alamofire (5.4.2)
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -26,7 +26,7 @@ PODS:
     - RxSwift (= 6.1.0)
   - RxSwift (6.1.0)
   - SnapKit (5.0.1)
-  - TZImagePickerController (3.5.8)
+  - TZImagePickerController (3.6.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -63,7 +63,7 @@ SPEC REPOS:
     - TZImagePickerController
 
 SPEC CHECKSUMS:
-  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  Alamofire: bfbc4c2fe5909b1d94fb4ef2277c6b3727ef5dae
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
   KakaJSON: cc5ff50a8c1cfbb09413db8496cb709a209e6137
@@ -78,7 +78,7 @@ SPEC CHECKSUMS:
   RxRelay: 483e1a19fad961b41f0b0c0bee506f46c1ae14fe
   RxSwift: a834e5c538e89eca0cae86f403f4fbf0336786ce
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  TZImagePickerController: 7fd9702897ef8c0b7c951e5463f4bcf398296f9e
+  TZImagePickerController: a37d7eec87c54436e896a67947033ad2178d498b
 
 PODFILE CHECKSUM: f91957365d982e2306f8ee6197c0aaa55637a1ab
 

@@ -31,9 +31,9 @@ class DTVpnManager {
     }
     
     fileprivate init() {
-        loadProviderManager {
+        loadProviderManager { [weak self] in
             if let manager = $0 {//$0就是闭包的第一个参数
-                self.updateVPNStatus(manager)
+                self?.updateVPNStatus(manager)
             }
         }
         addVPNStatusObserver()
@@ -45,12 +45,13 @@ class DTVpnManager {
     
     /// 添加vpn的状态的监听
     func addVPNStatusObserver() {
-        guard !observerDidAdd else {
-            return
+        if observerDidAdd {
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.NEVPNStatusDidChange, object: nil)
         }
-        loadProviderManager {
+        loadProviderManager { [weak self] in
+            guard let weakSelf = self else { return }
             if let manager = $0 {
-                self.observerDidAdd = true
+                weakSelf.observerDidAdd = true
                 NotificationCenter.default.addObserver(forName: NSNotification.Name.NEVPNStatusDidChange, object: manager.connection, queue: OperationQueue.main, using: { [weak self] (notification) -> Void in
                     self?.updateVPNStatus(manager)
                 })

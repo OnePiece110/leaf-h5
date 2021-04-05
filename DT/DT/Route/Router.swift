@@ -28,11 +28,12 @@ open class Router {
         imagePickerVc?.hideWhenCanNotSelect = true
         imagePickerVc?.showPhotoCannotSelectLayer = true
         imagePickerVc?.navigationBar.isTranslucent = false
+        imagePickerVc?.modalPresentationStyle = .fullScreen
         let image = UIImage.dt.imageWithColor(color: APPColor.main)
         imagePickerVc?.navigationBar.setBackgroundImage(image, for: .default)
         imagePickerVc?.navLeftBarButtonSettingBlock = { (button) in
-            button?.setImage(UIImage(named: "icon_back_white"), for: .normal)
-            button?.setImage(UIImage(named: "icon_back_white"), for: .highlighted)
+            button?.setImage(UIImage(named: "icon_common_back"), for: .normal)
+            button?.setImage(UIImage(named: "icon_common_back"), for: .highlighted)
             button?.sizeToFit()
         }
         let topViewController = DTConstants.currentTopViewController()

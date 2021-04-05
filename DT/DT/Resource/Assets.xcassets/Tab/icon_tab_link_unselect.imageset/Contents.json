@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "icon_tab_link_unselect@2x.png",
+      "filename" : "连接-未选中@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon_tab_link_unselect@3x.png",
+      "filename" : "连接-未选中@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

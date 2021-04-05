@@ -14,10 +14,21 @@ enum DTViewModeType:String {
     case proxyMode
 }
 
-enum DTProxyMode:Int {
+enum DTProxyMode: Int {
     case smart
     case direct
     case proxy
+    
+    static func matchProxyMode(proxyModel: DTProxyMode) -> String {
+        switch proxyModel {
+        case .smart:
+            return "智能模式"
+        case .direct:
+            return "直连模式"
+        case .proxy:
+            return "全局模式"
+        }
+    }
 }
 
 class DTDefualtRouteRowModel {

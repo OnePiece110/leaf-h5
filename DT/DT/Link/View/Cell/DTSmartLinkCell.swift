@@ -43,8 +43,8 @@ class DTSmartLinkCell: DTBaseTableViewCell {
             descLabel.text = model.groupDescription
             if let selectRouter = DTUserDefaults?.object(forKey: DTSelectRouter) as? String {
                 if !selectRouter.isVaildEmpty() {
-                    if let selectRouterData = selectRouter.kj.model(DTServerGroupData.self) {
-                        connectButton.isSelected = (selectRouterData.groupId == model.groupId)
+                    if let selectRouterData = selectRouter.kj.model(DTServerVOItemData.self) {
+                        connectButton.isSelected = (selectRouterData.itemId == model.groupId)
                     } else {
                         connectButton.isSelected = false
                     }

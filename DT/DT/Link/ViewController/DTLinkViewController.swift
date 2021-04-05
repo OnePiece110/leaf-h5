@@ -31,6 +31,15 @@ class DTLinkViewController: DTBaseViewController {
         return URL(fileURLWithPath: "")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        var mode = DTProxyMode.smart
+        if let modeNum = DTUserDefaults?.integer(forKey: DTProxyModeKey) {
+            mode = DTProxyMode(rawValue: modeNum) ?? .smart
+        }
+        self.routeModeLabel.text = "路由模式:\(DTProxyMode.matchProxyMode(proxyModel: mode))"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -148,6 +157,7 @@ class DTLinkViewController: DTBaseViewController {
                 self.rippleView.titleLabel.text = "断开中..."
             case .on:
                 DTProgress.dismiss(in: self)
+                self.isConnected = true
                 self.rippleView.titleLabel.text = "已连接"
             case .off:
                 self.rippleView.titleLabel.text = "未连接"
@@ -175,9 +185,6 @@ class DTLinkViewController: DTBaseViewController {
         if self.isStartConnect {
             return
         }
-        if !self.rippleView.isAnimation {
-            self.rippleView.startAnimation()
-        }
         if (DTVpnManager.shared.vpnStatus == .off) {
             self.connectVPN()
         } else {
@@ -187,46 +194,40 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     private func disConnect() {
-        if let model = self.selectModel {
-            self.viewModel.disConnect(id: model.itemId).subscribe { (json) in
-                DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
-                DTUserDefaults?.synchronize()
-            } onError: { [weak self] (error) in
-                guard let weakSelf = self else { return }
-                DTProgress.showError(in: weakSelf, message: "请求失败")
-            }.disposed(by: self.disposeBag)
-        }
+//        if let model = self.selectModel {
+//            self.viewModel.disConnect(id: model.itemId).subscribe { (json) in
+//                DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
+//                DTUserDefaults?.synchronize()
+//            } onError: { [weak self] (error) in
+//                guard let weakSelf = self else { return }
+//                DTProgress.showError(in: weakSelf, message: "请求失败")
+//            }.disposed(by: self.disposeBag)
+//        }
+        DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
+        DTUserDefaults?.synchronize()
     }
     
     private func connectVPN() {
         if let model = self.selectModel {
+            if self.isStartConnect {
+                return
+            }
             self.isStartConnect = true
             self.isConnected = false
             DTProgress.showProgress(in: self)
+            debugPrint("开始连接")
             self.viewModel.connect(id: model.itemId).subscribe { [weak self] (json) in
                 guard let weakSelf = self else { return }
+                debugPrint("开始连接参数获取")
                 DTProgress.dismiss(in: weakSelf)
                 weakSelf.selectProtocolDetail = json.entry
                 weakSelf.preSelectModel = weakSelf.selectModel
                 weakSelf.isStartConnect = false
                 weakSelf.isConnected = true
                 weakSelf.pingICMP()
-//                let serverData = DTServerDetailData()
-                // vless
-//                serverData.domain = "tele4.mytube.vip"
-//                serverData.port = 443
-//                serverData.uuid = "2b64afed-4ce3-4513-b6d0-5f6c69170ebd"
-//                serverData.proto = 22
-                
-                // aead
-//                serverData.domain = "smt3.dtssmmtt.ga"
-//                serverData.port = 443
-//                serverData.passwd = "INB2cu5PErQel"
-//                serverData.path = "/smt3"
-//                serverData.host = "smt3.dtssmmtt.ga"
-//                serverData.security = "aes-128-gcm"
-//                serverData.securityPassword = "123456"
-//                serverData.proto = 20
+                if !weakSelf.rippleView.isAnimation {
+                    weakSelf.rippleView.startAnimation()
+                }
                 
                 weakSelf.createConfig(model: weakSelf.viewModel.serverData)
                 DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
@@ -259,26 +260,30 @@ class DTLinkViewController: DTBaseViewController {
         self.view.addSubview(rippleView)
         self.view.addSubview(rateLabel)
         self.view.addSubview(linkButton)
+        self.view.addSubview(routeModeLabel)
         
         titleLabel.snp.makeConstraints { (make) in
             make.top.equalTo(40)
-            make.centerX.equalTo(rippleView)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(20)
         }
         
         linkNameLabel.snp.makeConstraints { (make) in
             make.centerX.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom)
+            make.height.equalTo(33)
         }
         
         rateLabel.snp.makeConstraints { (make) in
             make.top.equalTo(linkNameLabel.snp.bottom)
-            make.centerX.equalTo(self.view)
+            make.centerX.equalTo(linkNameLabel)
+            make.height.equalTo(25)
         }
         
         rippleView.snp.makeConstraints { (make) in
-            make.top.equalTo(rateLabel.snp.bottom).offset(40)
+            make.top.equalTo(rateLabel.snp.bottom).offset(30)
             make.centerX.equalTo(self.view)
-            make.size.equalTo(CGSize(width: 225, height: 225))
+            make.size.equalTo(CGSize(width: 255, height: 255))
         }
         
         linkButton.snp.makeConstraints { (make) in
@@ -286,10 +291,20 @@ class DTLinkViewController: DTBaseViewController {
             make.top.equalTo(rippleView.snp.bottom).offset(54)
             make.size.equalTo(CGSize(width: 225, height: 48))
         }
+        
+        routeModeLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(linkButton.snp.bottom).offset(15)
+            make.centerX.equalTo(linkButton)
+            make.height.equalTo(17)
+        }
     }
     
     @objc private func linkButtonClick() {
         Router.routeToClass(DTVPNListViewController.self, params: ["delegate": self], isCheckLogin: true)
+    }
+    
+    @objc private func routeModeClick() {
+        Router.routeToClass(DTProxyModeViewController.self, isCheckLogin: true)
     }
     
     private lazy var rippleView:DTRippleView = {
@@ -349,6 +364,16 @@ class DTLinkViewController: DTBaseViewController {
         linkButton.addGestureRecognizer(tap)
         return linkButton
     }()
+    
+    private lazy var routeModeLabel: UILabel = {
+        let routeModeLabel: UILabel = UILabel().dt
+            .text("路由模式:")
+            .textColor(APPColor.colorWhite.withAlphaComponent(0.12))
+            .font(UIFont.dt.Font(12))
+            .viewTarget(add: self, action: #selector(routeModeClick))
+            .build
+        return routeModeLabel
+    }()
 
 }
 
@@ -381,7 +406,15 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
         }
     }
     
-    func smartConnect() {
+    func smartConnect(model: DTServerVOItemData) {
+        
+        let jsonString = model.kj.JSONString()
+        DTUserDefaults?.set(jsonString, forKey: DTSelectRouter)
+        DTUserDefaults?.synchronize()
+        
+        self.selectModel = model
+        self.linkNameLabel.text = model.name
+        
         self.viewModel.smartConnect().subscribe { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.dismiss(in: weakSelf)
@@ -390,6 +423,9 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
             weakSelf.isStartConnect = false
             weakSelf.isConnected = true
             weakSelf.pingICMP()
+            if !weakSelf.rippleView.isAnimation {
+                weakSelf.rippleView.startAnimation()
+            }
             weakSelf.createConfig(model: weakSelf.viewModel.serverData)
             DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
             let jsonString = json.entry.kj.JSONString()

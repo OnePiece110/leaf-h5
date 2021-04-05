@@ -59,7 +59,6 @@ extension DTUpdateAvatarViewController: DTSelectViewDelegate {
         case "从手机相册选择":
             let albumVc = Router.presentAlbumVC()
             albumVc?.maxImagesCount = 1
-            albumVc?.pickerDelegate = self
             break
         default:
             debugPrint("error item")

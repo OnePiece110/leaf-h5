@@ -161,10 +161,13 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     }
     
     private func feedbackAction(imgs: String, text: String) {
-        self.viewModel.feedback(imgs: imgs, feedback: text).subscribe { (json) in
+        self.viewModel.feedback(imgs: imgs, feedback: text).subscribe { [weak self] (json) in
+            guard let weakSelf = self else { return }
             if let status = json.status, status {
-                DTProgress.showSuccess(in: self, message: "反馈成功")
-                self.popSelf()
+                DTProgress.showSuccess(in: weakSelf, message: "反馈成功")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    weakSelf.popSelf()
+                }
             }
         } onError: { [weak self] (err) in
             guard let weakSelf = self else { return }
@@ -272,6 +275,7 @@ extension DTFeedbackViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.viewModel.dataSource[indexPath.row].type == .add {
             let albumVc = Router.presentAlbumVC()
+            albumVc?.maxImagesCount = 8
             let aliveSource = self.viewModel.dataSource.filter { (data) -> Bool in
                 return data.type != .add
             }

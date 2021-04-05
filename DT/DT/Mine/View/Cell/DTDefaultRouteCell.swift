@@ -75,8 +75,9 @@ class DTDefaultRouteCell: DTBaseTableViewCell {
         }
         
         titleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(10)
+            make.top.equalTo(14)
             make.left.equalTo(15)
+            make.height.equalTo(22)
         }
         
         selectImageView.snp.makeConstraints { (make) in
@@ -88,6 +89,7 @@ class DTDefaultRouteCell: DTBaseTableViewCell {
         descLabel.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp.bottom)
             make.left.equalTo(titleLabel.snp.left)
+            make.height.equalTo(20)
         }
         
         lineView.snp.makeConstraints { (make) in

@@ -38,7 +38,7 @@ struct APPColor {
     static let color26B3AD = UIColor.dt.hex("#26B3AD")
     static let color09598B = UIColor.dt.hex("#09598B")
     static let color235476 = UIColor.dt.hex("#235476")
-    static let line = UIColor.dt.hex("#304E67")
+    static let line = UIColor.dt.hex("#235476")
     static let colorError = UIColor.dt.hex("#F63539")
     //字体颜色
     static let textColorMain = UIColor.dt.hex("#1B273E")
