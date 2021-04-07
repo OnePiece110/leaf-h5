@@ -101,7 +101,7 @@ class DTCommentPopupView: UIView {
     private lazy var descLabel: UILabel = {
         let descLabel = UILabel()
         descLabel.lineBreakMode = .byCharWrapping
-        descLabel.text = "如果您喜欢引力加速器，请给我们5星鼓励哦～好评截图发到example@gamil.com可以获得3天奖励，感谢您的支持"
+        descLabel.text = "如果您喜欢引力加速器，请给我们5星鼓励哦"
         descLabel.font = UIFont.dt.Font(14)
         descLabel.textColor = APPColor.colorF6F6F6
         descLabel.numberOfLines = 0

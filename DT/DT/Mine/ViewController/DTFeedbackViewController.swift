@@ -276,7 +276,6 @@ extension DTFeedbackViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.viewModel.dataSource[indexPath.row].type == .add {
             let albumVc = Router.presentAlbumVC()
-            albumVc?.maxImagesCount = 8
             let aliveSource = self.viewModel.dataSource.filter { (data) -> Bool in
                 return data.type != .add
             }

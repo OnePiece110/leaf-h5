@@ -65,12 +65,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            let tabBarVC = DTTabBarViewController()
-            self.window?.rootViewController = tabBarVC
-            self.window?.makeKeyAndVisible()
-        }
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let tabBarVC = DTTabBarViewController()
+        self.window?.rootViewController = tabBarVC
+        self.window?.makeKeyAndVisible()
         
         CrashEye.shareInstance.add(delegate: self)
         

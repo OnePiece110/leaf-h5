@@ -59,16 +59,17 @@
 		3D70C40A259A3FA900E19DB8 /* DTProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70C409259A3FA900E19DB8 /* DTProgress.swift */; };
 		3D721D2925939E780087339B /* DTBaseHttpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9EB42724CC1DB700C35C99 /* DTBaseHttpModel.swift */; };
 		3D721D572593A96F0087339B /* DTRouteSelectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1CC86624E2A4C6008F14AE /* DTRouteSelectModel.swift */; };
-		3D754938259470D700112EDA /* geo.mmdb in Resources */ = {isa = PBXBuildFile; fileRef = 3D754937259470D700112EDA /* geo.mmdb */; };
 		3D82576E26185BED0075CBC1 /* DTCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D82576D26185BED0075CBC1 /* DTCustomButton.swift */; };
 		3D8274D926186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */; };
 		3D8274E126186CF60075CBC1 /* DTUploadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274E026186CF60075CBC1 /* DTUploadModel.swift */; };
 		3D87D86B2593B9220027DA51 /* DTServerDetailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D721D4C2593A7150087339B /* DTServerDetailData.swift */; };
 		3D87D8732593B9EE0027DA51 /* DTLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D87D8722593B9EE0027DA51 /* DTLinkViewModel.swift */; };
-		3D888F7426197FD900AC9EE5 /* site.dat in Resources */ = {isa = PBXBuildFile; fileRef = 3D888F7326197FCF00AC9EE5 /* site.dat */; };
+		3D889847261CE1F700AC9EE5 /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D889846261CE1F700AC9EE5 /* libleaf.a */; };
 		3D889D11261A067800AC9EE5 /* icon_launch@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D889D0F261A067800AC9EE5 /* icon_launch@3x.png */; };
 		3D889D12261A067800AC9EE5 /* icon_launch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D889D10261A067800AC9EE5 /* icon_launch@2x.png */; };
-		3D889D22261A168500AC9EE5 /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D889D21261A168500AC9EE5 /* libleaf.a */; };
+		3D889FD4261C2C3200AC9EE5 /* site.dat in Resources */ = {isa = PBXBuildFile; fileRef = 3D889FD3261C2C3200AC9EE5 /* site.dat */; };
+		3D88B37E261C2F8700AC9EE5 /* geo.mmdb in Resources */ = {isa = PBXBuildFile; fileRef = 3D88B37D261C2F8700AC9EE5 /* geo.mmdb */; };
+		3D88C8A5261C72A000AC9EE5 /* CrashCensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF73EFF25A2DF3C00EF773A /* CrashCensor.swift */; };
 		3D9B0ECC25D55F4C00A9E40C /* DTVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9B0ECB25D55F4C00A9E40C /* DTVerifyCodeViewController.swift */; };
 		3D9B0ED025D560E500A9E40C /* DTPaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9B0ECF25D560E500A9E40C /* DTPaddingTextField.swift */; };
 		3D9B0ED425D563C500A9E40C /* DTCutDownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9B0ED325D563C500A9E40C /* DTCutDownView.swift */; };
@@ -296,15 +297,15 @@
 		3D70C409259A3FA900E19DB8 /* DTProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTProgress.swift; sourceTree = "<group>"; };
 		3D70D0A1259A4DF000E19DB8 /* domain_direct.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = domain_direct.txt; sourceTree = "<group>"; };
 		3D721D4C2593A7150087339B /* DTServerDetailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTServerDetailData.swift; sourceTree = "<group>"; };
-		3D754937259470D700112EDA /* geo.mmdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = geo.mmdb; sourceTree = "<group>"; };
 		3D82576D26185BED0075CBC1 /* DTCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCustomButton.swift; sourceTree = "<group>"; };
 		3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTPHAssetsLoadingManager.swift; sourceTree = "<group>"; };
 		3D8274E026186CF60075CBC1 /* DTUploadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTUploadModel.swift; sourceTree = "<group>"; };
 		3D87D8722593B9EE0027DA51 /* DTLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLinkViewModel.swift; sourceTree = "<group>"; };
-		3D888F7326197FCF00AC9EE5 /* site.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = site.dat; sourceTree = "<group>"; };
+		3D889846261CE1F700AC9EE5 /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3D889D0F261A067800AC9EE5 /* icon_launch@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_launch@3x.png"; sourceTree = "<group>"; };
 		3D889D10261A067800AC9EE5 /* icon_launch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_launch@2x.png"; sourceTree = "<group>"; };
-		3D889D21261A168500AC9EE5 /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
+		3D889FD3261C2C3200AC9EE5 /* site.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = site.dat; sourceTree = "<group>"; };
+		3D88B37D261C2F8700AC9EE5 /* geo.mmdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = geo.mmdb; sourceTree = "<group>"; };
 		3D9B0ECB25D55F4C00A9E40C /* DTVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		3D9B0ECF25D560E500A9E40C /* DTPaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTPaddingTextField.swift; sourceTree = "<group>"; };
 		3D9B0ED325D563C500A9E40C /* DTCutDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCutDownView.swift; sourceTree = "<group>"; };
@@ -430,7 +431,7 @@
 			files = (
 				3DEC5ABA24D7F4A000B941C1 /* NetworkExtension.framework in Frameworks */,
 				505C3BC686313087C3770AF8 /* Pods_Tunnel.framework in Frameworks */,
-				3D889D22261A168500AC9EE5 /* libleaf.a in Frameworks */,
+				3D889847261CE1F700AC9EE5 /* libleaf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,9 +453,9 @@
 			isa = PBXGroup;
 			children = (
 				3D12733425888AC00078D8E5 /* leaf.h */,
-				3D889D21261A168500AC9EE5 /* libleaf.a */,
-				3D754937259470D700112EDA /* geo.mmdb */,
-				3D888F7326197FCF00AC9EE5 /* site.dat */,
+				3D889846261CE1F700AC9EE5 /* libleaf.a */,
+				3D88B37D261C2F8700AC9EE5 /* geo.mmdb */,
+				3D889FD3261C2C3200AC9EE5 /* site.dat */,
 			);
 			path = libleaf;
 			sourceTree = "<group>";
@@ -1127,8 +1128,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D888F7426197FD900AC9EE5 /* site.dat in Resources */,
-				3D754938259470D700112EDA /* geo.mmdb in Resources */,
+				3D889FD4261C2C3200AC9EE5 /* site.dat in Resources */,
+				3D88B37E261C2F8700AC9EE5 /* geo.mmdb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1373,6 +1374,7 @@
 				3DEC5AB024D7F46200B941C1 /* PacketTunnelProvider.swift in Sources */,
 				3DEF968825E8E15A00DCEA9C /* DTTunnelInbounds.swift in Sources */,
 				3DEF968925E8E15A00DCEA9C /* DTTunnelRules.swift in Sources */,
+				3D88C8A5261C72A000AC9EE5 /* CrashCensor.swift in Sources */,
 				3DEF968C25E8E15A00DCEA9C /* DTTunnelOutbounds.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1524,7 +1526,7 @@
 				CODE_SIGN_ENTITLEMENTS = DT/DT.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = T5434635F3;
 				INFOPLIST_FILE = DT/Resource/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1552,7 +1554,7 @@
 				CODE_SIGN_ENTITLEMENTS = DT/DT.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = T5434635F3;
 				INFOPLIST_FILE = DT/Resource/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1579,7 +1581,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = T5434635F3;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tunnel/Info.plist;
@@ -1613,7 +1615,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = T5434635F3;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tunnel/Info.plist;

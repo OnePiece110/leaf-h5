@@ -42,7 +42,7 @@ struct DTMineRowModel {
 class DTMineViewModel {
     
     var tableData = [DTMineSectionModel]()
-    var isNeedUpdate = false
+    var version = ""
     
     func reloadData() {
         tableData.removeAll()
@@ -107,7 +107,7 @@ class DTMineViewModel {
     func versionCheck() -> Observable<DTVersionCheckModel> {
         return DTMineSchedule.versionCheck().do { [weak self] (json) in
             guard let weakSelf = self else { return }
-            weakSelf.isNeedUpdate = !json.entry.isVaildEmpty()
+            weakSelf.version = json.entry
         }
     }
 }

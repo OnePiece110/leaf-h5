@@ -36,7 +36,7 @@ class DTFeedbackModel {
 class DTFeedbackViewModel {
     
     var dataSource = [DTFeedbackModel]()
-    let maxImageCount = 9
+    let maxImageCount = 8
     
     init() {
         dataSource.append(DTFeedbackModel(image: nil, type: .add))

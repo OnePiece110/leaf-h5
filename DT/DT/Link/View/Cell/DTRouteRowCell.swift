@@ -14,6 +14,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
     
     lazy var iconImageView:UIImageView = {
         let iconImageView = UIImageView()
+        iconImageView.contentMode = .scaleAspectFill
         iconImageView.layer.cornerRadius = 17
         iconImageView.layer.masksToBounds = true
         return iconImageView
@@ -61,7 +62,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
         didSet {
             titleLabel.text = model.name
             rateLabel.textColor = UIColor.dt.hex(model.color)
-            
+            iconImageView.image = UIImage(named: model.area.lowercased())
             if let selectRouter = DTUserDefaults?.object(forKey: DTSelectRouter) as? String {
                 if !selectRouter.isVaildEmpty() {
                     if let selectRouterData = selectRouter.kj.model(DTServerVOItemData.self) {

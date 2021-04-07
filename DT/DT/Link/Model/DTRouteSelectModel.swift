@@ -41,13 +41,14 @@ class DTServerGroupData:Convertible {
 }
 
 class DTServerVOItemData: NSObject, Convertible {
-    var color:String = ""
-    var name:String = ""
-    var desc:String = ""
-    var domain = ""
-    var ping:Double = 0
-    var itemId:Int = 0
-    var connectFlag:ConnectStatus = .disConnect
+    var color: String = ""
+    var name: String = ""
+    var desc: String = ""
+    var domain: String = ""
+    var ping: Double = 0
+    var itemId: Int = 0
+    var connectFlag: ConnectStatus = .disConnect
+    var area: String = ""
     
     required override init() {
     }

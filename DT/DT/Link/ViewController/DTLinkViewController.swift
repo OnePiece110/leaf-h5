@@ -451,7 +451,7 @@ extension DTLinkViewController {
         //log
         let log = DTTunnelLog(level: .trace)
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         if let baseURL = groupFileManagerURL {
             let logURL = DTFileManager.createFolder(name: "Log", baseUrl: baseURL, isRmove: false)
             let fileURL = DTFileManager.createFile(name: "\(formatter.string(from: Date())).log", baseUrl: logURL)

@@ -131,16 +131,10 @@ extension DTMineViewController:UITableViewDelegate {
             self.viewModel.versionCheck().subscribe { [weak self] (json) in
                 guard let weakSelf = self else { return }
                 DTProgress.dismiss(in: weakSelf)
-                if weakSelf.viewModel.isNeedUpdate {
+                if !weakSelf.viewModel.version.isVaildEmpty() {
                     weakSelf.openPopup()
                 } else {
-                    let updatePopup = DTAlertBaseView()
-                    updatePopup.alertManager?.isDimissTapBgView = false
-                    updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "无新版本", message: "")
-                    updatePopup.addAction("已是最新版本", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: weakSelf, selector: #selector(weakSelf.cancelUpdate))
-                    updatePopup.finish()
-                    updatePopup.alertManager?.show()
-                    weakSelf.popupView = updatePopup
+                    weakSelf.unUpdatePopup()
                 }
             } onError: { [weak self] (error) in
                 guard let weakSelf = self else { return }
@@ -156,10 +150,20 @@ extension DTMineViewController:UITableViewDelegate {
         }
     }
     
+    private func unUpdatePopup() {
+        let updatePopup = DTAlertBaseView()
+        updatePopup.alertManager?.isDimissTapBgView = false
+        updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "无新版本", message: "")
+        updatePopup.addAction("已是最新版本", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(cancelUpdate))
+        updatePopup.finish()
+        updatePopup.alertManager?.show()
+        self.popupView = updatePopup
+    }
+    
     private func openPopup() {
         let updatePopup = DTAlertBaseView()
         updatePopup.alertManager?.isDimissTapBgView = false
-        updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "发现新版本", message: "发现了引力加速器最新的v2.0版本\n我们强烈建议您进行更新，是否立即更新？")
+        updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "发现新版本", message: "发现了引力加速器最新的v\(self.viewModel.version)版本\n我们强烈建议您进行更新，是否立即更新？")
         updatePopup.addGradientAction("立即更新", titleColor: APPColor.colorWhite, direction: .leftToRight, colors: [APPColor.color36BDB8, APPColor.color00B170], target: self, selector: #selector(startUpdate))
 //        updatePopup.addDesc("不更新则无法继续使用本APP", titleColor: APPColor.color36BDB8)
         updatePopup.addAction("暂不更新", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(cancelUpdate))
