@@ -17,18 +17,23 @@ class DTLinkViewController: DTBaseViewController {
     let disposeBag = DisposeBag()
     private let viewModel = DTLinkViewModel()
     private var selectModel: DTServerVOItemData?
-    private var preSelectModel: DTServerVOItemData?
+    private var reStart: Bool = false
     private var selectProtocolDetail: DTServerDetailData?
     private var isStartConnect = false
     private var isConnected = false
     private let pingQueue = DispatchQueue(label: "com.dt.ping")
+    private var isChangeProxyMode = false
     
-    private var configUrl: URL {
+    var configUrl: URL {
         if let groupFileManagerURL = groupFileManagerURL {
             let url = groupFileManagerURL.appendingPathComponent("running_config.json")
             return url
         }
         return URL(fileURLWithPath: "")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,7 +58,6 @@ class DTLinkViewController: DTBaseViewController {
         if let selectRouter = DTUserDefaults?.object(forKey: DTSelectRouter) as? String, !selectRouter.isVaildEmpty() {
             if let model = selectRouter.kj.model(DTServerVOItemData.self) {
                 self.selectModel = model
-                self.preSelectModel = model
                 self.linkNameLabel.text = model.name
             }
         }
@@ -62,11 +66,15 @@ class DTLinkViewController: DTBaseViewController {
             if let model = detail.kj.model(DTServerDetailData.self) {
                 self.selectProtocolDetail = model
                 self.pingICMP()
-                if !self.rippleView.isAnimation {
-                    self.rippleView.startAnimation()
-                }
             }
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(proxyModeChange), name: NSNotification.Name(rawValue: PROXY_MODE_CHANGE_Notification), object: nil)
+    }
+    
+    @objc private func proxyModeChange() {
+        self.isChangeProxyMode = true
+        DTVpnManager.shared.stopVPN()
     }
     
     // 匿名登录,第一版本处理
@@ -120,7 +128,7 @@ class DTLinkViewController: DTBaseViewController {
     @objc private func pingICMP() {
         if let data = self.selectProtocolDetail {
             rateLabel.text = "正在计算"
-            JFPingManager.getFastestAddress(addressList: [data.ip]) { [weak self] (address, ping)  in
+            JFPingManager.getFastestAddress(addressList: [data.domain]) { [weak self] (address, ping)  in
                 guard let weakSelf = self, let ping = ping else {
                     return
                 }
@@ -138,9 +146,9 @@ class DTLinkViewController: DTBaseViewController {
         if !self.isConnected {
             return
         }
-        if ping <= 50 {
+        if ping <= 100 {
             self.rippleView.resetPulsingColor(type: .good)
-        } else if (ping >= 50 && ping <= 200) {
+        } else if (ping >= 100 && ping <= 200) {
             self.rippleView.resetPulsingColor(type: .general)
         } else {
             self.rippleView.resetPulsingColor(type: .bad)
@@ -159,14 +167,23 @@ class DTLinkViewController: DTBaseViewController {
                 DTProgress.dismiss(in: self)
                 self.isConnected = true
                 self.rippleView.titleLabel.text = "已连接"
+                if !self.rippleView.isAnimation {
+                    self.rippleView.startAnimation()
+                }
             case .off:
                 self.rippleView.titleLabel.text = "未连接"
                 self.rippleView.resetPulsingColor(type: .initial)
-                if self.preSelectModel?.itemId != self.selectModel?.itemId {
-                    self.connectVPN()
+                if self.reStart, let selectModel = self.selectModel {
+                    self.connectClick(model: selectModel, reStart: false)
+                } else if (self.isChangeProxyMode) {
+                    self.isChangeProxyMode = false
+                    self.createConfig(model: self.viewModel.serverData)
+                    DTVpnManager.shared.startVPN(self.viewModel.serverData)
                 } else {
-                    DTProgress.dismiss(in: self)
-                    self.rippleView.stopAnimation()
+                    if !self.isStartConnect {
+                        DTProgress.dismiss(in: self)
+                        self.rippleView.stopAnimation()
+                    }
                 }
             }
             let userInteractionEnabled = [DTVpnStatus.on, DTVpnStatus.off].contains(status)
@@ -176,7 +193,7 @@ class DTLinkViewController: DTBaseViewController {
         }
     }
     
-    @objc private func connectClick() {
+    @objc private func connectClick(model: DTServerVOItemData, reStart: Bool) {
         if !DTUser.sharedUser.isLogin {
             self.rippleView.stopAnimation()
             Router.routeToClass(DTLoginViewController.self, params: ["isAddNavigation":true], present: true)
@@ -185,8 +202,17 @@ class DTLinkViewController: DTBaseViewController {
         if self.isStartConnect {
             return
         }
+        self.selectModel = model
+        self.reStart = reStart
         if (DTVpnManager.shared.vpnStatus == .off) {
-            self.connectVPN()
+            if model.itemId == -1 {
+                let serverVOItem = DTServerVOItemData()
+                serverVOItem.name = "智能链接"
+                serverVOItem.itemId = -1
+                self.requestSmartConnect(model: model)
+            } else {
+                self.connectVPN()
+            }
         } else {
             DTVpnManager.shared.stopVPN()
             self.disConnect()
@@ -194,15 +220,6 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     private func disConnect() {
-//        if let model = self.selectModel {
-//            self.viewModel.disConnect(id: model.itemId).subscribe { (json) in
-//                DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
-//                DTUserDefaults?.synchronize()
-//            } onError: { [weak self] (error) in
-//                guard let weakSelf = self else { return }
-//                DTProgress.showError(in: weakSelf, message: "请求失败")
-//            }.disposed(by: self.disposeBag)
-//        }
         DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
         DTUserDefaults?.synchronize()
     }
@@ -221,7 +238,6 @@ class DTLinkViewController: DTBaseViewController {
                 debugPrint("开始连接参数获取")
                 DTProgress.dismiss(in: weakSelf)
                 weakSelf.selectProtocolDetail = json.entry
-                weakSelf.preSelectModel = weakSelf.selectModel
                 weakSelf.isStartConnect = false
                 weakSelf.isConnected = true
                 weakSelf.pingICMP()
@@ -236,7 +252,6 @@ class DTLinkViewController: DTBaseViewController {
                 DTUserDefaults?.synchronize()
             } onError: { [weak self] (error) in
                 guard let weakSelf = self else { return }
-                DTProgress.dismiss(in: weakSelf)
                 DTProgress.showError(in: weakSelf, message: "请求失败")
                 weakSelf.isStartConnect = false
                 weakSelf.isConnected = false
@@ -380,7 +395,11 @@ class DTLinkViewController: DTBaseViewController {
 // MARK: - VpnManagerDelegate
 extension DTLinkViewController: DTRippleViewDelegate {
     func rippleViewClick() {
-        self.connectClick()
+        if let selectModel = self.selectModel {
+            self.connectClick(model: selectModel, reStart: false)
+        } else {
+            Router.routeToClass(DTVPNListViewController.self, params: ["delegate": self])
+        }
     }
 }
 
@@ -399,27 +418,23 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
         DTUserDefaults?.set(jsonString, forKey: DTSelectRouter)
         DTUserDefaults?.synchronize()
         
-        self.selectModel = model
         self.linkNameLabel.text = model.name
-        if self.selectModel?.itemId != self.preSelectModel?.itemId || DTVpnManager.shared.vpnStatus == .off {
-            self.connectClick()
+        if self.selectModel?.itemId != model.itemId || DTVpnManager.shared.vpnStatus == .off {
+            self.connectClick(model: model, reStart: self.selectModel?.itemId != model.itemId)
         }
     }
     
-    func smartConnect(model: DTServerVOItemData) {
-        
-        let jsonString = model.kj.JSONString()
-        DTUserDefaults?.set(jsonString, forKey: DTSelectRouter)
-        DTUserDefaults?.synchronize()
-        
-        self.selectModel = model
-        self.linkNameLabel.text = model.name
-        
+    private func requestSmartConnect(model: DTServerVOItemData) {
+        if self.isStartConnect {
+            return
+        }
+        self.isStartConnect = true
+        self.isConnected = false
+        DTProgress.showProgress(in: self)
         self.viewModel.smartConnect().subscribe { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.dismiss(in: weakSelf)
             weakSelf.selectProtocolDetail = json.entry
-            weakSelf.preSelectModel = weakSelf.selectModel
             weakSelf.isStartConnect = false
             weakSelf.isConnected = true
             weakSelf.pingICMP()
@@ -433,197 +448,10 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
             DTUserDefaults?.synchronize()
         } onError: { [weak self] (error) in
             guard let weakSelf = self else { return }
-            DTProgress.dismiss(in: weakSelf)
             DTProgress.showError(in: weakSelf, message: "请求失败")
             weakSelf.isStartConnect = false
             weakSelf.isConnected = false
             weakSelf.rippleView.stopAnimation()
         }.disposed(by: self.disposeBag)
-    }
-}
-
-
-// MARK: create config
-extension DTLinkViewController {
-    func createConfig(model: DTServerDetailData) {
-        let conf = DTTunnelConfig()
-        
-        //log
-        let log = DTTunnelLog(level: .trace)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        if let baseURL = groupFileManagerURL {
-            let logURL = DTFileManager.createFolder(name: "Log", baseUrl: baseURL, isRmove: false)
-            let fileURL = DTFileManager.createFile(name: "\(formatter.string(from: Date())).log", baseUrl: logURL)
-            log.output = fileURL.path
-        }
-        conf.log = log
-        
-        //dns
-        let dnsServer = DTTunnelDNS(servers: ["114.114.114.114", "233.5.5.5", "8.8.8.8"])
-        conf.dns = dnsServer
-        
-        //inbounds
-        let tun = DTTunnelInbounds(fd: 4)
-//        tun.settings?.fakeDnsExclude = [model.domain]
-        tun.settings?.fakeDnsInclude = ["google"]
-        conf.inbounds.append(tun)
-        
-        //outbounds
-        let pro: DTOutboundsProtocol = DTOutboundsProtocol.matchPtotocol(proto: model.proto)
-        
-        var mode = DTProxyMode.smart
-        if let modeNum = DTUserDefaults?.integer(forKey: DTProxyModeKey) {
-            mode = DTProxyMode(rawValue: modeNum) ?? .smart
-        }
-        
-        if mode == .smart || mode == .direct {
-            let direct = DTTunnelOutbounds(proto: .direct)
-            conf.outbounds.append(direct)
-        }
-        
-        if mode == .proxy || mode == .smart {
-            if pro == .shadowsocks {
-                let ss = DTTunnelOutbounds(proto: pro)
-                ss.settings?.address = model.domain
-                ss.settings?.password = model.passwd
-                ss.settings?.method = model.algorithm
-                ss.settings?.port = model.port
-                ss.tag = "failover_out"
-                conf.outbounds.append(ss)
-            } else {
-                let chain = DTTunnelOutbounds(proto: .chain)
-                chain.tag = "failover_out"
-                conf.outbounds.append(chain)
-                
-                // tls协议
-                let tls = DTTunnelOutbounds(proto: .tls)
-                if !model.sni.isVaildEmpty() {
-                    tls.settings?.serverName = model.sni
-                }
-                tls.tag = "tls"
-                tls.settings?.alpn = ["http/1.1"]
-                conf.outbounds.append(tls)
-                chain.settings?.actors?.append("tls")
-                
-                // h2协议
-                let h2 = DTTunnelOutbounds(proto: .h2)
-                if model.h2Path.count > 1 {
-                    tls.settings?.alpn = ["h2"]
-                    h2.settings?.path = model.h2Path
-                    if model.h2Host.count > 0 {
-                        h2.settings?.host = model.h2Host
-                    }
-                    conf.outbounds.append(h2)
-                    chain.settings?.actors?.append("h2")
-                }
-                
-                // ws协议
-                if model.path.count > 1 {
-                    let ws = DTTunnelOutbounds(proto: .ws)
-                    ws.settings?.path = model.path
-                    ws.tag = "ws"
-                    if model.host.count > 0 {
-                        ws.settings?.headers = ["Host": model.host]
-                    }
-                    conf.outbounds.append(ws)
-                    chain.settings?.actors?.append("ws")
-                }
-                
-                // 协议实例 包括vless trojan vmess
-                let proto = DTTunnelOutbounds(proto: pro)
-                proto.configSetting(model: model)
-                if !model.algorithm.isVaildEmpty() {
-                    proto.settings?.method = model.algorithm
-                }
-                //aead 加密
-                if model.security.count > 0 {
-                    proto.settings?.security = model.security.lowercased()
-                }
-                if model.securityPassword.count > 0 {
-                    proto.settings?.security_password = model.securityPassword
-                }
-                proto.tag = "proto"
-                conf.outbounds.append(proto)
-                chain.settings?.actors?.append("proto")
-                
-            }
-        }
-        
-        //rules
-        var rules = [DTTunnelRule]()
-        
-        let domainFailover = self.addRule(withType: .domain, fileName: "domain_failover", target: "failover_out")
-        let domainDirect = self.addRule(withType: .domain, fileName: "domain_direct", target: "direct_out")
-        rules.append(contentsOf: [domainFailover, domainDirect])
-
-        let domianSuffixDirect = self.addRule(withType: .domainSuffix, fileName: "domain_suffix_direct", target: "direct_out")
-        let domianSuffixFailover = self.addRule(withType: .domainSuffix, fileName: "domain_suffix_failover", target: "failover_out")
-        rules.append(contentsOf: [domianSuffixFailover, domianSuffixDirect])
-
-        let domianKeywordDirect = self.addRule(withType: .domainKeyword, fileName: "domain_keyword_direct", target: "direct_out")
-        let domianKeywordFailover = self.addRule(withType: .domainKeyword, fileName: "domain_keyword_failover", target: "failover_out")
-        rules.append(contentsOf: [domianKeywordFailover, domianKeywordDirect])
-
-        let ipDirect = self.addRule(withType: .ip, fileName: "domain_ip_direct", target: "direct_out")
-        let ipFailover = self.addRule(withType: .ip, fileName: "domain_ip_failover", target: "failover_out")
-        rules.append(contentsOf: [ipFailover, ipDirect])
-
-        let external = DTTunnelRule()
-        external.addRule(["site:!cn"], type: .external, target: "failover_out")
-
-        let externalMMDB = DTTunnelRule()
-        externalMMDB.addRule(["mmdb:!cn"], type: .external, target: "failover_out")
-
-        rules.append(contentsOf: [external, externalMMDB])
-        
-        if mode == .smart {
-            conf.rules = rules
-        } else {
-            let rule = DTTunnelRule()
-            rule.addRule([""], type: .domainKeyword, target: mode == .direct ? "direct_out" : "failover_out")
-            conf.rules = [rule]
-        }
-        
-        do {
-            try conf.kj.JSONString().write(to: configUrl, atomically: false, encoding: .utf8)
-        } catch {
-            NSLog("fialed to write config file \(error)")
-        }
-    }
-    
-    func addRule(withType type: DTRuleType, fileName: String, target: String) -> DTTunnelRule {
-        let ruleModel = DTTunnelRule()
-        
-        var rulePath = ""
-        let (url, isValid) = self.isValidFileName(fileName: fileName, ofType: "txt")
-        if isValid, let url = url {
-            rulePath = url.path
-        } else {
-            rulePath = Bundle.main.path(forResource: fileName, ofType: "txt")!
-        }
-        do {
-            let ipConetont = try String(contentsOfFile: rulePath, encoding: .utf8)
-            var rules = ipConetont.components(separatedBy: "\n")
-            rules.removeLast()
-            ruleModel.addRule((rules), type: type, target: target)
-        } catch {
-            print(String(describing: error))
-        }
-        
-        return ruleModel
-    }
-    
-    func isValidFileName(fileName: String,ofType type: String) -> (URL?,Bool) {
-        let path = groupFileManagerURL?.appendingPathComponent("rules/\(fileName).\(type)")
-        if let path = path {
-            if DT.fileManager.fileExists(atPath: path.path) {
-                let fileData = try? Data(contentsOf: path)
-                if let fileData = fileData {
-                    return (path, fileData.count > 0)
-                }
-            }
-        }
-        return (nil, false)
     }
 }

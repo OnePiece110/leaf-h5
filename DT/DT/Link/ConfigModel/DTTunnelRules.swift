@@ -19,7 +19,7 @@ enum DTRuleType {
 }
 
 class DTTunnelRule: Convertible {
-    private var target = ""
+    var target = ""
     private var domain: [String]?
     private var domainSuffix: [String]?
     private var domainKeyword: [String]?

@@ -74,8 +74,10 @@ struct DTConstantsKey {
 
 #endif
 
-let baseUrl = "https://api-dev.mytube.vip/"
-let downloadUrl = "https://api-dev.mytube.vip/rules/"
+//let baseUrl = "https://api-dev.mytube.vip/"
+//let downloadUrl = "https://api-dev.mytube.vip/rules/"
+let baseUrl = "https://api.yinli.ga/"
+let downloadUrl = "https://api.yinli.ga/rules/"
 
 let appGroup = "group.com.alphaWisdom.gft"
 let DTUserDefaults = UserDefaults(suiteName: appGroup)
@@ -117,3 +119,4 @@ let kLaunchScreenVersion: String = "kLaunchScreenVersion"
 let kLaunchScreenVersionNumber:Int = 5
 //MARK: -- 通知
 let LOGOUT_Notification: String = "DT_LOGOUT_Notification"
+let PROXY_MODE_CHANGE_Notification: String = "PROXY_MODE_CHANGE_Notification"

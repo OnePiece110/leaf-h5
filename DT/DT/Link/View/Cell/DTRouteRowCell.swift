@@ -12,52 +12,6 @@ class DTRouteRowCell: DTBaseTableViewCell {
 
     private let radiusView = DTCustomRadiusView()
     
-    lazy var iconImageView:UIImageView = {
-        let iconImageView = UIImageView()
-        iconImageView.contentMode = .scaleAspectFill
-        iconImageView.layer.cornerRadius = 17
-        iconImageView.layer.masksToBounds = true
-        return iconImageView
-    }()
-    
-    lazy var titleLabel:UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = UIFont.dt.Font(14)
-        titleLabel.textColor = APPColor.colorF6F6F6
-        return titleLabel
-    }()
-    
-    lazy var rateLabel:UILabel = {
-        let rateLabel = UILabel()
-        rateLabel.font = UIFont.dt.Font(12)
-        rateLabel.textColor = UIColor.dt.hex("26CF5E")
-        return rateLabel
-    }()
-    
-    lazy var lineView:UIView = {
-        let lineView = UIView()
-        lineView.backgroundColor = APPColor.color235476
-        return lineView
-    }()
-    
-    lazy var connectButton:UIButton = {
-        let connectButton = UIButton(type: .custom)
-        connectButton.isUserInteractionEnabled = false
-        connectButton.layer.cornerRadius = 15
-        connectButton.layer.masksToBounds = true
-        connectButton.titleLabel?.font = UIFont.dt.Bold_Font(14)
-        connectButton.backgroundColor = APPColor.colorD8D8D8.withAlphaComponent(0.1)
-        
-        connectButton.setTitle("连接", for: .normal)
-        connectButton.setTitleColor(.white, for: .normal)
-        connectButton.setBackgroundImage(nil, for: .selected)
-        
-        connectButton.setTitle("", for: .selected)
-        connectButton.setBackgroundImage(UIImage(named: "icon_common_select"), for: .selected)
-//        connectButton.addTarget(self, action: #selector(connectButtonClick), for: .touchUpInside)
-        return connectButton
-    }()
-    
     private var model:DTServerVOItemData = DTServerVOItemData()  {
         didSet {
             titleLabel.text = model.name
@@ -116,7 +70,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
         self.iconImageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(radiusView)
             make.left.equalTo(15)
-            make.size.equalTo(CGSize(width: 34, height: 34))
+            make.size.equalTo(CGSize(width: 48.57, height: 34))
         }
         
         self.titleLabel.snp.makeConstraints { (make) in
@@ -144,5 +98,49 @@ class DTRouteRowCell: DTBaseTableViewCell {
         }
         
     }
+    
+    private lazy var iconImageView:UIImageView = {
+        let iconImageView = UIImageView()
+        iconImageView.clipsToBounds = true
+        return iconImageView
+    }()
+    
+    private lazy var titleLabel:UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont.dt.Font(14)
+        titleLabel.textColor = APPColor.colorF6F6F6
+        return titleLabel
+    }()
+    
+    private lazy var rateLabel:UILabel = {
+        let rateLabel = UILabel()
+        rateLabel.font = UIFont.dt.Font(12)
+        rateLabel.textColor = UIColor.dt.hex("26CF5E")
+        return rateLabel
+    }()
+    
+    private lazy var lineView:UIView = {
+        let lineView = UIView()
+        lineView.backgroundColor = APPColor.color235476
+        return lineView
+    }()
+    
+    private lazy var connectButton:UIButton = {
+        let connectButton = UIButton(type: .custom)
+        connectButton.isUserInteractionEnabled = false
+        connectButton.layer.cornerRadius = 15
+        connectButton.layer.masksToBounds = true
+        connectButton.titleLabel?.font = UIFont.dt.Bold_Font(14)
+        connectButton.backgroundColor = APPColor.colorD8D8D8.withAlphaComponent(0.1)
+        
+        connectButton.setTitle("连接", for: .normal)
+        connectButton.setTitleColor(.white, for: .normal)
+        connectButton.setBackgroundImage(nil, for: .selected)
+        
+        connectButton.setTitle("", for: .selected)
+        connectButton.setBackgroundImage(UIImage(named: "icon_common_select"), for: .selected)
+//        connectButton.addTarget(self, action: #selector(connectButtonClick), for: .touchUpInside)
+        return connectButton
+    }()
     
 }

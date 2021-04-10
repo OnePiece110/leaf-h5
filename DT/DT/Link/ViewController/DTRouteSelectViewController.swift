@@ -11,7 +11,6 @@ import RxSwift
 
 protocol DTRouteSelectViewControllerDelegate:class {
     func routeClick(model: DTServerVOItemData)
-    func smartConnect(model: DTServerVOItemData)
 }
 
 class DTRouteSelectViewController: DTBaseViewController,Routable {

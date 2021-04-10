@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class DTProxyModeViewController: DTBaseViewController,Routable {
 
@@ -15,8 +16,10 @@ class DTProxyModeViewController: DTBaseViewController,Routable {
         return vc
     }
     
-    var viewModel = DTDefaultRouteViewModel(type: .proxyMode)
+    private var viewModel = DTDefaultRouteViewModel(type: .proxyMode)
     private var tableView:UITableView?
+    private let pb1 = PublishSubject<Int>()
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,5 +81,9 @@ extension DTProxyModeViewController:UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.viewModel.changeValue(indexPath: indexPath)
         self.tableView?.reloadData()
+        pb1.debounce(.milliseconds(500), scheduler: MainScheduler.instance).subscribe { (data) in
+            NotificationCenter.default.post(name: NSNotification.Name(PROXY_MODE_CHANGE_Notification), object: nil)
+        }.disposed(by: disposeBag)
+        pb1.onNext(1)
     }
 }

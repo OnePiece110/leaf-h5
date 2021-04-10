@@ -6,5 +6,4 @@ iqiyi
 qq
 sina
 sinaimg
-mytube
 qpic

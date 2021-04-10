@@ -18,10 +18,10 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         return vc
     }
     
-    let disposeBag = DisposeBag()
-    let viewModel = DTFeedbackViewModel()
-    let itemWidth = (kScreentWidth - 10 * 2 - 5 * 3) / 4
-    
+    private let disposeBag = DisposeBag()
+    private let viewModel = DTFeedbackViewModel()
+    private let itemWidth = (kScreentWidth - 10 * 2 - 5 * 3) / 4
+    private var contactStr = "https://t.me/joinchat/ZPJ3fZ07uZFmMjJl"
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSubViews()
@@ -41,23 +41,32 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     func configureSubViews() {
         self.navigationItem.title = "意见反馈"
         
-        contentTextView.placeholder = "请输入问题描述"
-        contentTextView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        contentTextView.backgroundColor = .clear
-        contentTextView.textColor = .white
-        contentTextView.font = UIFont.dt.Bold_Font(16)
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
         
         let textViewBgView = UIView()
         textViewBgView.backgroundColor = APPColor.color3E5E77
         textViewBgView.layer.cornerRadius = 10
         textViewBgView.layer.masksToBounds = true
-        self.view.addSubview(textViewBgView)
+        contentView.addSubview(textViewBgView)
         textViewBgView.addSubview(self.contentTextView)
         textViewBgView.addSubview(self.countLabel)
-        self.view.addSubview(self.contactInformationTextField)
-        self.view.addSubview(self.collectionView)
-        self.view.addSubview(self.contactInformationTextField)
-        self.view.addSubview(self.sendButton)
+        contentView.addSubview(self.contactInformationTextField)
+        contentView.addSubview(self.collectionView)
+        contentView.addSubview(self.contactInformationTextField)
+        contentView.addSubview(self.descLabel)
+        contentView.addSubview(self.contactLabel)
+        contentView.addSubview(self.sendButton)
+        
+        scrollView.snp.makeConstraints { (make) in
+            make.edges.equalTo(0)
+        }
+        
+        contentView.snp.makeConstraints { (make) in
+            make.edges.equalTo(0)
+            make.width.equalTo(scrollView.snp.width)
+        }
         
         textViewBgView.snp.makeConstraints { (make) in
             make.left.top.equalTo(10)
@@ -91,11 +100,24 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
             make.height.equalTo(50)
         }
         
+        self.descLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(25)
+            make.top.equalTo(self.contactInformationTextField.snp.bottom).offset(10)
+            make.right.equalTo(-25)
+        }
+        
+        self.contactLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(25)
+            make.top.equalTo(self.descLabel.snp.bottom).offset(10)
+            make.right.equalTo(-25)
+        }
+        
         self.sendButton.snp.makeConstraints { (make) in
             make.left.equalTo(10)
-            make.top.equalTo(self.contactInformationTextField.snp.bottom).offset(10)
+            make.top.equalTo(self.contactLabel.snp.bottom).offset(10)
             make.right.equalTo(-10)
             make.height.equalTo(50)
+            make.bottom.equalTo(-20)
         }
     }
     
@@ -142,12 +164,12 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     private func uploadItems(datas: [Data], content: String, contact: String) {
         var signals = [Observable<DTUploadModel>]()
         for (index, imageData) in datas.enumerated() {
-            let uploadSignal: Observable<DTUploadModel> = DTHttp.share.uploadImage(imageData) { [weak self] (json, err) in
+            let uploadSignal: Observable<DTUploadModel> = DTHttp.share.uploadImage(imageData, fileName: "\(index).png", mimeType: "image/jpeg", uploadBlock: { [weak self] (json, err) in
                 guard let weakSelf = self else { return }
                 if let json = json {
                     weakSelf.viewModel.dataSource[index].url = json.entry
                 }
-            }
+            })
             signals.append(uploadSignal)
         }
         Observable.zip(signals).subscribe { [weak self] (datas) in
@@ -176,6 +198,15 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         }.disposed(by: disposeBag)
     }
     
+    @objc private func contactLabelClick() {
+        let contactURL = URL(string: contactStr)
+        if let contactURL = contactURL, UIApplication.shared.canOpenURL(contactURL) {
+            UIApplication.shared.open(contactURL, options: [:], completionHandler: nil)
+        } else {
+            DTProgress.showError(in: self, message: "请下载Telegram")
+        }
+    }
+    
     func calculateCollectionViewHeight() {
         let column = self.viewModel.dataSource.count / 4
         
@@ -187,9 +218,28 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         }
     }
     
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.bounces = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.backgroundColor = .clear
+        return contentView
+    }()
+    
     private lazy var contentTextView: DTTextView = {
         let contentTextView = DTTextView()
         contentTextView.backgroundColor = APPColor.colorSubBgView
+        contentTextView.placeholder = "请输入问题描述"
+        contentTextView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        contentTextView.backgroundColor = .clear
+        contentTextView.textColor = .white
+        contentTextView.font = UIFont.dt.Bold_Font(16)
         return contentTextView
     }()
     
@@ -222,6 +272,24 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
         sendButton.setTitle("提交", for: .normal)
         sendButton.addTarget(self, action: #selector(sendButtonClick), for: .touchUpInside)
         return sendButton
+    }()
+    
+    private lazy var descLabel: UILabel = {
+        let descLabel = UILabel()
+        descLabel.text = "您也可以加入我们官方电报群，随时反馈并可了解"
+        descLabel.textColor = UIColor.white.withAlphaComponent(0.3)
+        descLabel.font = UIFont.dt.Font(14)
+        descLabel.numberOfLines = 2;
+        return descLabel
+    }()
+    
+    private lazy var contactLabel: UILabel = {
+        let contactLabel = UILabel()
+        contactLabel.text = contactStr
+        contactLabel.textColor = UIColor.white
+        contactLabel.font = UIFont.dt.Bold_Font(14)
+        contactLabel.dt.viewTarget(add: self, action: #selector(contactLabelClick))
+        return contactLabel
     }()
     
     private lazy var contactInformationTextField: DTTextFieldView = DTTextFieldView(code: "联系方式", placeHolder: "QQ或电报号", corner: 10)

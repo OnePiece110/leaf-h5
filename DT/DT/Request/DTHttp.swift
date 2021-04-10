@@ -97,7 +97,7 @@ class DTHttp {
         }
     }
 	
-    func uploadImage<T: BaseResult>(_ data:Data, uploadBlock:@escaping (_ json:T?,_ error:Error?) -> Void) -> Observable<T> {
+    func uploadImage<T: BaseResult>(_ data:Data, fileName: String, mimeType: String, uploadBlock:@escaping (_ json:T?,_ error:Error?) -> Void) -> Observable<T> {
         var headersParams = [String: String]()
         if DTUser.sharedUser.isLogin {
             headersParams["token"] = DTUser.sharedUser.token
@@ -108,7 +108,7 @@ class DTHttp {
         return Observable<T>.create { [weak self] (observer) -> Disposable in
             guard let weakSelf = self else { return Disposables.create() }
             let dataRequest = weakSelf.session.upload(multipartFormData: { (multipartFormData) in
-                multipartFormData.append(data, withName: "file", fileName: "123456.png", mimeType: "image/jpeg")
+                multipartFormData.append(data, withName: "file", fileName: fileName, mimeType: mimeType)
             }, to: baseUrl + "lighthouse/upload/file", headers: headers).uploadProgress { (progress) in
                 debugPrint("图片上传进度: \(progress.fractionCompleted)")
             }.responseString(completionHandler: { (response) in

@@ -26,7 +26,13 @@ class DTRippleView: UIView {
     weak var animationLayer: CALayer?
     weak var delegate: DTRippleViewDelegate?
     var isAnimation = false
-    private var iconImageView = UIImageView(image: UIImage(named: "icon_link_unLink"))
+    private var iconButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setBackgroundImage(UIImage(named: "icon_link_unLink"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "icon_link_unLink_small"), for: .highlighted)
+        button.addTarget(self, action: #selector(rippleAction), for: .touchUpInside)
+        return button
+    }()
     private var animateColor = UIColor.white
     
     lazy var titleLabel: UILabel = {
@@ -40,11 +46,8 @@ class DTRippleView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(rippleAction))
-        self.addGestureRecognizer(tap)
-        
-        self.addSubview(iconImageView)
-        iconImageView.snp.makeConstraints { (make) in
+        self.addSubview(iconButton)
+        iconButton.snp.makeConstraints { (make) in
             make.edges.equalTo(0)
         }
         
@@ -66,22 +69,28 @@ class DTRippleView: UIView {
     
     func resetPulsingColor(type: DTRippleViewType) {
         var image: UIImage?
+        var highlightImage: UIImage?
         var color: UIColor = .white
         switch type {
         case .good:
             image = UIImage(named: "icon_link_good")
+            highlightImage = UIImage(named: "icon_link_good_small")
             color = APPColor.color00B170
         case .general:
             image = UIImage(named: "icon_link_general")
+            highlightImage = UIImage(named: "icon_link_general_small")
             color = APPColor.sub
         case .bad:
             image = UIImage(named: "icon_link_bad")
+            highlightImage = UIImage(named: "icon_link_bad_small")
             color = APPColor.colorError
         case .initial:
             image = UIImage(named: "icon_link_unLink")
+            highlightImage = UIImage(named: "icon_link_unLink_small")
             color = APPColor.color52AAAA
         }
-        iconImageView.image = image
+        iconButton.setBackgroundImage(image, for: .normal)
+        iconButton.setBackgroundImage(highlightImage, for: .highlighted)
         animateColor = color
         for item in self.items {
             item.borderColor = color.cgColor

@@ -155,7 +155,7 @@ extension DTVPNListViewController: UITableViewDelegate {
             let serverData = DTServerVOItemData()
             serverData.name = "智能连接"
             serverData.itemId = -1
-            self.delegate?.smartConnect(model: serverData)
+            self.delegate?.routeClick(model: serverData)
         } else if indexPath.row == 0 {
             sectionModel.isOpen = !sectionModel.isOpen
             self.tableView.reloadData()

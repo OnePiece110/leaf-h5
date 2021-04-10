@@ -7,7 +7,17 @@
 //
 
 import UIKit
+import KakaJSON
 
 class DTVersionCheckModel: DTBaseResult {
-    var entry: String = ""
+    var entry: DTVersionModel = DTVersionModel()
+}
+
+class DTVersionModel: Convertible {
+    var version: String = ""
+    var forceFlag: Int = 0
+    var iosUrl: String = ""
+    required init() {
+        
+    }
 }

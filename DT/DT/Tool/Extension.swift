@@ -193,12 +193,12 @@ extension Date {
         }
         let betweenHours = lastDate.hourBetweenDate(toDate: nowDate)
         debugPrint("betweenHours", betweenHours)
-        if betweenHours > 6 {
+        if betweenHours >= 3 {
             DTUserDefaults?.set(nowDate, forKey: DTConstantsKey.HalfDayKey)
             DTUserDefaults?.synchronize()
         }
         
-        return betweenHours > 6
+        return betweenHours >= 3
     }
     
     func hourBetweenDate(toDate: Date) -> Int {
