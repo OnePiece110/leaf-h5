@@ -131,8 +131,10 @@ class DTAlertManager: NSObject,UIGestureRecognizerDelegate {
 	}
 	
 	@objc func removeView() {
-		self.bgView.removeFromSuperview()
-		self.view.removeFromSuperview()
+        if self.isDimissTapBgView {
+            self.bgView.removeFromSuperview()
+            self.view.removeFromSuperview()
+        }
 	}
 }
 

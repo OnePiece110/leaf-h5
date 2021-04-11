@@ -112,7 +112,6 @@ class DTHttp {
             }, to: baseUrl + "lighthouse/upload/file", headers: headers).uploadProgress { (progress) in
                 debugPrint("图片上传进度: \(progress.fractionCompleted)")
             }.responseString(completionHandler: { (response) in
-                debugPrint(response)
                 switch response.result {
                 case .success(let jsonValue):
                     let json = jsonValue.kj.model(T.self)

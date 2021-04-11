@@ -59,8 +59,7 @@ class DTFileManager {
         let exist = fileManager.fileExists(atPath: filePath.path)
         if !exist {
             let data = Data(base64Encoded:"测试" ,options:.ignoreUnknownCharacters)
-            let success = fileManager.createFile(atPath: filePath.path, contents: data, attributes: nil)
-            debugPrint(success)
+            let _ = fileManager.createFile(atPath: filePath.path, contents: data, attributes: nil)
         }
         return filePath
     }

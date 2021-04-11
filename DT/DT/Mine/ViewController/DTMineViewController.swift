@@ -55,7 +55,7 @@ class DTMineViewController: DTBaseViewController {
     }
     
     @objc private func startUpdate() {
-        self.popupView?.alertManager?.dimiss()
+        Router.openLink(self.viewModel.updateModel.iosUrl)
     }
     
     @objc private func cancelUpdate() {

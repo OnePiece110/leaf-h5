@@ -128,7 +128,7 @@ class DTLinkViewController: DTBaseViewController {
     @objc private func pingICMP() {
         if let data = self.selectProtocolDetail {
             rateLabel.text = "正在计算"
-            JFPingManager.getFastestAddress(addressList: [data.domain]) { [weak self] (address, ping)  in
+            JFPingManager.getFastestAddress(addressList: [data.ip]) { [weak self] (address, ping)  in
                 guard let weakSelf = self, let ping = ping else {
                     return
                 }
