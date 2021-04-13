@@ -15,7 +15,8 @@ enum DTTunnelError:Error {
 class PacketTunnelProvider: NEPacketTunnelProvider {
     
     var lastPath:NWPath?
-    private var isStartLeaf = false
+    private var prxoyId: UInt16 = 10086
+    
     override func startTunnel(options: [String : NSObject]? = nil, completionHandler: @escaping (Error?) -> Void) {
         guard let config = (protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration else {
             NSLog("[ERROR] No ProtocolConfiguration Found")
@@ -59,16 +60,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                         completionHandler(error)
                         NSLog("fialed to write config file \(error)")
                     }
-                    if !weakSelf.isStartLeaf {
-    //                    weakSelf.addObserver(weakSelf, forKeyPath: "defaultPath", options: .initial, context: nil)
-                        isSuccess = true
-                        DispatchQueue.global(qos: .userInteractive).async {
-                            signal(SIGPIPE, SIG_IGN)
-                            weakSelf.isStartLeaf = true
-                            run_leaf(url.path)
-                        }
-                        completionHandler(nil)
+                    var certPath = Bundle.main.executableURL?.deletingLastPathComponent()
+                    setenv("SSL_CERT_DIR", certPath?.path, 1)
+                    certPath?.appendPathComponent("cacert.pem")
+                    setenv("SSL_CERT_FILE", certPath?.path, 1)
+                    isSuccess = true
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        signal(SIGPIPE, SIG_IGN)
+                        leaf_run(weakSelf.prxoyId, url.path)
                     }
+                    completionHandler(nil)
                 }
                 if !isSuccess {
                     completionHandler(DTTunnelError.unValid)
@@ -81,11 +82,17 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         self.cancelTunnelWithError(nil)
+        leaf_shutdown(self.prxoyId)
         completionHandler()
     }
         
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
         // Add code here to handle the message.
+        DispatchQueue.global(qos: .userInteractive).async {
+            signal(SIGPIPE, SIG_IGN)
+            leaf_reload(self.prxoyId)
+        }
+        
         if let handler = completionHandler {
             handler(messageData)
         }

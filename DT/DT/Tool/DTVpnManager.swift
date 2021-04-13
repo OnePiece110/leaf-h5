@@ -192,4 +192,15 @@ extension DTVpnManager {
             manager.connection.stopVPNTunnel()
         }
     }
+    
+    public func sendMessage() {
+        loadProviderManager { manager in
+            guard let manager = manager else {
+                return
+            }
+            let session = manager.connection as? NETunnelProviderSession
+            let message = "reload".data(using: .utf8)
+            try? session?.sendProviderMessage(message ?? Data(), responseHandler: nil)
+        }
+    }
 }

@@ -17,12 +17,10 @@ class DTLinkViewController: DTBaseViewController {
     let disposeBag = DisposeBag()
     private let viewModel = DTLinkViewModel()
     private var selectModel: DTServerVOItemData?
-    private var reStart: Bool = false
     private var selectProtocolDetail: DTServerDetailData?
     private var isStartConnect = false
     private var isConnected = false
     private let pingQueue = DispatchQueue(label: "com.dt.ping")
-    private var isChangeProxyMode = false
     
     var configUrl: URL {
         if let groupFileManagerURL = groupFileManagerURL {
@@ -73,8 +71,8 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     @objc private func proxyModeChange() {
-        self.isChangeProxyMode = true
-        DTVpnManager.shared.stopVPN()
+        self.createConfig(model: self.viewModel.serverData)
+        DTVpnManager.shared.sendMessage()
     }
     
     // 匿名登录,第一版本处理
@@ -121,8 +119,8 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     @objc private func toLogVC() {
-        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
-//        Router.routeToClass(DTLogsViewController.self, params: nil)
+//        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
+        Router.routeToClass(DTLogsViewController.self, params: nil)
     }
     
     @objc private func pingICMP() {
@@ -173,18 +171,8 @@ class DTLinkViewController: DTBaseViewController {
             case .off:
                 self.rippleView.titleLabel.text = "未连接"
                 self.rippleView.resetPulsingColor(type: .initial)
-                if self.reStart, let selectModel = self.selectModel {
-                    self.connectClick(model: selectModel, reStart: false)
-                } else if (self.isChangeProxyMode) {
-                    self.isChangeProxyMode = false
-                    self.createConfig(model: self.viewModel.serverData)
-                    DTVpnManager.shared.startVPN(self.viewModel.serverData)
-                } else {
-                    if !self.isStartConnect {
-                        DTProgress.dismiss(in: self)
-                        self.rippleView.stopAnimation()
-                    }
-                }
+                DTProgress.dismiss(in: self)
+                self.rippleView.stopAnimation()
             }
             let userInteractionEnabled = [DTVpnStatus.on, DTVpnStatus.off].contains(status)
             self.rippleView.isUserInteractionEnabled = userInteractionEnabled
@@ -193,7 +181,7 @@ class DTLinkViewController: DTBaseViewController {
         }
     }
     
-    @objc private func connectClick(model: DTServerVOItemData, reStart: Bool) {
+    @objc private func connectClick(model: DTServerVOItemData) {
         if !DTUser.sharedUser.isLogin {
             self.rippleView.stopAnimation()
             Router.routeToClass(DTLoginViewController.self, params: ["isAddNavigation":true], present: true)
@@ -203,19 +191,13 @@ class DTLinkViewController: DTBaseViewController {
             return
         }
         self.selectModel = model
-        self.reStart = reStart
-        if (DTVpnManager.shared.vpnStatus == .off) {
-            if model.itemId == -1 {
-                let serverVOItem = DTServerVOItemData()
-                serverVOItem.name = "智能链接"
-                serverVOItem.itemId = -1
-                self.requestSmartConnect(model: model)
-            } else {
-                self.connectVPN()
-            }
+        if model.itemId == -1 {
+            let serverVOItem = DTServerVOItemData()
+            serverVOItem.name = "智能链接"
+            serverVOItem.itemId = -1
+            self.requestSmartConnect(model: model)
         } else {
-            DTVpnManager.shared.stopVPN()
-            self.disConnect()
+            self.connectVPN()
         }
     }
     
@@ -246,7 +228,11 @@ class DTLinkViewController: DTBaseViewController {
                 }
                 
                 weakSelf.createConfig(model: weakSelf.viewModel.serverData)
-                DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
+                if DTVpnManager.shared.vpnStatus == .off {
+                    DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
+                } else if DTVpnManager.shared.vpnStatus == .on {
+                    DTVpnManager.shared.sendMessage()
+                }
                 let jsonString = json.entry.kj.JSONString()
                 DTUserDefaults?.set(jsonString, forKey: DTSelectProtocolDetail)
                 DTUserDefaults?.synchronize()
@@ -396,7 +382,11 @@ class DTLinkViewController: DTBaseViewController {
 extension DTLinkViewController: DTRippleViewDelegate {
     func rippleViewClick() {
         if let selectModel = self.selectModel {
-            self.connectClick(model: selectModel, reStart: false)
+            if DTVpnManager.shared.vpnStatus == .off {
+                self.connectClick(model: selectModel)
+            } else {
+                DTVpnManager.shared.stopVPN()
+            }
         } else {
             Router.routeToClass(DTVPNListViewController.self, params: ["delegate": self])
         }
@@ -420,7 +410,7 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
         
         self.linkNameLabel.text = model.name
         if self.selectModel?.itemId != model.itemId || DTVpnManager.shared.vpnStatus == .off {
-            self.connectClick(model: model, reStart: self.selectModel?.itemId != model.itemId)
+            self.connectClick(model: model)
         }
     }
     
@@ -442,7 +432,11 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
                 weakSelf.rippleView.startAnimation()
             }
             weakSelf.createConfig(model: weakSelf.viewModel.serverData)
-            DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
+            if DTVpnManager.shared.vpnStatus == .off {
+                DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
+            } else if DTVpnManager.shared.vpnStatus == .on {
+                DTVpnManager.shared.sendMessage()
+            }
             let jsonString = json.entry.kj.JSONString()
             DTUserDefaults?.set(jsonString, forKey: DTSelectProtocolDetail)
             DTUserDefaults?.synchronize()

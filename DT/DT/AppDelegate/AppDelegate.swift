@@ -166,6 +166,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         Observable.zip(signals).subscribe { (datas) in
             debugPrint("上传成功")
+            if let baseURL = DT.groupFileManagerURL {
+                _ = DTFileManager.createFolder(name: "Log", baseUrl: baseURL, isRmove: true)
+            }
         } onError: { (err) in
             debugPrint("上传失败")
         }.disposed(by: disposeBag)
