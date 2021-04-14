@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		3D12732E2588854E0078D8E5 /* DTWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D12732D2588854E0078D8E5 /* DTWebViewController.swift */; };
 		3D12734725888B890078D8E5 /* DTVpnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D12734625888B890078D8E5 /* DTVpnManager.swift */; };
-		3D1C166F2596475D007C9F95 /* JFPingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C166C2596475D007C9F95 /* JFPingServices.swift */; };
-		3D1C16702596475D007C9F95 /* SimplePing.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C166D2596475D007C9F95 /* SimplePing.m */; };
-		3D1C16712596475D007C9F95 /* JFPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C166E2596475D007C9F95 /* JFPingManager.swift */; };
 		3D1CC86524E2A003008F14AE /* DTLoginResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1CC86424E2A003008F14AE /* DTLoginResult.swift */; };
 		3D1CC86724E2A4C6008F14AE /* DTRouteSelectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1CC86624E2A4C6008F14AE /* DTRouteSelectModel.swift */; };
+		3D3236702626F9D000D7F97D /* SwiftyPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D32366F2626F9D000D7F97D /* SwiftyPing.swift */; };
 		3D43A8B325D2B39500B70F08 /* DTLogOutPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D43A8B225D2B39500B70F08 /* DTLogOutPopupView.swift */; };
 		3D43A8F425D4BA0100B70F08 /* DTLoginBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D43A8F325D4BA0100B70F08 /* DTLoginBottomView.swift */; };
 		3D43A8F825D4BFB800B70F08 /* DTImageTitleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D43A8F725D4BFB800B70F08 /* DTImageTitleButton.swift */; };
@@ -229,12 +227,9 @@
 		3D12733425888AC00078D8E5 /* leaf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leaf.h; sourceTree = "<group>"; };
 		3D12733D25888AD00078D8E5 /* Tunnel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tunnel-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D12734625888B890078D8E5 /* DTVpnManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTVpnManager.swift; sourceTree = "<group>"; };
-		3D1C166B2596475D007C9F95 /* SimplePing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePing.h; sourceTree = "<group>"; };
-		3D1C166C2596475D007C9F95 /* JFPingServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFPingServices.swift; sourceTree = "<group>"; };
-		3D1C166D2596475D007C9F95 /* SimplePing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePing.m; sourceTree = "<group>"; };
-		3D1C166E2596475D007C9F95 /* JFPingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFPingManager.swift; sourceTree = "<group>"; };
 		3D1CC86424E2A003008F14AE /* DTLoginResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLoginResult.swift; sourceTree = "<group>"; };
 		3D1CC86624E2A4C6008F14AE /* DTRouteSelectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSelectModel.swift; sourceTree = "<group>"; };
+		3D32366F2626F9D000D7F97D /* SwiftyPing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyPing.swift; sourceTree = "<group>"; };
 		3D3B13EA258B9FD0006B1584 /* DT-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DT-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D43A8B225D2B39500B70F08 /* DTLogOutPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLogOutPopupView.swift; sourceTree = "<group>"; };
 		3D43A8F325D4BA0100B70F08 /* DTLoginBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLoginBottomView.swift; sourceTree = "<group>"; };
@@ -465,10 +460,7 @@
 		3D1C166A2596475D007C9F95 /* PingTester */ = {
 			isa = PBXGroup;
 			children = (
-				3D1C166E2596475D007C9F95 /* JFPingManager.swift */,
-				3D1C166C2596475D007C9F95 /* JFPingServices.swift */,
-				3D1C166B2596475D007C9F95 /* SimplePing.h */,
-				3D1C166D2596475D007C9F95 /* SimplePing.m */,
+				3D32366F2626F9D000D7F97D /* SwiftyPing.swift */,
 			);
 			path = PingTester;
 			sourceTree = "<group>";
@@ -1311,7 +1303,6 @@
 				3D4A5D0B260A46D100D97FAE /* DTAddPhoneViewModel.swift in Sources */,
 				3D4A5CCF260A1F8300D97FAE /* DTAlertCustomButton.swift in Sources */,
 				3DEF893225E8B77E00DCEA9C /* DTTunnelConfig.swift in Sources */,
-				3D1C166F2596475D007C9F95 /* JFPingServices.swift in Sources */,
 				3D4D82BA24AAB117007E55A4 /* AppDelegate.swift in Sources */,
 				3DD3B73B24BB1075008760BA /* DTForgetPasswordViewController.swift in Sources */,
 				3D613350259D64DA0051FF07 /* IPHelper.m in Sources */,
@@ -1322,9 +1313,9 @@
 				3D4A5CF7260A404800D97FAE /* DTVerifyCodeViewModel.swift in Sources */,
 				3D12732E2588854E0078D8E5 /* DTWebViewController.swift in Sources */,
 				3D87D86B2593B9220027DA51 /* DTServerDetailData.swift in Sources */,
+				3D3236702626F9D000D7F97D /* SwiftyPing.swift in Sources */,
 				3DCB0D5524B9BAA300B59C52 /* DTBaseTableViewCell.swift in Sources */,
 				3D9B0EE425D6529600A9E40C /* DTUpdateAvatarViewController.swift in Sources */,
-				3D1C16702596475D007C9F95 /* SimplePing.m in Sources */,
 				3DD3B72724BAF3DF008760BA /* RichString.swift in Sources */,
 				3DD3B71524BADA51008760BA /* DTDefaultRouteViewModel.swift in Sources */,
 				3DF4D61425B2C28400D8EDBF /* DTVPNListViewController.swift in Sources */,
@@ -1351,7 +1342,6 @@
 				3DAFAB1A24C2BE7200100736 /* DTRippleView.swift in Sources */,
 				3DEF893125E8B77E00DCEA9C /* DTTunnelInbounds.swift in Sources */,
 				3DF73F0025A2DF3C00EF773A /* CrashCensor.swift in Sources */,
-				3D1C16712596475D007C9F95 /* JFPingManager.swift in Sources */,
 				3D8274E126186CF60075CBC1 /* DTUploadModel.swift in Sources */,
 				3D12734725888B890078D8E5 /* DTVpnManager.swift in Sources */,
 				3D9B0ED025D560E500A9E40C /* DTPaddingTextField.swift in Sources */,

@@ -11,13 +11,6 @@ import UIKit
 class DTRouteSectionCell: DTBaseTableViewCell {
 
     private let radiusView = DTCustomRadiusView()
-        
-    lazy var iconImageView:UIImageView = {
-        let iconImageView = UIImageView()
-        iconImageView.layer.cornerRadius = 17
-        iconImageView.layer.masksToBounds = true
-        return iconImageView
-    }()
     
     lazy var titleLabel:UILabel = {
         let titleLabel = UILabel()
@@ -49,7 +42,6 @@ class DTRouteSectionCell: DTBaseTableViewCell {
             let image = UIImage(named: arrowImageText)?.withRenderingMode(.alwaysTemplate)
             arrowImageView.image = image
             arrowImageView.tintColor = .white
-            iconImageView.kf.setImage(with: URL(string: model.grouoLogo), placeholder: nil)
         }
     }
     
@@ -66,7 +58,6 @@ class DTRouteSectionCell: DTBaseTableViewCell {
         radiusView.backgroundColor = APPColor.colorSubBgView
         radiusView.corner = 10
         self.contentView.addSubview(radiusView)
-        radiusView.addSubview(self.iconImageView)
         radiusView.addSubview(self.titleLabel)
         radiusView.addSubview(self.lineView)
         radiusView.addSubview(self.arrowImageView)
@@ -75,16 +66,10 @@ class DTRouteSectionCell: DTBaseTableViewCell {
             make.edges.equalTo(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
         }
         
-        self.iconImageView.snp.makeConstraints { (make) in
-            make.centerY.equalTo(radiusView)
-            make.left.equalTo(15)
-            make.size.equalTo(CGSize(width: 34, height: 34))
-        }
-        
         self.titleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(radiusView)
             make.height.equalTo(22)
-            make.left.equalTo(self.iconImageView.snp.right).offset(15)
+            make.left.equalTo(15)
         }
         
         self.lineView.snp.makeConstraints { (make) in

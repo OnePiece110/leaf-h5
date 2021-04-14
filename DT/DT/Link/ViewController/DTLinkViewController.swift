@@ -23,6 +23,7 @@ class DTLinkViewController: DTBaseViewController {
     private var isConnected = false
     private let pingQueue = DispatchQueue(label: "com.dt.ping")
     private var isChangeProxyMode = false
+    private var ping: SwiftyPing?
     
     var configUrl: URL {
         if let groupFileManagerURL = groupFileManagerURL {
@@ -128,16 +129,19 @@ class DTLinkViewController: DTBaseViewController {
     @objc private func pingICMP() {
         if let data = self.selectProtocolDetail {
             rateLabel.text = "正在计算"
-            JFPingManager.getFastestAddress(addressList: [data.ip]) { [weak self] (address, ping)  in
-                guard let weakSelf = self, let ping = ping else {
-                    return
+            do {
+                ping = try SwiftyPing(host: data.ip, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
+                ping?.targetCount = 1
+                ping?.observer = { [weak self] (response) in
+                    guard let weakSelf = self else { return }
+                    DispatchQueue.main.async {
+                        weakSelf.rateLabel.text = String(format: "%.2fms", response.duration! * 1000)
+                        weakSelf.changeRipple(ping: response.duration! * 1000)
+                    }
                 }
-                if ping == 0 {
-                    weakSelf.rateLabel.text = "无信号"
-                } else {
-                    weakSelf.rateLabel.text = String(format: "%.2fms", ping)
-                }
-                weakSelf.changeRipple(ping: ping)
+                try ping?.startPinging()
+            } catch {
+                debugPrint(error)
             }
         }
     }
@@ -147,10 +151,13 @@ class DTLinkViewController: DTBaseViewController {
             return
         }
         if ping <= 100 {
+            self.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
             self.rippleView.resetPulsingColor(type: .good)
         } else if (ping >= 100 && ping <= 200) {
+            self.rateImageView.image = UIImage(named: "icon_link_rate_fast")
             self.rippleView.resetPulsingColor(type: .general)
         } else {
+            self.rateImageView.image = UIImage(named: "icon_link_rate_general")
             self.rippleView.resetPulsingColor(type: .bad)
         }
         rateLabel.textColor = UIColor.white
@@ -173,6 +180,7 @@ class DTLinkViewController: DTBaseViewController {
             case .off:
                 self.rippleView.titleLabel.text = "未连接"
                 self.rippleView.resetPulsingColor(type: .initial)
+                self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
                 if self.reStart, let selectModel = self.selectModel {
                     self.connectClick(model: selectModel, reStart: false)
                 } else if (self.isChangeProxyMode) {
@@ -273,7 +281,9 @@ class DTLinkViewController: DTBaseViewController {
         self.view.addSubview(titleLabel)
         self.view.addSubview(linkNameLabel)
         self.view.addSubview(rippleView)
-        self.view.addSubview(rateLabel)
+        self.view.addSubview(rateView)
+        rateView.addSubview(rateImageView)
+        rateView.addSubview(rateLabel)
         self.view.addSubview(linkButton)
         self.view.addSubview(routeModeLabel)
         
@@ -289,10 +299,21 @@ class DTLinkViewController: DTBaseViewController {
             make.height.equalTo(33)
         }
         
-        rateLabel.snp.makeConstraints { (make) in
+        rateView.snp.makeConstraints { (make) in
             make.top.equalTo(linkNameLabel.snp.bottom)
             make.centerX.equalTo(linkNameLabel)
             make.height.equalTo(25)
+        }
+        
+        rateImageView.snp.makeConstraints { (make) in
+            make.left.equalTo(0)
+            make.centerY.equalTo(rateView)
+            make.size.equalTo(CGSize(width: 23, height: 20))
+        }
+        
+        rateLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(rateImageView.snp.right).offset(10)
+            make.top.bottom.right.equalTo(0)
         }
         
         rippleView.snp.makeConstraints { (make) in
@@ -336,12 +357,22 @@ class DTLinkViewController: DTBaseViewController {
         return titleLabel
     }()
     
+    private lazy var rateView: UIView = {
+        let rateView = UIView()
+        return rateView
+    }()
+    
     private lazy var linkNameLabel:UILabel = {
         let linkNameLabel = UILabel()
         linkNameLabel.text = "未选择线路"
         linkNameLabel.font = UIFont.dt.Bold_Font(24)
         linkNameLabel.textColor = APPColor.color36BDB8
         return linkNameLabel
+    }()
+    
+    private lazy var rateImageView: UIImageView = {
+        let rateImageView = UIImageView(image: UIImage(named: "icon_link_rate_unlink"))
+        return rateImageView
     }()
     
     private lazy var rateLabel:UILabel = {

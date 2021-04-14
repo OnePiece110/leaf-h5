@@ -2,6 +2,5 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-#import "SimplePing.h"
 #import "IPHelper.h"
 #import "DTRouter.h"

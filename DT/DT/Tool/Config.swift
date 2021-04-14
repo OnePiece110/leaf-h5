@@ -74,10 +74,10 @@ struct DTConstantsKey {
 
 #endif
 
-//let baseUrl = "https://api-dev.mytube.vip/"
-//let downloadUrl = "https://api-dev.mytube.vip/rules/"
-let baseUrl = "https://api.yinli.ga/"
-let downloadUrl = "https://api.yinli.ga/rules/"
+let baseUrl = "https://api-dev.mytube.vip/"
+let downloadUrl = "https://api-dev.mytube.vip/rules/"
+//let baseUrl = "https://api.yinli.ga/"
+//let downloadUrl = "https://api.yinli.ga/rules/"
 
 let appGroup = "group.com.alphaWisdom.gft"
 let DTUserDefaults = UserDefaults(suiteName: appGroup)

@@ -11,11 +11,11 @@ import UIKit
 class DTRouteRowCell: DTBaseTableViewCell {
 
     private let radiusView = DTCustomRadiusView()
+    private var ping: SwiftyPing?
     
     private var model:DTServerVOItemData = DTServerVOItemData()  {
         didSet {
             titleLabel.text = model.name
-            rateLabel.textColor = UIColor.dt.hex(model.color)
             iconImageView.image = UIImage(named: model.area.lowercased())
             if let selectRouter = DTUserDefaults?.object(forKey: DTSelectRouter) as? String {
                 if !selectRouter.isVaildEmpty() {
@@ -29,6 +29,34 @@ class DTRouteRowCell: DTBaseTableViewCell {
                 }
             } else {
                 connectButton.isSelected = false
+            }
+            
+            do {
+                ping = try SwiftyPing(host: model.domain, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
+                ping?.targetCount = 1
+                ping?.observer = { [weak self] (response) in
+                    guard let weakSelf = self else { return }
+                    DispatchQueue.main.async {
+                        let ping = response.duration! * 1000
+                        weakSelf.rateLabel.text = String(format: "%.2fms", ping)
+                        if ping <= 100 {
+                            weakSelf.rateLabel.text = "超快"
+                            weakSelf.rateLabel.textColor = APPColor.color00B170
+                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
+                        } else if (ping >= 100 && ping <= 200) {
+                            weakSelf.rateLabel.text = "快"
+                            weakSelf.rateLabel.textColor = APPColor.sub
+                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_fast")
+                        } else {
+                            weakSelf.rateLabel.text = "一般"
+                            weakSelf.rateLabel.textColor = APPColor.colorError
+                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_general")
+                        }
+                    }
+                }
+                try ping?.startPinging()
+            } catch {
+                debugPrint(error)
             }
             
             connectButton.backgroundColor = connectButton.isSelected ? UIColor.clear : APPColor.colorD8D8D8.withAlphaComponent(0.1)
@@ -60,6 +88,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
         radiusView.addSubview(self.iconImageView)
         radiusView.addSubview(self.titleLabel)
         radiusView.addSubview(self.rateLabel)
+        radiusView.addSubview(self.rateImageView)
         radiusView.addSubview(lineView)
         radiusView.addSubview(self.connectButton)
         
@@ -70,17 +99,24 @@ class DTRouteRowCell: DTBaseTableViewCell {
         self.iconImageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(radiusView)
             make.left.equalTo(15)
-            make.size.equalTo(CGSize(width: 48.57, height: 34))
+            make.size.equalTo(CGSize(width: 36, height: 24))
         }
         
         self.titleLabel.snp.makeConstraints { (make) in
             make.centerY.equalTo(radiusView)
             make.height.equalTo(20)
-            make.left.equalTo(self.iconImageView.snp.right).offset(15)
+            make.left.equalTo(self.iconImageView.snp.right).offset(10)
+            make.right.equalTo(self.rateImageView.snp.left).offset(-10)
+        }
+        
+        self.rateImageView.snp.makeConstraints { (make) in
+            make.right.equalTo(-124)
+            make.size.equalTo(CGSize(width: 18, height: 16))
+            make.centerY.equalTo(self.contentView)
         }
         
         self.rateLabel.snp.makeConstraints { (make) in
-            make.right.equalTo(self.connectButton.snp.left).offset(-15)
+            make.left.equalTo(self.rateImageView.snp.right).offset(5)
             make.centerY.equalTo(self.contentView)
         }
         
@@ -115,8 +151,13 @@ class DTRouteRowCell: DTBaseTableViewCell {
     private lazy var rateLabel:UILabel = {
         let rateLabel = UILabel()
         rateLabel.font = UIFont.dt.Font(12)
-        rateLabel.textColor = UIColor.dt.hex("26CF5E")
+        rateLabel.textColor = APPColor.color00B170
         return rateLabel
+    }()
+    
+    private lazy var rateImageView: UIImageView = {
+        let rateImageView = UIImageView(image: UIImage(named: "icon_link_rate_unlink"))
+        return rateImageView
     }()
     
     private lazy var lineView:UIView = {
