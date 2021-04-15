@@ -22,6 +22,10 @@ class DTTabBarViewController: UITabBarController {
         self.addChild(linkVC)
 //        self.addChild(searchVC)
         self.addChild(mineVC)
+        #if DEBUG
+        let debugBtn = DTDebugButton(frame: CGRect(x: self.view.frame.width - 54, y: (self.view.frame.height - 44) / 2.0, width: 44, height: 44));
+        self.view.addSubview(debugBtn)
+        #endif
     }
     
     func getInstantVC(storyName:String) -> UIViewController {

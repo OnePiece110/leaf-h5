@@ -31,32 +31,23 @@ class DTRouteRowCell: DTBaseTableViewCell {
                 connectButton.isSelected = false
             }
             
-            do {
-                ping = try SwiftyPing(host: model.domain, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
-                ping?.targetCount = 1
-                ping?.observer = { [weak self] (response) in
-                    guard let weakSelf = self else { return }
-                    DispatchQueue.main.async {
-                        let ping = response.duration! * 1000
-                        weakSelf.rateLabel.text = String(format: "%.2fms", ping)
-                        if ping <= 100 {
-                            weakSelf.rateLabel.text = "超快"
-                            weakSelf.rateLabel.textColor = APPColor.color00B170
-                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
-                        } else if (ping >= 100 && ping <= 200) {
-                            weakSelf.rateLabel.text = "快"
-                            weakSelf.rateLabel.textColor = APPColor.sub
-                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_fast")
-                        } else {
-                            weakSelf.rateLabel.text = "一般"
-                            weakSelf.rateLabel.textColor = APPColor.colorError
-                            weakSelf.rateImageView.image = UIImage(named: "icon_link_rate_general")
-                        }
-                    }
+            if model.ping > 0 {
+                if model.ping <= 100 {
+                    self.rateLabel.text = "超快"
+                    self.rateLabel.textColor = APPColor.color00B170
+                    self.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
+                } else if (model.ping >= 100 && model.ping <= 200) {
+                    self.rateLabel.text = "快"
+                    self.rateLabel.textColor = APPColor.sub
+                    self.rateImageView.image = UIImage(named: "icon_link_rate_fast")
+                } else {
+                    self.rateLabel.text = "一般"
+                    self.rateLabel.textColor = APPColor.colorError
+                    self.rateImageView.image = UIImage(named: "icon_link_rate_general")
                 }
-                try ping?.startPinging()
-            } catch {
-                debugPrint(error)
+            } else {
+                self.rateLabel.text = ""
+                self.rateImageView.image = nil
             }
             
             connectButton.backgroundColor = connectButton.isSelected ? UIColor.clear : APPColor.colorD8D8D8.withAlphaComponent(0.1)
@@ -156,7 +147,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
     }()
     
     private lazy var rateImageView: UIImageView = {
-        let rateImageView = UIImageView(image: UIImage(named: "icon_link_rate_unlink"))
+        let rateImageView = UIImageView()
         return rateImageView
     }()
     

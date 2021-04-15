@@ -130,12 +130,11 @@ class DTLinkViewController: DTBaseViewController {
         if let data = self.selectProtocolDetail {
             rateLabel.text = "正在计算"
             do {
-                ping = try SwiftyPing(host: data.ip, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
+                ping = try SwiftyPing(host: data.domain, configuration: PingConfiguration(interval: 0.3), queue: DispatchQueue.global())
                 ping?.targetCount = 1
                 ping?.observer = { [weak self] (response) in
                     guard let weakSelf = self else { return }
                     DispatchQueue.main.async {
-                        weakSelf.rateLabel.text = String(format: "%.2fms", response.duration! * 1000)
                         weakSelf.changeRipple(ping: response.duration! * 1000)
                     }
                 }
@@ -147,20 +146,22 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     private func changeRipple(ping:Double) {
-        if !self.isConnected {
-            return
-        }
         if ping <= 100 {
             self.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
+            self.rateLabel.text = "超快"
+            self.rateLabel.textColor = APPColor.color00B170
             self.rippleView.resetPulsingColor(type: .good)
         } else if (ping >= 100 && ping <= 200) {
             self.rateImageView.image = UIImage(named: "icon_link_rate_fast")
+            self.rateLabel.text = "快"
+            self.rateLabel.textColor = APPColor.sub
             self.rippleView.resetPulsingColor(type: .general)
         } else {
             self.rateImageView.image = UIImage(named: "icon_link_rate_general")
+            self.rateLabel.text = "一般"
+            self.rateLabel.textColor = APPColor.colorError
             self.rippleView.resetPulsingColor(type: .bad)
         }
-        rateLabel.textColor = UIColor.white
     }
     
     private func updateConnectButtonText(status: DTVpnStatus) {
@@ -178,9 +179,7 @@ class DTLinkViewController: DTBaseViewController {
                     self.rippleView.startAnimation()
                 }
             case .off:
-                self.rippleView.titleLabel.text = "未连接"
-                self.rippleView.resetPulsingColor(type: .initial)
-                self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
+                
                 if self.reStart, let selectModel = self.selectModel {
                     self.connectClick(model: selectModel, reStart: false)
                 } else if (self.isChangeProxyMode) {
@@ -189,6 +188,11 @@ class DTLinkViewController: DTBaseViewController {
                     DTVpnManager.shared.startVPN(self.viewModel.serverData)
                 } else {
                     if !self.isStartConnect {
+                        self.rippleView.titleLabel.text = "未连接"
+                        if !self.reStart && !self.isChangeProxyMode {
+                            self.rippleView.resetPulsingColor(type: .initial)
+                            self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
+                        }
                         DTProgress.dismiss(in: self)
                         self.rippleView.stopAnimation()
                     }
@@ -228,8 +232,7 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     private func disConnect() {
-        DTUserDefaults?.set(nil, forKey: DTSelectProtocolDetail)
-        DTUserDefaults?.synchronize()
+        self.rateLabel.textColor = .white
     }
     
     private func connectVPN() {

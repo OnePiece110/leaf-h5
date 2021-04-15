@@ -74,8 +74,8 @@ struct DTConstantsKey {
 
 #endif
 
-let baseUrl = "https://api-dev.mytube.vip/"
-let downloadUrl = "https://api-dev.mytube.vip/rules/"
+var baseUrl = "https://api-dev.mytube.vip/"
+var downloadUrl = "https://api-dev.mytube.vip/rules/"
 //let baseUrl = "https://api.yinli.ga/"
 //let downloadUrl = "https://api.yinli.ga/rules/"
 

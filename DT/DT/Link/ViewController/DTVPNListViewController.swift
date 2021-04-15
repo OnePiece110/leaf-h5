@@ -158,11 +158,51 @@ extension DTVPNListViewController: UITableViewDelegate {
             self.delegate?.routeClick(model: serverData)
         } else if indexPath.row == 0 {
             sectionModel.isOpen = !sectionModel.isOpen
+            self.pingGroup(group: sectionModel)
             self.tableView.reloadData()
         } else {
             let model = sectionModel.serverVOList[indexPath.row-1]
             self.popSelf()
             self.delegate?.routeClick(model: model)
+        }
+    }
+    
+    private func pingGroup(group: DTServerGroupData) {
+        if !group.isOpen {
+            return
+        }
+        var pingObsebables = [Observable<Double>]()
+        for item in group.serverVOList {
+            pingObsebables.append(self.pingRow(model: item))
+        }
+        Observable.zip(pingObsebables).subscribe { [weak self] (pingDatas) in
+            guard let weakSelf = self else { return }
+            for (index, ping) in pingDatas.enumerated() {
+                group.serverVOList[index].ping = ping
+            }
+            weakSelf.tableView.reloadData()
+        } onError: { (error) in
+            debugPrint(error)
+        }.disposed(by: disposeBag)
+    }
+    
+    private func pingRow(model: DTServerVOItemData) -> Observable<Double> {
+        return Observable<Double>.create { (observer) -> Disposable in
+            do {
+                let ping = try SwiftyPing(host: model.domain, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
+                ping.targetCount = 1
+                ping.observer = { (response) in
+                    observer.onNext(response.duration! * 1000)
+                    observer.onCompleted()
+                }
+                try ping.startPinging()
+            } catch {
+                debugPrint(error.localizedDescription)
+                observer.onError(error)
+            }
+            return Disposables.create {
+                
+            }
         }
     }
 }
