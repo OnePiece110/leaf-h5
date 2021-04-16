@@ -60,6 +60,7 @@
 		3D70C40A259A3FA900E19DB8 /* DTProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70C409259A3FA900E19DB8 /* DTProgress.swift */; };
 		3D721D2925939E780087339B /* DTBaseHttpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9EB42724CC1DB700C35C99 /* DTBaseHttpModel.swift */; };
 		3D721D572593A96F0087339B /* DTRouteSelectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1CC86624E2A4C6008F14AE /* DTRouteSelectModel.swift */; };
+		3D80BBBD262877240046722E /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D80BBBC262877240046722E /* libleaf.a */; };
 		3D82576E26185BED0075CBC1 /* DTCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D82576D26185BED0075CBC1 /* DTCustomButton.swift */; };
 		3D8274D926186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */; };
 		3D8274E126186CF60075CBC1 /* DTUploadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274E026186CF60075CBC1 /* DTUploadModel.swift */; };
@@ -134,7 +135,6 @@
 		3DE631FF24C2DAD80011270C /* DTRouteSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE631FE24C2DAD80011270C /* DTRouteSelectViewModel.swift */; };
 		3DE6320224C2F2740011270C /* DTRouteSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */; };
 		3DE6320424C2F2840011270C /* DTRouteRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320324C2F2830011270C /* DTRouteRowCell.swift */; };
-		3DE735F326212CBC00AA2D7B /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE735F226212CBB00AA2D7B /* libleaf.a */; };
 		3DE735F72621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE735F62621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift */; };
 		3DEC5AB024D7F46200B941C1 /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC5AAF24D7F46200B941C1 /* PacketTunnelProvider.swift */; };
 		3DEC5AB424D7F46200B941C1 /* Tunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3DEC5AAB24D7F46200B941C1 /* Tunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -299,6 +299,7 @@
 		3D70C409259A3FA900E19DB8 /* DTProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTProgress.swift; sourceTree = "<group>"; };
 		3D70D0A1259A4DF000E19DB8 /* domain_direct.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = domain_direct.txt; sourceTree = "<group>"; };
 		3D721D4C2593A7150087339B /* DTServerDetailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTServerDetailData.swift; sourceTree = "<group>"; };
+		3D80BBBC262877240046722E /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3D82576D26185BED0075CBC1 /* DTCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCustomButton.swift; sourceTree = "<group>"; };
 		3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTPHAssetsLoadingManager.swift; sourceTree = "<group>"; };
 		3D8274E026186CF60075CBC1 /* DTUploadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTUploadModel.swift; sourceTree = "<group>"; };
@@ -372,7 +373,6 @@
 		3DE631FE24C2DAD80011270C /* DTRouteSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSelectViewModel.swift; sourceTree = "<group>"; };
 		3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSectionCell.swift; sourceTree = "<group>"; };
 		3DE6320324C2F2830011270C /* DTRouteRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteRowCell.swift; sourceTree = "<group>"; };
-		3DE735F226212CBB00AA2D7B /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3DE735F62621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DTLinkViewController+ProxyConfig.swift"; sourceTree = "<group>"; };
 		3DEC5AAB24D7F46200B941C1 /* Tunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Tunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DEC5AAF24D7F46200B941C1 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
@@ -434,7 +434,7 @@
 			files = (
 				3DEC5ABA24D7F4A000B941C1 /* NetworkExtension.framework in Frameworks */,
 				505C3BC686313087C3770AF8 /* Pods_Tunnel.framework in Frameworks */,
-				3DE735F326212CBC00AA2D7B /* libleaf.a in Frameworks */,
+				3D80BBBD262877240046722E /* libleaf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,7 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				3D12733425888AC00078D8E5 /* leaf.h */,
-				3DE735F226212CBB00AA2D7B /* libleaf.a */,
+				3D80BBBC262877240046722E /* libleaf.a */,
 				3D88B37D261C2F8700AC9EE5 /* geo.mmdb */,
 				3D889FD3261C2C3200AC9EE5 /* site.dat */,
 			);
@@ -1540,7 +1540,7 @@
 				CODE_SIGN_ENTITLEMENTS = DT/DT.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = T5434635F3;
 				INFOPLIST_FILE = DT/Resource/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1568,7 +1568,7 @@
 				CODE_SIGN_ENTITLEMENTS = DT/DT.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = T5434635F3;
 				INFOPLIST_FILE = DT/Resource/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1595,7 +1595,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = T5434635F3;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tunnel/Info.plist;
@@ -1629,7 +1629,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tunnel/Tunnel.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = T5434635F3;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tunnel/Info.plist;

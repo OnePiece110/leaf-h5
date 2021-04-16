@@ -32,6 +32,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
             }
             
             if model.ping > 0 {
+                self.activity.stopAnimating()
                 if model.ping <= 100 {
                     self.rateLabel.text = "超快"
                     self.rateLabel.textColor = APPColor.color00B170
@@ -46,6 +47,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
                     self.rateImageView.image = UIImage(named: "icon_link_rate_general")
                 }
             } else {
+                self.activity.startAnimating()
                 self.rateLabel.text = ""
                 self.rateImageView.image = nil
             }
@@ -82,6 +84,7 @@ class DTRouteRowCell: DTBaseTableViewCell {
         radiusView.addSubview(self.rateImageView)
         radiusView.addSubview(lineView)
         radiusView.addSubview(self.connectButton)
+        radiusView.addSubview(activity)
         
         radiusView.snp.makeConstraints { (make) in
             make.edges.equalTo(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
@@ -116,6 +119,11 @@ class DTRouteRowCell: DTBaseTableViewCell {
             make.right.equalTo(-15)
             make.bottom.equalTo(-1)
             make.height.equalTo(1)
+        }
+        
+        activity.snp.makeConstraints { (make) in
+            make.centerY.equalTo(self.radiusView)
+            make.right.equalTo(-124)
         }
         
         self.connectButton.snp.makeConstraints { (make) in
@@ -171,8 +179,15 @@ class DTRouteRowCell: DTBaseTableViewCell {
         
         connectButton.setTitle("", for: .selected)
         connectButton.setBackgroundImage(UIImage(named: "icon_common_select"), for: .selected)
-//        connectButton.addTarget(self, action: #selector(connectButtonClick), for: .touchUpInside)
         return connectButton
+    }()
+    
+    
+    private lazy var activity: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView(style: .medium)
+        activity.color = .white
+        activity.hidesWhenStopped = true
+        return activity
     }()
     
 }

@@ -122,25 +122,27 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     @objc private func toLogVC() {
-        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
-//        Router.routeToClass(DTLogsViewController.self, params: nil)
+//        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
+        Router.routeToClass(DTLogsViewController.self, params: nil)
     }
     
     @objc private func pingICMP() {
         if let data = self.selectProtocolDetail {
             rateLabel.text = "正在计算"
-            do {
-                ping = try SwiftyPing(host: data.domain, configuration: PingConfiguration(interval: 0.3), queue: DispatchQueue.global())
-                ping?.targetCount = 1
-                ping?.observer = { [weak self] (response) in
-                    guard let weakSelf = self else { return }
-                    DispatchQueue.main.async {
-                        weakSelf.changeRipple(ping: response.duration! * 1000)
+            pingQueue.async {
+                do {
+                    self.ping = try SwiftyPing(host: data.domain, configuration: PingConfiguration(interval: 0.3), queue: DispatchQueue.global())
+                    self.ping?.targetCount = 1
+                    self.ping?.observer = { [weak self] (response) in
+                        guard let weakSelf = self else { return }
+                        DispatchQueue.main.async {
+                            weakSelf.changeRipple(ping: response.duration! * 1000)
+                        }
                     }
+                    try self.ping?.startPinging()
+                } catch {
+                    debugPrint(error)
                 }
-                try ping?.startPinging()
-            } catch {
-                debugPrint(error)
             }
         }
     }
@@ -188,11 +190,7 @@ class DTLinkViewController: DTBaseViewController {
                     DTVpnManager.shared.startVPN(self.viewModel.serverData)
                 } else {
                     if !self.isStartConnect {
-                        self.rippleView.titleLabel.text = "未连接"
-                        if !self.reStart && !self.isChangeProxyMode {
-                            self.rippleView.resetPulsingColor(type: .initial)
-                            self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
-                        }
+                        self.rippleView.titleLabel.text = "点击连接"
                         DTProgress.dismiss(in: self)
                         self.rippleView.stopAnimation()
                     }
@@ -226,6 +224,8 @@ class DTLinkViewController: DTBaseViewController {
                 self.connectVPN()
             }
         } else {
+            self.rippleView.resetPulsingColor(type: .initial)
+            self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
             DTVpnManager.shared.stopVPN()
             self.disConnect()
         }
@@ -380,7 +380,7 @@ class DTLinkViewController: DTBaseViewController {
     
     private lazy var rateLabel:UILabel = {
         let rateLabel = UILabel()
-        rateLabel.text = "未连接"
+        rateLabel.text = "点击连接"
         rateLabel.font = UIFont.dt.Font(18)
         rateLabel.textColor = UIColor.white
         let rateTap = UITapGestureRecognizer(target: self, action: #selector(pingICMP))

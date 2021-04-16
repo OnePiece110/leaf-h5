@@ -77,6 +77,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         self.viewModel.list().subscribe(onNext: { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.dismiss(in: weakSelf)
+            weakSelf.pingAllDomain()
             self?.tableView.reloadData()
         }, onError: { [weak self ] (error) in
             guard let weakSelf = self else { return }
@@ -158,7 +159,6 @@ extension DTVPNListViewController: UITableViewDelegate {
             self.delegate?.routeClick(model: serverData)
         } else if indexPath.row == 0 {
             sectionModel.isOpen = !sectionModel.isOpen
-            self.pingGroup(group: sectionModel)
             self.tableView.reloadData()
         } else {
             let model = sectionModel.serverVOList[indexPath.row-1]
@@ -167,23 +167,26 @@ extension DTVPNListViewController: UITableViewDelegate {
         }
     }
     
-    private func pingGroup(group: DTServerGroupData) {
-        if !group.isOpen {
-            return
-        }
+    private func pingAllDomain() {
         var pingObsebables = [Observable<Double>]()
-        for item in group.serverVOList {
-            pingObsebables.append(self.pingRow(model: item))
-        }
-        Observable.zip(pingObsebables).subscribe { [weak self] (pingDatas) in
-            guard let weakSelf = self else { return }
-            for (index, ping) in pingDatas.enumerated() {
-                group.serverVOList[index].ping = ping
+        for group in self.viewModel.normalSectionList {
+            for item in group.serverVOList {
+                let observer = self.pingRow(model: item).do { [weak self] (ping) in
+                    guard let weakSelf = self else { return }
+                    item.ping = ping
+                } onError: { (err) in
+                    debugPrint(err)
+                }
+                pingObsebables.append(observer)
             }
+        }
+        Observable.concat(pingObsebables).subscribe(on: SerialDispatchQueueScheduler(internalSerialQueueName: "dt.group.ping")).map{ $0 }.toArray().subscribe { [weak self] (pingDatas) in
+            guard let weakSelf = self else { return }
             weakSelf.tableView.reloadData()
-        } onError: { (error) in
-            debugPrint(error)
+        } onFailure: { (err) in
+            print(err)
         }.disposed(by: disposeBag)
+
     }
     
     private func pingRow(model: DTServerVOItemData) -> Observable<Double> {

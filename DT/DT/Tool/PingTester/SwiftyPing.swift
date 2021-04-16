@@ -722,7 +722,7 @@ public struct PingConfiguration {
     /// Timeout interval in seconds.
     public let timeoutInterval: TimeInterval
     /// If `true`, then `SwiftyPing` will automatically halt and restart the pinging when the app state changes. Only applicable on iOS. If `false`, then the user is responsible for appropriately handling app state changes, see issue #15 on GitHub.
-    public var handleBackgroundTransitions = true
+    public var handleBackgroundTransitions = false
     /// Sets the TTL flag on the socket. All requests sent from the socket will include the TTL field set to this value.
     public var timeToLive: Int?
     /// Payload size in bytes. The payload always includes a fingerprint, and a payload size smaller than the fingerprint is ignored. By default, only the fingerprint is included in the payload.
