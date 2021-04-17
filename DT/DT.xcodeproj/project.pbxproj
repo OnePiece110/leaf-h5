@@ -108,6 +108,9 @@
 		3DCB0D6024B9BE2700B59C52 /* UIGradientHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5C24B9BE2700B59C52 /* UIGradientHelper.swift */; };
 		3DCB0D6124B9BE2700B59C52 /* GradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5D24B9BE2700B59C52 /* GradientLayer.swift */; };
 		3DCB0D6224B9BE2700B59C52 /* UIGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5E24B9BE2700B59C52 /* UIGradient.swift */; };
+		3DCEB623262AA59B0090C99F /* DTVPNLineEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCEB620262AA59A0090C99F /* DTVPNLineEditViewController.swift */; };
+		3DCEB624262AA59B0090C99F /* DTVPNPtotocolViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCEB621262AA59B0090C99F /* DTVPNPtotocolViewController.swift */; };
+		3DCEB625262AA59B0090C99F /* DTVPNLineListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCEB622262AA59B0090C99F /* DTVPNLineListViewController.swift */; };
 		3DD3B70D24B9C1A7008760BA /* DTSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B70C24B9C1A7008760BA /* DTSettingViewController.swift */; };
 		3DD3B70F24B9C1F9008760BA /* DTSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B70E24B9C1F9008760BA /* DTSettingViewModel.swift */; };
 		3DD3B71124BACDF4008760BA /* DTSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B71024BACDF4008760BA /* DTSettingCell.swift */; };
@@ -346,6 +349,9 @@
 		3DCB0D5C24B9BE2700B59C52 /* UIGradientHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGradientHelper.swift; sourceTree = "<group>"; };
 		3DCB0D5D24B9BE2700B59C52 /* GradientLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientLayer.swift; sourceTree = "<group>"; };
 		3DCB0D5E24B9BE2700B59C52 /* UIGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGradient.swift; sourceTree = "<group>"; };
+		3DCEB620262AA59A0090C99F /* DTVPNLineEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTVPNLineEditViewController.swift; sourceTree = "<group>"; };
+		3DCEB621262AA59B0090C99F /* DTVPNPtotocolViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTVPNPtotocolViewController.swift; sourceTree = "<group>"; };
+		3DCEB622262AA59B0090C99F /* DTVPNLineListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTVPNLineListViewController.swift; sourceTree = "<group>"; };
 		3DD3B70C24B9C1A7008760BA /* DTSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingViewController.swift; sourceTree = "<group>"; };
 		3DD3B70E24B9C1F9008760BA /* DTSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingViewModel.swift; sourceTree = "<group>"; };
 		3DD3B71024BACDF4008760BA /* DTSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingCell.swift; sourceTree = "<group>"; };
@@ -818,6 +824,9 @@
 				3D9EB41D24CC1B0E00C35C99 /* DTSelectCountryViewController.swift */,
 				3D6132F5259CFB1B0051FF07 /* DTJsonViewController.swift */,
 				3D6132F1259CFA140051FF07 /* DTLogsViewController.swift */,
+				3DCEB620262AA59A0090C99F /* DTVPNLineEditViewController.swift */,
+				3DCEB622262AA59B0090C99F /* DTVPNLineListViewController.swift */,
+				3DCEB621262AA59B0090C99F /* DTVPNPtotocolViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1341,6 +1350,7 @@
 				3DFD61D4260E232900C1F359 /* DTNoticeViewModel.swift in Sources */,
 				3D9EB42A24CC1E4700C35C99 /* DTCountryModel.swift in Sources */,
 				3DD3B71724BAE68C008760BA /* DTDefaultRouteCell.swift in Sources */,
+				3DCEB624262AA59B0090C99F /* DTVPNPtotocolViewController.swift in Sources */,
 				3D9B0EE025D63B0D00A9E40C /* DTUpdateUserNameViewController.swift in Sources */,
 				3DF73E7425A2AD6E00EF773A /* DTFileManager.swift in Sources */,
 				3DD3B72824BAF3DF008760BA /* Font_PlatformDependent.swift in Sources */,
@@ -1349,6 +1359,7 @@
 				3DF4393125B6B3F2009C8EDD /* HUDLayout.swift in Sources */,
 				3D9EBFB524CD39E000C35C99 /* DTForgetPasswordViewModel.swift in Sources */,
 				3D8274D926186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift in Sources */,
+				3DCEB623262AA59B0090C99F /* DTVPNLineEditViewController.swift in Sources */,
 				3DD3B73024BAFA03008760BA /* DTLogoutCell.swift in Sources */,
 				3DEF892B25E8B77A00DCEA9C /* DTTunnelRules.swift in Sources */,
 				3D70C40A259A3FA900E19DB8 /* DTProgress.swift in Sources */,
@@ -1363,6 +1374,7 @@
 				3DF73F0025A2DF3C00EF773A /* CrashCensor.swift in Sources */,
 				3D8274E126186CF60075CBC1 /* DTUploadModel.swift in Sources */,
 				3D12734725888B890078D8E5 /* DTVpnManager.swift in Sources */,
+				3DCEB625262AA59B0090C99F /* DTVPNLineListViewController.swift in Sources */,
 				3D9B0ED025D560E500A9E40C /* DTPaddingTextField.swift in Sources */,
 				3D32368E262746AD00D7F97D /* DTToolViewModel.swift in Sources */,
 				3DEF893325E8B77E00DCEA9C /* DTTunnelOutbounds.swift in Sources */,
