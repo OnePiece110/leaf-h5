@@ -56,7 +56,6 @@
 		3D613339259D63810051FF07 /* DTWIFIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D613338259D63810051FF07 /* DTWIFIManager.swift */; };
 		3D613350259D64DA0051FF07 /* IPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D61334E259D64DA0051FF07 /* IPHelper.m */; };
 		3D6815A124CDC5C6001E0648 /* DTAlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6815A024CDC5C6001E0648 /* DTAlertManager.swift */; };
-		3D699CB52625E5C300D5D06B /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D699CB42625E5C300D5D06B /* libleaf.a */; };
 		3D699CB72625E61000D5D06B /* cacert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3D699CB62625E60F00D5D06B /* cacert.pem */; };
 		3D70C40A259A3FA900E19DB8 /* DTProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70C409259A3FA900E19DB8 /* DTProgress.swift */; };
 		3D721D2925939E780087339B /* DTBaseHttpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9EB42724CC1DB700C35C99 /* DTBaseHttpModel.swift */; };
@@ -69,7 +68,6 @@
 		3D889D11261A067800AC9EE5 /* icon_launch@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D889D0F261A067800AC9EE5 /* icon_launch@3x.png */; };
 		3D889D12261A067800AC9EE5 /* icon_launch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D889D10261A067800AC9EE5 /* icon_launch@2x.png */; };
 		3D889FD4261C2C3200AC9EE5 /* site.dat in Resources */ = {isa = PBXBuildFile; fileRef = 3D889FD3261C2C3200AC9EE5 /* site.dat */; };
-		3D88B37E261C2F8700AC9EE5 /* geo.mmdb in Resources */ = {isa = PBXBuildFile; fileRef = 3D88B37D261C2F8700AC9EE5 /* geo.mmdb */; };
 		3D88C8A5261C72A000AC9EE5 /* CrashCensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF73EFF25A2DF3C00EF773A /* CrashCensor.swift */; };
 		3D9B0ECC25D55F4C00A9E40C /* DTVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9B0ECB25D55F4C00A9E40C /* DTVerifyCodeViewController.swift */; };
 		3D9B0ED025D560E500A9E40C /* DTPaddingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9B0ECF25D560E500A9E40C /* DTPaddingTextField.swift */; };
@@ -136,6 +134,8 @@
 		3DE6320224C2F2740011270C /* DTRouteSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */; };
 		3DE6320424C2F2840011270C /* DTRouteRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320324C2F2830011270C /* DTRouteRowCell.swift */; };
 		3DE735F72621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE735F62621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift */; };
+		3DEB9EF32629CF1200D3D619 /* geo.mmdb in Resources */ = {isa = PBXBuildFile; fileRef = 3DEB9EF22629CF1200D3D619 /* geo.mmdb */; };
+		3DEB9EFD2629E59600D3D619 /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DEB9EFC2629E59600D3D619 /* libleaf.a */; };
 		3DEC5AB024D7F46200B941C1 /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC5AAF24D7F46200B941C1 /* PacketTunnelProvider.swift */; };
 		3DEC5AB424D7F46200B941C1 /* Tunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3DEC5AAB24D7F46200B941C1 /* Tunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3DEC5ABA24D7F4A000B941C1 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DEC5AB924D7F4A000B941C1 /* NetworkExtension.framework */; };
@@ -283,7 +283,6 @@
 		3D61334E259D64DA0051FF07 /* IPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPHelper.m; sourceTree = "<group>"; };
 		3D61334F259D64DA0051FF07 /* IPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPHelper.h; sourceTree = "<group>"; };
 		3D6815A024CDC5C6001E0648 /* DTAlertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTAlertManager.swift; sourceTree = "<group>"; };
-		3D699CB42625E5C300D5D06B /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3D699CB62625E60F00D5D06B /* cacert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cacert.pem; sourceTree = "<group>"; };
 		3D70C2F82599A9A600E19DB8 /* DTTunnelConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTTunnelConfig.swift; sourceTree = "<group>"; };
 		3D70C2FE2599A9D700E19DB8 /* DTTunnelLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTTunnelLog.swift; sourceTree = "<group>"; };
@@ -308,7 +307,6 @@
 		3D889D0F261A067800AC9EE5 /* icon_launch@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_launch@3x.png"; sourceTree = "<group>"; };
 		3D889D10261A067800AC9EE5 /* icon_launch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_launch@2x.png"; sourceTree = "<group>"; };
 		3D889FD3261C2C3200AC9EE5 /* site.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = site.dat; sourceTree = "<group>"; };
-		3D88B37D261C2F8700AC9EE5 /* geo.mmdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = geo.mmdb; sourceTree = "<group>"; };
 		3D9B0ECB25D55F4C00A9E40C /* DTVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		3D9B0ECF25D560E500A9E40C /* DTPaddingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTPaddingTextField.swift; sourceTree = "<group>"; };
 		3D9B0ED325D563C500A9E40C /* DTCutDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCutDownView.swift; sourceTree = "<group>"; };
@@ -375,6 +373,8 @@
 		3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSectionCell.swift; sourceTree = "<group>"; };
 		3DE6320324C2F2830011270C /* DTRouteRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteRowCell.swift; sourceTree = "<group>"; };
 		3DE735F62621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DTLinkViewController+ProxyConfig.swift"; sourceTree = "<group>"; };
+		3DEB9EF22629CF1200D3D619 /* geo.mmdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = geo.mmdb; sourceTree = "<group>"; };
+		3DEB9EFC2629E59600D3D619 /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3DEC5AAB24D7F46200B941C1 /* Tunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Tunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DEC5AAF24D7F46200B941C1 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
 		3DEC5AB124D7F46200B941C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -435,7 +435,7 @@
 			files = (
 				3DEC5ABA24D7F4A000B941C1 /* NetworkExtension.framework in Frameworks */,
 				505C3BC686313087C3770AF8 /* Pods_Tunnel.framework in Frameworks */,
-				3D699CB52625E5C300D5D06B /* libleaf.a in Frameworks */,
+				3DEB9EFD2629E59600D3D619 /* libleaf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,8 +458,8 @@
 			children = (
 				3D699CB62625E60F00D5D06B /* cacert.pem */,
 				3D2C699F2625654900DC01D3 /* leaf.h */,
-				3D699CB42625E5C300D5D06B /* libleaf.a */,
-				3D88B37D261C2F8700AC9EE5 /* geo.mmdb */,
+				3DEB9EFC2629E59600D3D619 /* libleaf.a */,
+				3DEB9EF22629CF1200D3D619 /* geo.mmdb */,
 				3D889FD3261C2C3200AC9EE5 /* site.dat */,
 			);
 			path = libleaf;
@@ -1134,9 +1134,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DEB9EF32629CF1200D3D619 /* geo.mmdb in Resources */,
 				3D699CB72625E61000D5D06B /* cacert.pem in Resources */,
 				3D889FD4261C2C3200AC9EE5 /* site.dat in Resources */,
-				3D88B37E261C2F8700AC9EE5 /* geo.mmdb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

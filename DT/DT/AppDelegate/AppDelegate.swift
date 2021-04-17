@@ -120,24 +120,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             debugPrint(error)
             weakSelf.isStartDown = false
         }.disposed(by: disposeBag)
-        
-        var logFileDatas = [Data]()
-        if let baseURL = DT.groupFileManagerURL {
-            let logURL = DTFileManager.createFolder(name: "Log", baseUrl: baseURL, isRmove: false)
-            let enumeratorAtPath = DT.fileManager.enumerator(at: logURL, includingPropertiesForKeys: nil, options: .skipsSubdirectoryDescendants)
-            if let enumeratorAtPath = enumeratorAtPath {
-                for subPath in enumeratorAtPath.allObjects {
-                    if let subPath = subPath as? URL {
-                        if let fileData = try? Data(contentsOf: subPath) {
-                            logFileDatas.append(fileData)
-                        }
-                    }
-                }
-            }
-        }
-        
-        uploadItems(datas: logFileDatas)
-        
     }
     
     private func startDownLoadFile(fileName: String) -> Observable<Data> {
@@ -151,27 +133,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             debugPrint(error)
         }
         return domainDirect
-    }
-    
-    private func uploadItems(datas: [Data]) {
-        if datas.count == 0 {
-            return
-        }
-        var signals = [Observable<DTUploadModel>]()
-        for (index, fileData) in datas.enumerated() {
-            let uploadSignal: Observable<DTUploadModel> = DTHttp.share.uploadImage(fileData, fileName: "\(index).log", mimeType: "text/plain", uploadBlock: { (json, err) in
-                
-            })
-            signals.append(uploadSignal)
-        }
-        Observable.zip(signals).subscribe { (datas) in
-            debugPrint("上传成功")
-            if let baseURL = DT.groupFileManagerURL {
-                _ = DTFileManager.createFolder(name: "Log", baseUrl: baseURL, isRmove: true)
-            }
-        } onError: { (err) in
-            debugPrint("上传失败")
-        }.disposed(by: disposeBag)
     }
     
     deinit {

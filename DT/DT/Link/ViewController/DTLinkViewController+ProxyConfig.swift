@@ -154,10 +154,10 @@ extension DTLinkViewController {
         rules.append(contentsOf: [ipFailover, ipDirect])
 
         let external = DTTunnelRule()
-        external.addRule(["site:!cn"], type: .external, target: "failover_out")
+        external.addRule(["site:cn"], type: .external, target: "direct_out")
 
         let externalMMDB = DTTunnelRule()
-        externalMMDB.addRule(["mmdb:!cn"], type: .external, target: "failover_out")
+        externalMMDB.addRule(["mmdb:cn, mmdb:ua"], type: .external, target: "direct_out")
 
         rules.append(contentsOf: [external, externalMMDB])
         
