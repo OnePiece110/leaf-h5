@@ -69,6 +69,7 @@ struct APPSystem {
 
 struct DTConstantsKey {
     static let HalfDayKey = "HalfDayKey"
+    static let PingHalfDayKey = "PingHalfDayKey"
 }
 
 

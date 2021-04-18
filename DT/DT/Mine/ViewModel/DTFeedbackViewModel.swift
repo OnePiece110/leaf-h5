@@ -17,19 +17,20 @@ enum DTFeedbackType {
 
 class DTFeedbackModel {
     var image:UIImage?
-    var asset: PHAsset?
-    var requestId: PHImageRequestID?
     var type:DTFeedbackType
     var url = ""
+    var asset: PHAsset?
     
-    init(image: UIImage?, type: DTFeedbackType) {
+    init(image: UIImage?, type: DTFeedbackType, asset: PHAsset?) {
         self.image = image
         self.type = type
+        self.asset = asset
     }
     
-    init(type: DTFeedbackType, url: String) {
+    init(type: DTFeedbackType, url: String, asset: PHAsset?) {
         self.type = type
         self.url = url
+        self.asset = asset
     }
 }
 
@@ -39,7 +40,7 @@ class DTFeedbackViewModel {
     let maxImageCount = 8
     
     init() {
-        dataSource.append(DTFeedbackModel(image: nil, type: .add))
+        dataSource.append(DTFeedbackModel(image: nil, type: .add, asset: nil))
     }
     
     func feedback(imgs: String, feedback: String, contact: String) -> Observable<DTBaseResult> {

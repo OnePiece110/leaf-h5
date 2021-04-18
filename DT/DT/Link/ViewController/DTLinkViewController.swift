@@ -66,7 +66,6 @@ class DTLinkViewController: DTBaseViewController {
         if let detail = DTUserDefaults?.object(forKey: DTSelectProtocolDetail) as? String, !detail.isVaildEmpty() {
             if let model = detail.kj.model(DTServerDetailData.self) {
                 self.selectProtocolDetail = model
-                self.pingICMP()
             }
         }
         
@@ -122,38 +121,16 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     @objc private func toLogVC() {
-//        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
-        Router.routeToClass(DTLogsViewController.self, params: nil)
-    }
-    
-    @objc private func pingICMP() {
-        if let data = self.selectProtocolDetail {
-            rateLabel.text = "正在计算"
-            pingQueue.async {
-                do {
-                    self.ping = try SwiftyPing(host: data.domain, configuration: PingConfiguration(interval: 0.3), queue: DispatchQueue.global())
-                    self.ping?.targetCount = 1
-                    self.ping?.observer = { [weak self] (response) in
-                        guard let weakSelf = self else { return }
-                        DispatchQueue.main.async {
-                            weakSelf.changeRipple(ping: response.duration! * 1000)
-                        }
-                    }
-                    try self.ping?.startPinging()
-                } catch {
-                    debugPrint(error)
-                }
-            }
-        }
+        Router.routeToClass(DTNoticeViewController.self, params: nil, isCheckLogin: true)
     }
     
     private func changeRipple(ping:Double) {
-        if ping <= 100 {
+        if ping <= 200 {
             self.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
             self.rateLabel.text = "超快"
             self.rateLabel.textColor = APPColor.color00B170
             self.rippleView.resetPulsingColor(type: .good)
-        } else if (ping >= 100 && ping <= 200) {
+        } else if (ping >= 200 && ping <= 500) {
             self.rateImageView.image = UIImage(named: "icon_link_rate_fast")
             self.rateLabel.text = "快"
             self.rateLabel.textColor = APPColor.sub
@@ -212,6 +189,7 @@ class DTLinkViewController: DTBaseViewController {
         if self.isStartConnect {
             return
         }
+        self.changeRipple(ping: model.ping)
         self.selectModel = model
         self.reStart = reStart
         if (DTVpnManager.shared.vpnStatus == .off) {
@@ -251,7 +229,6 @@ class DTLinkViewController: DTBaseViewController {
                 weakSelf.selectProtocolDetail = json.entry
                 weakSelf.isStartConnect = false
                 weakSelf.isConnected = true
-                weakSelf.pingICMP()
                 if !weakSelf.rippleView.isAnimation {
                     weakSelf.rippleView.startAnimation()
                 }
@@ -383,9 +360,6 @@ class DTLinkViewController: DTBaseViewController {
         rateLabel.text = "点击连接"
         rateLabel.font = UIFont.dt.Font(18)
         rateLabel.textColor = UIColor.white
-        let rateTap = UITapGestureRecognizer(target: self, action: #selector(pingICMP))
-        rateLabel.isUserInteractionEnabled = true
-        rateLabel.addGestureRecognizer(rateTap)
         return rateLabel
     }()
     
@@ -445,7 +419,7 @@ extension DTLinkViewController: DTVpnManagerDelegate {
 }
 
 //MARK: - DTRouteSelectViewControllerDelegate
-extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
+extension DTLinkViewController: DTVPNListViewControllerDelegate {
     func routeClick(model: DTServerVOItemData) {
         
         let jsonString = model.kj.JSONString()
@@ -471,7 +445,6 @@ extension DTLinkViewController: DTRouteSelectViewControllerDelegate {
             weakSelf.selectProtocolDetail = json.entry
             weakSelf.isStartConnect = false
             weakSelf.isConnected = true
-            weakSelf.pingICMP()
             if !weakSelf.rippleView.isAnimation {
                 weakSelf.rippleView.startAnimation()
             }

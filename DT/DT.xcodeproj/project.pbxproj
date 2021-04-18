@@ -45,9 +45,7 @@
 		3D4D82E624AABAE8007E55A4 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D82E524AABAE8007E55A4 /* Config.swift */; };
 		3D505A45260B8249009C6DC7 /* DTResetPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D505A44260B8249009C6DC7 /* DTResetPasswordViewModel.swift */; };
 		3D505A4A260B9EDF009C6DC7 /* DTServerDetailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D721D4C2593A7150087339B /* DTServerDetailData.swift */; };
-		3D5AD33824B16E1500FF56A4 /* DTMine.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D5AD33724B16E1500FF56A4 /* DTMine.storyboard */; };
 		3D5AD33A24B16E2000FF56A4 /* DTSearch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D5AD33924B16E2000FF56A4 /* DTSearch.storyboard */; };
-		3D5AD33C24B16E2B00FF56A4 /* DTLink.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D5AD33B24B16E2B00FF56A4 /* DTLink.storyboard */; };
 		3D60025E24D061AD00970130 /* DTFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D60025D24D061AD00970130 /* DTFeedbackViewController.swift */; };
 		3D60026024D0647F00970130 /* DTTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D60025F24D0647F00970130 /* DTTextView.swift */; };
 		3D60026224D0707100970130 /* DTFeedbackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D60026124D0707100970130 /* DTFeedbackCell.swift */; };
@@ -60,7 +58,6 @@
 		3D70C40A259A3FA900E19DB8 /* DTProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D70C409259A3FA900E19DB8 /* DTProgress.swift */; };
 		3D721D2925939E780087339B /* DTBaseHttpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9EB42724CC1DB700C35C99 /* DTBaseHttpModel.swift */; };
 		3D721D572593A96F0087339B /* DTRouteSelectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1CC86624E2A4C6008F14AE /* DTRouteSelectModel.swift */; };
-		3D80BBBD262877240046722E /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D80BBBC262877240046722E /* libleaf.a */; };
 		3D82576E26185BED0075CBC1 /* DTCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D82576D26185BED0075CBC1 /* DTCustomButton.swift */; };
 		3D8274D926186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */; };
 		3D8274E126186CF60075CBC1 /* DTUploadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8274E026186CF60075CBC1 /* DTUploadModel.swift */; };
@@ -108,6 +105,8 @@
 		3DCB0D6024B9BE2700B59C52 /* UIGradientHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5C24B9BE2700B59C52 /* UIGradientHelper.swift */; };
 		3DCB0D6124B9BE2700B59C52 /* GradientLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5D24B9BE2700B59C52 /* GradientLayer.swift */; };
 		3DCB0D6224B9BE2700B59C52 /* UIGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCB0D5E24B9BE2700B59C52 /* UIGradient.swift */; };
+		3DCEB62B262B99CA0090C99F /* libleaf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCEB62A262B99CA0090C99F /* libleaf.a */; };
+		3DCEB685262C18CB0090C99F /* DTLineTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCEB684262C18CB0090C99F /* DTLineTool.swift */; };
 		3DD3B70D24B9C1A7008760BA /* DTSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B70C24B9C1A7008760BA /* DTSettingViewController.swift */; };
 		3DD3B70F24B9C1F9008760BA /* DTSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B70E24B9C1F9008760BA /* DTSettingViewModel.swift */; };
 		3DD3B71124BACDF4008760BA /* DTSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B71024BACDF4008760BA /* DTSettingCell.swift */; };
@@ -131,7 +130,6 @@
 		3DD3B73924BB0598008760BA /* DTTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B73824BB0598008760BA /* DTTextFieldView.swift */; };
 		3DD3B73B24BB1075008760BA /* DTForgetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B73A24BB1075008760BA /* DTForgetPasswordViewController.swift */; };
 		3DD3B73D24BB1110008760BA /* DTCutDownTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD3B73C24BB1110008760BA /* DTCutDownTextField.swift */; };
-		3DE6268824C2D3A60011270C /* DTRouteSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6268724C2D3A60011270C /* DTRouteSelectViewController.swift */; };
 		3DE631FF24C2DAD80011270C /* DTRouteSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE631FE24C2DAD80011270C /* DTRouteSelectViewModel.swift */; };
 		3DE6320224C2F2740011270C /* DTRouteSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */; };
 		3DE6320424C2F2840011270C /* DTRouteRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE6320324C2F2830011270C /* DTRouteRowCell.swift */; };
@@ -227,7 +225,6 @@
 		071B3FA866EF706B5319E52B /* Pods-Tunnel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tunnel.debug.xcconfig"; path = "Target Support Files/Pods-Tunnel/Pods-Tunnel.debug.xcconfig"; sourceTree = "<group>"; };
 		1059940EFFC7C0DFF85D32E4 /* Pods_Tunnel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tunnel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D12732D2588854E0078D8E5 /* DTWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTWebViewController.swift; sourceTree = "<group>"; };
-		3D12733425888AC00078D8E5 /* leaf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leaf.h; sourceTree = "<group>"; };
 		3D12733D25888AD00078D8E5 /* Tunnel-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tunnel-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D12734625888B890078D8E5 /* DTVpnManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTVpnManager.swift; sourceTree = "<group>"; };
 		3D1CC86424E2A003008F14AE /* DTLoginResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLoginResult.swift; sourceTree = "<group>"; };
@@ -270,9 +267,7 @@
 		3D4D82E324AABA79007E55A4 /* DTConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTConstants.swift; sourceTree = "<group>"; };
 		3D4D82E524AABAE8007E55A4 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		3D505A44260B8249009C6DC7 /* DTResetPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTResetPasswordViewModel.swift; sourceTree = "<group>"; };
-		3D5AD33724B16E1500FF56A4 /* DTMine.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DTMine.storyboard; sourceTree = "<group>"; };
 		3D5AD33924B16E2000FF56A4 /* DTSearch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DTSearch.storyboard; sourceTree = "<group>"; };
-		3D5AD33B24B16E2B00FF56A4 /* DTLink.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DTLink.storyboard; sourceTree = "<group>"; };
 		3D60025D24D061AD00970130 /* DTFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTFeedbackViewController.swift; sourceTree = "<group>"; };
 		3D60025F24D0647F00970130 /* DTTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTTextView.swift; sourceTree = "<group>"; };
 		3D60026124D0707100970130 /* DTFeedbackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTFeedbackCell.swift; sourceTree = "<group>"; };
@@ -299,7 +294,6 @@
 		3D70C409259A3FA900E19DB8 /* DTProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTProgress.swift; sourceTree = "<group>"; };
 		3D70D0A1259A4DF000E19DB8 /* domain_direct.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = domain_direct.txt; sourceTree = "<group>"; };
 		3D721D4C2593A7150087339B /* DTServerDetailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTServerDetailData.swift; sourceTree = "<group>"; };
-		3D80BBBC262877240046722E /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
 		3D82576D26185BED0075CBC1 /* DTCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCustomButton.swift; sourceTree = "<group>"; };
 		3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTPHAssetsLoadingManager.swift; sourceTree = "<group>"; };
 		3D8274E026186CF60075CBC1 /* DTUploadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTUploadModel.swift; sourceTree = "<group>"; };
@@ -346,6 +340,9 @@
 		3DCB0D5C24B9BE2700B59C52 /* UIGradientHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGradientHelper.swift; sourceTree = "<group>"; };
 		3DCB0D5D24B9BE2700B59C52 /* GradientLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientLayer.swift; sourceTree = "<group>"; };
 		3DCB0D5E24B9BE2700B59C52 /* UIGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGradient.swift; sourceTree = "<group>"; };
+		3DCEB62A262B99CA0090C99F /* libleaf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libleaf.a; sourceTree = "<group>"; };
+		3DCEB630262B9A0E0090C99F /* leaf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = leaf.h; sourceTree = "<group>"; };
+		3DCEB684262C18CB0090C99F /* DTLineTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTLineTool.swift; sourceTree = "<group>"; };
 		3DD3B70C24B9C1A7008760BA /* DTSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingViewController.swift; sourceTree = "<group>"; };
 		3DD3B70E24B9C1F9008760BA /* DTSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingViewModel.swift; sourceTree = "<group>"; };
 		3DD3B71024BACDF4008760BA /* DTSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTSettingCell.swift; sourceTree = "<group>"; };
@@ -369,7 +366,6 @@
 		3DD3B73824BB0598008760BA /* DTTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTTextFieldView.swift; sourceTree = "<group>"; };
 		3DD3B73A24BB1075008760BA /* DTForgetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTForgetPasswordViewController.swift; sourceTree = "<group>"; };
 		3DD3B73C24BB1110008760BA /* DTCutDownTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCutDownTextField.swift; sourceTree = "<group>"; };
-		3DE6268724C2D3A60011270C /* DTRouteSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSelectViewController.swift; sourceTree = "<group>"; };
 		3DE631FE24C2DAD80011270C /* DTRouteSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSelectViewModel.swift; sourceTree = "<group>"; };
 		3DE6320124C2F2740011270C /* DTRouteSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteSectionCell.swift; sourceTree = "<group>"; };
 		3DE6320324C2F2830011270C /* DTRouteRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTRouteRowCell.swift; sourceTree = "<group>"; };
@@ -434,7 +430,7 @@
 			files = (
 				3DEC5ABA24D7F4A000B941C1 /* NetworkExtension.framework in Frameworks */,
 				505C3BC686313087C3770AF8 /* Pods_Tunnel.framework in Frameworks */,
-				3D80BBBD262877240046722E /* libleaf.a in Frameworks */,
+				3DCEB62B262B99CA0090C99F /* libleaf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,8 +451,8 @@
 		3D12733325888AC00078D8E5 /* libleaf */ = {
 			isa = PBXGroup;
 			children = (
-				3D12733425888AC00078D8E5 /* leaf.h */,
-				3D80BBBC262877240046722E /* libleaf.a */,
+				3DCEB630262B9A0E0090C99F /* leaf.h */,
+				3DCEB62A262B99CA0090C99F /* libleaf.a */,
 				3D88B37D261C2F8700AC9EE5 /* geo.mmdb */,
 				3D889FD3261C2C3200AC9EE5 /* site.dat */,
 			);
@@ -568,7 +564,6 @@
 				3DE6268924C2D3AA0011270C /* ViewModel */,
 				3DAFAB1824C2BE5700100736 /* View */,
 				3DAFAB1724C2BE4A00100736 /* ViewController */,
-				3D5AD33524B16DFB00FF56A4 /* Resource */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -639,7 +634,6 @@
 		3D4D82E224AABA5C007E55A4 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
-				3D323679262742B700D7F97D /* Util */,
 				3D8274D826186A3A0075CBC1 /* DTPHAssetsLoadingManager.swift */,
 				3D4D82E524AABAE8007E55A4 /* Config.swift */,
 				3D6815A024CDC5C6001E0648 /* DTAlertManager.swift */,
@@ -652,6 +646,8 @@
 				3D12734625888B890078D8E5 /* DTVpnManager.swift */,
 				3D9F3D4B24B0736E00C9278A /* Extension.swift */,
 				3DF4D61F25B3D3AC00D8EDBF /* DengTa.swift */,
+				3DCEB67A262C18720090C99F /* LineTool */,
+				3D323679262742B700D7F97D /* Util */,
 				3D4D82D924AAB5BB007E55A4 /* Tabbar */,
 				3D43A8FB25D4CD8B00B70F08 /* AlertView */,
 				3DF4391825B6B3F2009C8EDD /* Chrysan */,
@@ -667,7 +663,6 @@
 		3D5AD33324B16DE800FF56A4 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				3D5AD33724B16E1500FF56A4 /* DTMine.storyboard */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -676,14 +671,6 @@
 			isa = PBXGroup;
 			children = (
 				3D5AD33924B16E2000FF56A4 /* DTSearch.storyboard */,
-			);
-			path = Resource;
-			sourceTree = "<group>";
-		};
-		3D5AD33524B16DFB00FF56A4 /* Resource */ = {
-			isa = PBXGroup;
-			children = (
-				3D5AD33B24B16E2B00FF56A4 /* DTLink.storyboard */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -813,7 +800,6 @@
 			children = (
 				3D4D82E024AAB671007E55A4 /* DTLinkViewController.swift */,
 				3DE735F62621C67D00AA2D7B /* DTLinkViewController+ProxyConfig.swift */,
-				3DE6268724C2D3A60011270C /* DTRouteSelectViewController.swift */,
 				3DF4D61325B2C28400D8EDBF /* DTVPNListViewController.swift */,
 				3D9EB41D24CC1B0E00C35C99 /* DTSelectCountryViewController.swift */,
 				3D6132F5259CFB1B0051FF07 /* DTJsonViewController.swift */,
@@ -850,6 +836,14 @@
 				3DCB0D5E24B9BE2700B59C52 /* UIGradient.swift */,
 			);
 			path = UIGradient;
+			sourceTree = "<group>";
+		};
+		3DCEB67A262C18720090C99F /* LineTool */ = {
+			isa = PBXGroup;
+			children = (
+				3DCEB684262C18CB0090C99F /* DTLineTool.swift */,
+			);
+			path = LineTool;
 			sourceTree = "<group>";
 		};
 		3DD3B71C24BAF3DE008760BA /* RichString */ = {
@@ -1126,13 +1120,11 @@
 				3DEF894A25E8C05700DCEA9C /* domain_suffix_failover.txt in Resources */,
 				3D5AD33A24B16E2000FF56A4 /* DTSearch.storyboard in Resources */,
 				3DEF894C25E8C05700DCEA9C /* domain_direct.txt in Resources */,
-				3D5AD33C24B16E2B00FF56A4 /* DTLink.storyboard in Resources */,
 				3D4D82C324AAB118007E55A4 /* Assets.xcassets in Resources */,
 				3DEF894425E8C05700DCEA9C /* domain_keyword_failover.txt in Resources */,
 				3D889D12261A067800AC9EE5 /* icon_launch@2x.png in Resources */,
 				3DEF894E25E8C05700DCEA9C /* domain_suffix_direct.txt in Resources */,
 				3DEF894B25E8C05700DCEA9C /* domain_keyword_direct.txt in Resources */,
-				3D5AD33824B16E1500FF56A4 /* DTMine.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1273,7 +1265,6 @@
 				3DEF893025E8B77E00DCEA9C /* DTTunnelLog.swift in Sources */,
 				3D4A5CFD260A416600D97FAE /* DTVerifyCodeResult.swift in Sources */,
 				3D4A5CF3260A31E900D97FAE /* DTMobileCheckViewModel.swift in Sources */,
-				3DE6268824C2D3A60011270C /* DTRouteSelectViewController.swift in Sources */,
 				3DFD61F3260EDC5E00C1F359 /* DTMineSchedule.swift in Sources */,
 				3DCB0D4D24B9B13B00B59C52 /* Router.swift in Sources */,
 				3D4B5BDC25A4755D00A41AE7 /* DTRouter.m in Sources */,
@@ -1330,6 +1321,7 @@
 				3DEF893425E8B77E00DCEA9C /* DTTunnelDNS.swift in Sources */,
 				3DF4393025B6B3F2009C8EDD /* HUDIndicatorFactory.swift in Sources */,
 				3D4A5CF7260A404800D97FAE /* DTVerifyCodeViewModel.swift in Sources */,
+				3DCEB685262C18CB0090C99F /* DTLineTool.swift in Sources */,
 				3D12732E2588854E0078D8E5 /* DTWebViewController.swift in Sources */,
 				3D87D86B2593B9220027DA51 /* DTServerDetailData.swift in Sources */,
 				3D3236702626F9D000D7F97D /* SwiftyPing.swift in Sources */,

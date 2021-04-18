@@ -80,14 +80,17 @@ extension DTToolViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let updatePopup = DTAlertBaseView()
-        updatePopup.alertManager?.isDimissTapBgView = false
-        updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "切换环境", message: "")
-        updatePopup.addAction("测试环境", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(changeDebug))
-        updatePopup.addAction("正式环境", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(changeRelease))
-        updatePopup.finish()
-        updatePopup.alertManager?.show()
-        self.popupView = updatePopup
+        if indexPath.row == 0 {
+            let updatePopup = DTAlertBaseView()
+            updatePopup.readData(icon: UIImage(named: "icon_logo"), title: "切换环境", message: "")
+            updatePopup.addAction("测试环境", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(changeDebug))
+            updatePopup.addAction("正式环境", titleColor: UIColor.white.withAlphaComponent(0.5), bgColor: APPColor.colorSubBgView, target: self, selector: #selector(changeRelease))
+            updatePopup.finish()
+            updatePopup.alertManager?.show()
+            self.popupView = updatePopup
+        } else if indexPath.row == 1 {
+            Router.routeToClass(DTLogsViewController.self, params: nil)
+        }
     }
     
     @objc private func changeDebug() {

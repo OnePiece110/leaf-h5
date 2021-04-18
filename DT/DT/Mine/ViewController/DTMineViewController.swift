@@ -11,7 +11,7 @@ import RxSwift
 
 class DTMineViewController: DTBaseViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    private var tableView: UITableView?
     private let viewModel = DTMineViewModel()
     private var headerView:DTMineHeaderView?
     private weak var popupView: DTAlertBaseView?
@@ -21,13 +21,14 @@ class DTMineViewController: DTBaseViewController {
         super.viewWillAppear(animated)
         self.viewModel.reloadData()
         self.headerView?.reloadData()
-        tableView.reloadData()
+        tableView?.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        createTableView()
         configureTableView()
+        configure()
         configureCell()
     }
     
@@ -37,17 +38,17 @@ class DTMineViewController: DTBaseViewController {
     }
     
     func configureCell() {
-        tableView.backgroundColor = .clear
-        tableView.register(DTMineCell.self, forCellReuseIdentifier: "DTMineCell")
-        tableView.register(DTMineTopUpCell.self, forCellReuseIdentifier: "DTMineTopUpCell")
-        tableView.register(DTLogoutCell.self, forCellReuseIdentifier: "DTLogoutCell")
+        tableView?.backgroundColor = .clear
+        tableView?.register(DTMineCell.self, forCellReuseIdentifier: "DTMineCell")
+        tableView?.register(DTMineTopUpCell.self, forCellReuseIdentifier: "DTMineTopUpCell")
+        tableView?.register(DTLogoutCell.self, forCellReuseIdentifier: "DTLogoutCell")
     }
     
     func configureTableView() {
         let headerView = DTMineHeaderView(frame: CGRect(x: 0, y: 0, width: kScreentWidth, height: 104))
-        tableView.tableHeaderView = headerView
+        tableView?.tableHeaderView = headerView
         if #available(iOS 11.0, *) {
-            self.tableView.contentInsetAdjustmentBehavior = .never
+            self.tableView?.contentInsetAdjustmentBehavior = .never
         } else {
             self.automaticallyAdjustsScrollViewInsets = false
         }
@@ -62,6 +63,29 @@ class DTMineViewController: DTBaseViewController {
         self.popupView?.alertManager?.dimiss()
     }
 
+    private func createTableView() {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedSectionFooterHeight = 0
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        configureCell()
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints { (make) in
+            make.left.top.right.equalTo(0)
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            } else {
+                make.bottom.equalTo(0)
+            }
+        }
+        
+        self.tableView = tableView
+    }
 }
 
 extension DTMineViewController:UITableViewDataSource {
@@ -195,7 +219,7 @@ extension DTMineViewController: DTMineTopUpCellDelegate {
         }
         if advertisementSectionIndex > -1 {
             viewModel.tableData.remove(at: advertisementSectionIndex)
-            tableView.reloadData()
+            tableView?.reloadData()
         }
     }
 }
@@ -205,7 +229,7 @@ extension DTMineViewController: DTLogOutPopupViewDelegate {
         DTUser.sharedUser.clearData()
         self.viewModel.reloadData()
         self.headerView?.reloadData()
-        tableView.reloadData()
+        tableView?.reloadData()
     }
     
     func cancelButtonClick() {

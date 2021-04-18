@@ -10,12 +10,16 @@ import UIKit
 import RxSwift
 import SnapKit
 
+protocol DTVPNListViewControllerDelegate:class {
+    func routeClick(model: DTServerVOItemData)
+}
+
 class DTVPNListViewController: DTBaseViewController, Routable {
 
     static func initWithParams(params: [String : Any]?) -> UIViewController {
         let vc = DTVPNListViewController()
         if let params = params {
-            if let delegate = params["delegate"] as? DTRouteSelectViewControllerDelegate {
+            if let delegate = params["delegate"] as? DTVPNListViewControllerDelegate {
                 vc.delegate = delegate
             }
         }
@@ -24,7 +28,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
     
     private var viewModel = DTRouteSelectViewModel()
     private let disposeBag = DisposeBag()
-    weak var delegate:DTRouteSelectViewControllerDelegate?
+    weak var delegate: DTVPNListViewControllerDelegate?
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -45,7 +49,13 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         self.title = "选择线路"
         self.configRightItems()
         self.configSubView()
-        self.configureData()
+//        self.configureData()
+        DTLineTool.shared.requestData(vc: self) { [weak self] in
+            self?.tableView.reloadData()
+        } reloadBlock: { [weak self] in
+            self?.tableView.reloadData()
+        }
+
     }
     
     private func configRightItems() {
@@ -72,18 +82,18 @@ class DTVPNListViewController: DTBaseViewController, Routable {
         }
     }
     
-    private func configureData() {
-        DTProgress.showProgress(in: self)
-        self.viewModel.list().subscribe(onNext: { [weak self] (json) in
-            guard let weakSelf = self else { return }
-            DTProgress.dismiss(in: weakSelf)
-            weakSelf.pingAllDomain()
-            self?.tableView.reloadData()
-        }, onError: { [weak self ] (error) in
-            guard let weakSelf = self else { return }
-            DTProgress.showError(in: weakSelf, message: "请求失败")
-        }).disposed(by: disposeBag)
-    }
+//    private func configureData() {
+//        DTProgress.showProgress(in: self)
+//        DTLineTool.shared.list().subscribe(onNext: { [weak self] (json) in
+//            guard let weakSelf = self else { return }
+//            DTProgress.dismiss(in: weakSelf)
+//            weakSelf.pingAllDomain()
+//            self?.tableView.reloadData()
+//        }, onError: { [weak self ] (error) in
+//            guard let weakSelf = self else { return }
+//            DTProgress.showError(in: weakSelf, message: "请求失败")
+//        }).disposed(by: disposeBag)
+//    }
     
     //MARK: -- action
     @objc private func rightItemClick(button: UIButton) {
@@ -92,7 +102,7 @@ class DTVPNListViewController: DTBaseViewController, Routable {
     }
     
     private func closeOrShowItems(isShow: Bool) {
-        for item in self.viewModel.normalSectionList {
+        for item in DTLineTool.shared.normalSectionList {
             item.isOpen = isShow
         }
         self.tableView.reloadData()
@@ -102,19 +112,19 @@ class DTVPNListViewController: DTBaseViewController, Routable {
 
 extension DTVPNListViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.normalSectionList.count
+        return DTLineTool.shared.normalSectionList.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.viewModel.normalSectionList[section].isOpen {
-            return self.viewModel.normalSectionList[section].serverVOList.count + 1
+        if DTLineTool.shared.normalSectionList[section].isOpen {
+            return DTLineTool.shared.normalSectionList[section].serverVOList.count + 1
         } else {
             return 1
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let sectionModel = self.viewModel.normalSectionList[indexPath.section]
+        let sectionModel = DTLineTool.shared.normalSectionList[indexPath.section]
         if sectionModel.groupId == -1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DTSmartLinkCell", for: indexPath) as! DTSmartLinkCell
             cell.model = sectionModel
@@ -134,7 +144,7 @@ extension DTVPNListViewController: UITableViewDataSource {
 
 extension DTVPNListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let sectionModel = self.viewModel.normalSectionList[indexPath.section]
+        let sectionModel = DTLineTool.shared.normalSectionList[indexPath.section]
         if sectionModel.groupId == -1 {
             return 70
         }
@@ -150,7 +160,7 @@ extension DTVPNListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sectionModel = self.viewModel.normalSectionList[indexPath.section]
+        let sectionModel = DTLineTool.shared.normalSectionList[indexPath.section]
         if sectionModel.groupId == -1 {
             self.popSelf()
             let serverData = DTServerVOItemData()
@@ -169,11 +179,16 @@ extension DTVPNListViewController: UITableViewDelegate {
     
     private func pingAllDomain() {
         var pingObsebables = [Observable<Double>]()
-        for group in self.viewModel.normalSectionList {
+        var pingResultCount = 0
+        for group in DTLineTool.shared.normalSectionList {
             for item in group.serverVOList {
                 let observer = self.pingRow(model: item).do { [weak self] (ping) in
                     guard let weakSelf = self else { return }
                     item.ping = ping
+                    pingResultCount += 1
+                    if pingResultCount % 4 == 0 {
+                        weakSelf.tableView.reloadData()
+                    }
                 } onError: { (err) in
                     debugPrint(err)
                 }
@@ -191,18 +206,13 @@ extension DTVPNListViewController: UITableViewDelegate {
     
     private func pingRow(model: DTServerVOItemData) -> Observable<Double> {
         return Observable<Double>.create { (observer) -> Disposable in
-            do {
-                let ping = try SwiftyPing(host: model.domain, configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
-                ping.targetCount = 1
-                ping.observer = { (response) in
-                    observer.onNext(response.duration! * 1000)
-                    observer.onCompleted()
-                }
-                try ping.startPinging()
-            } catch {
-                debugPrint(error.localizedDescription)
-                observer.onError(error)
+            let ping = SwiftyPing(configuration: PingConfiguration(interval: 1.0, with: 1), queue: DispatchQueue.global())
+            ping.targetCount = 1
+            ping.observer = { (response) in
+                observer.onNext(response.duration! * 1000)
+                observer.onCompleted()
             }
+            ping.startPing(host: model.domain)
             return Disposables.create {
                 
             }

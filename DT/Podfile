@@ -10,7 +10,7 @@ def dt_main
   pod 'SnapKit'
   pod 'Kingfisher'
   pod 'IQKeyboardManagerSwift'
-  pod 'TZImagePickerController'
+  pod 'ZLPhotoBrowser'
   pod 'MFSIdentifier'
   pod 'RxSwift'
   pod 'RxCocoa'

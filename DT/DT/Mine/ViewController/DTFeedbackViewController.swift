@@ -8,7 +8,7 @@
 
 import UIKit
 import RxSwift
-import TZImagePickerController
+import ZLPhotoBrowser
 import Photos
 
 class DTFeedbackViewController: DTBaseViewController,Routable {
@@ -295,33 +295,6 @@ class DTFeedbackViewController: DTBaseViewController,Routable {
     private lazy var contactInformationTextField: DTTextFieldView = DTTextFieldView(code: "联系方式", placeHolder: "QQ或电报号", corner: 10)
 }
 
-extension DTFeedbackViewController: TZImagePickerControllerDelegate {
-    
-    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
-        
-        let aliveSource = self.viewModel.dataSource.filter { (data) -> Bool in
-            return data.type != .add
-        }
-        
-        if aliveSource.count != self.viewModel.maxImageCount {
-            self.viewModel.dataSource.removeLast()
-        }
-        
-        for (index, photo) in photos.enumerated() {
-            let model = DTFeedbackModel(image: photo, type: .image)
-            if let asset = assets[index] as? PHAsset {
-                model.asset = asset
-            }
-            self.viewModel.dataSource.append(model)
-        }
-
-        if self.viewModel.dataSource.count < self.viewModel.maxImageCount {
-            self.viewModel.dataSource.append(DTFeedbackModel(image: nil, type: .add))
-        }
-        self.calculateCollectionViewHeight()
-    }
-}
-
 extension DTFeedbackViewController: DTFeedbackCellDelegate {
     func closeButtonClick(cell: DTFeedbackCell) {
         let indexPath = self.collectionView.indexPath(for: cell)
@@ -331,7 +304,7 @@ extension DTFeedbackViewController: DTFeedbackCellDelegate {
                 return data.type != .add
             }
             if aliveSource.count == self.viewModel.maxImageCount {
-                self.viewModel.dataSource.append(DTFeedbackModel(image: nil, type: .add))
+                self.viewModel.dataSource.append(DTFeedbackModel(image: nil, type: .add, asset: nil))
             }
             self.viewModel.dataSource.remove(at: indexPath.item)
             self.calculateCollectionViewHeight()
@@ -343,15 +316,29 @@ extension DTFeedbackViewController: DTFeedbackCellDelegate {
 extension DTFeedbackViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.viewModel.dataSource[indexPath.row].type == .add {
-            let albumVc = Router.presentAlbumVC()
-            let aliveSource = self.viewModel.dataSource.filter { (data) -> Bool in
-                return data.type != .add
+            let assets = self.viewModel.dataSource.filter { $0.asset != nil }.map{ $0.asset! }
+            
+            Router.presentAlbumVC(target: self, maxSelectCount: self.viewModel.maxImageCount, assets: assets) { [weak self] (images, assets, isOriginal) in
+                guard let weakSelf = self else { return }
+                weakSelf.weChatMomentClick(images: images, assets: assets)
             }
-            albumVc?.maxImagesCount = self.viewModel.maxImageCount - aliveSource.count
-            albumVc?.pickerDelegate = self
         } else {
             
         }
+    }
+    
+    func weChatMomentClick(images: [UIImage], assets: [PHAsset]) {
+        
+        self.viewModel.dataSource.removeAll()
+        
+        for (index, photo) in images.enumerated() {
+            self.viewModel.dataSource.append(DTFeedbackModel(image: photo, type: .image, asset: assets[index]))
+        }
+
+        if self.viewModel.dataSource.count < self.viewModel.maxImageCount {
+            self.viewModel.dataSource.append(DTFeedbackModel(image: nil, type: .add, asset: nil))
+        }
+        self.calculateCollectionViewHeight()
     }
 }
 

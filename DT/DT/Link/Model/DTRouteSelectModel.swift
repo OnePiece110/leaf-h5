@@ -19,11 +19,11 @@ class DTServerGroupResult:DTBaseResult {
     var entry = [DTServerGroupData]()
 }
 
-class DTServerGroupData:Convertible {
-    var grouoLogo:String = ""
-    var groupName:String = ""
-    var groupDescription:String = ""
-    var groupId:Int = 0
+class DTServerGroupData: Convertible {
+    var grouoLogo: String = ""
+    var groupName: String = ""
+    var groupDescription: String = ""
+    var groupId: Int = 0
     var isOpen = false
     var serverVOList = [DTServerVOItemData]()
     
@@ -45,7 +45,7 @@ class DTServerVOItemData: NSObject, Convertible {
     var name: String = ""
     var desc: String = ""
     var domain: String = ""
-    var ping: Double = 0
+    var ping: Double = Double(arc4random_uniform(250))
     var itemId: Int = 0
     var connectFlag: ConnectStatus = .disConnect
     var area: String = ""

@@ -30,7 +30,7 @@ class DTNoticeViewController: DTBaseViewController,Routable {
         self.tableView?.mj_header?.beginRefreshing()
     }
     
-    func createTableView() {
+    private func createTableView() {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear

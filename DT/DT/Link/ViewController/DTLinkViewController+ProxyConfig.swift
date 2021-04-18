@@ -14,7 +14,7 @@ extension DTLinkViewController {
         let conf = DTTunnelConfig()
         
         //log
-        let log = DTTunnelLog(level: .trace)
+        let log = DTTunnelLog(level: .info)
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         if let baseURL = groupFileManagerURL {
@@ -154,21 +154,16 @@ extension DTLinkViewController {
         rules.append(contentsOf: [ipFailover, ipDirect])
 
         let external = DTTunnelRule()
-        external.addRule(["site:!cn"], type: .external, target: "failover_out")
+        external.addRule(["site:cn"], type: .external, target: "direct_out")
 
         let externalMMDB = DTTunnelRule()
-        externalMMDB.addRule(["mmdb:!cn"], type: .external, target: "failover_out")
+        externalMMDB.addRule(["mmdb:cn"], type: .external, target: "direct_out")
 
         rules.append(contentsOf: [external, externalMMDB])
         
         if mode == .smart {
             conf.rules = rules
-        } else {
-            let rule = DTTunnelRule()
-            rule.addRule([""], type: .domainKeyword, target: mode == .direct ? "direct_out" : "failover_out")
-            conf.rules = [rule]
         }
-        
         do {
             try conf.kj.JSONString().write(to: configUrl, atomically: false, encoding: .utf8)
         } catch {

@@ -144,9 +144,9 @@ public class SwiftyPing: NSObject {
     }
     // MARK: - Initialization
     /// Ping host
-    public let destination: Destination
+    public var destination: Destination
     /// Ping configuration
-    public let configuration: PingConfiguration
+    public var configuration: PingConfiguration
     /// This closure gets called with ping responses.
     public var observer: Observer?
     /// This delegate gets called with ping responses.
@@ -164,7 +164,7 @@ public class SwiftyPing: NSObject {
     /// A random UUID fingerprint sent as the payload.
     private let fingerprint = UUID()
     /// User-specified dispatch queue. The `observer` is always called from this queue.
-    private let currentQueue: DispatchQueue
+    private var currentQueue: DispatchQueue
     
     /// Socket for sending and receiving data.
     private var socket: CFSocket?
@@ -256,6 +256,32 @@ public class SwiftyPing: NSObject {
         let result = try Destination.getIPv4AddressFromHost(host: host)
         let destination = Destination(host: host, ipv4Address: result)
         try self.init(destination: destination, configuration: configuration, queue: queue)
+    }
+    
+    public init(configuration: PingConfiguration, queue: DispatchQueue) {
+        self.configuration = configuration
+        self.currentQueue = queue
+        self.destination = Destination(host: "www.baidu.com", ipv4Address: Data())
+        super.init()
+    }
+    
+    public func startPing(host: String) {
+        self.currentQueue.async {
+            let result = try? Destination.getIPv4AddressFromHost(host: host)
+            if let result = result {
+                let destination = Destination(host: host, ipv4Address: result)
+                self.destination = destination
+
+                try? self.createSocket()
+                
+                try? self.startPinging()
+                #if os(iOS)
+                if self.configuration.handleBackgroundTransitions {
+                    self.addAppStateNotifications()
+                }
+                #endif
+            }
+        }
     }
     
     /// Initializes a CFSocket.

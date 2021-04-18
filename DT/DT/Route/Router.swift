@@ -8,7 +8,8 @@
 
 import UIKit
 import MobileCoreServices
-import TZImagePickerController
+import ZLPhotoBrowser
+import Photos
 
 public protocol Routable {
 	/**
@@ -21,24 +22,46 @@ public protocol Routable {
 open class Router {
 	
     // MARK: -- 相册选择器
-    class func presentAlbumVC() -> TZImagePickerController? {
-        let imagePickerVc = TZImagePickerController(maxImagesCount: 9, columnNumber: 4, delegate: nil, pushPhotoPickerVc: true)
-        imagePickerVc?.allowTakeVideo = false
-        imagePickerVc?.allowPickingVideo = false
-        imagePickerVc?.hideWhenCanNotSelect = true
-        imagePickerVc?.showPhotoCannotSelectLayer = true
-        imagePickerVc?.navigationBar.isTranslucent = false
-        imagePickerVc?.modalPresentationStyle = .fullScreen
-        let image = UIImage.dt.imageWithColor(color: APPColor.main)
-        imagePickerVc?.navigationBar.setBackgroundImage(image, for: .default)
-        imagePickerVc?.navLeftBarButtonSettingBlock = { (button) in
-            button?.setImage(UIImage(named: "icon_common_back"), for: .normal)
-            button?.setImage(UIImage(named: "icon_common_back"), for: .highlighted)
-            button?.sizeToFit()
+    class func presentAlbumVC(target: UIViewController, maxSelectCount: Int, assets: [PHAsset], selectImageBlock: ( ([UIImage], [PHAsset], Bool) -> Void )?) {
+        let config = ZLPhotoConfiguration.default()
+        config.allowSelectImage = true
+        config.allowSelectVideo = false
+        config.allowSelectGif = false
+        config.allowSelectLivePhoto = false
+        config.allowSelectOriginal = true
+        config.cropVideoAfterSelectThumbnail = true
+        config.allowEditVideo = true
+        config.allowMixSelect = false
+        config.maxSelectCount = maxSelectCount
+        config.maxEditVideoTime = 15
+        config.languageType = .chineseSimplified
+        
+        // You can first determine whether the asset is allowed to be selected.
+        config.canSelectAsset = { (asset) -> Bool in
+            return true
         }
-        let topViewController = DTConstants.currentTopViewController()
-        topViewController?.present(imagePickerVc!, animated: true, completion: nil)
-        return imagePickerVc
+        
+        config.noAuthorityCallback = { (type) in
+            switch type {
+            case .library:
+                debugPrint("No library authority")
+            case .camera:
+                debugPrint("No camera authority")
+            case .microphone:
+                debugPrint("No microphone authority")
+            }
+        }
+        
+        let ac = ZLPhotoPreviewSheet(selectedAssets: assets)
+        ac.selectImageBlock = selectImageBlock
+        ac.cancelBlock = {
+            debugPrint("cancel select")
+        }
+        ac.selectImageRequestErrorBlock = { (errorAssets, errorIndexs) in
+            debugPrint("fetch error assets: \(errorAssets), error indexs: \(errorIndexs)")
+        }
+        
+        ac.showPhotoLibrary(sender: target)
     }
     
 	//MARK: -- 打开自带相机

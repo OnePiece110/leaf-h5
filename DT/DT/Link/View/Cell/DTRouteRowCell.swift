@@ -32,12 +32,11 @@ class DTRouteRowCell: DTBaseTableViewCell {
             }
             
             if model.ping > 0 {
-                self.activity.stopAnimating()
-                if model.ping <= 100 {
+                if model.ping <= 200 {
                     self.rateLabel.text = "超快"
                     self.rateLabel.textColor = APPColor.color00B170
                     self.rateImageView.image = UIImage(named: "icon_link_rate_very_fast")
-                } else if (model.ping >= 100 && model.ping <= 200) {
+                } else if (model.ping >= 200 && model.ping <= 500) {
                     self.rateLabel.text = "快"
                     self.rateLabel.textColor = APPColor.sub
                     self.rateImageView.image = UIImage(named: "icon_link_rate_fast")
@@ -47,9 +46,8 @@ class DTRouteRowCell: DTBaseTableViewCell {
                     self.rateImageView.image = UIImage(named: "icon_link_rate_general")
                 }
             } else {
-                self.activity.startAnimating()
-                self.rateLabel.text = ""
-                self.rateImageView.image = nil
+                self.rateLabel.text = nil;
+                self.rateImageView.image = nil;
             }
             
             connectButton.backgroundColor = connectButton.isSelected ? UIColor.clear : APPColor.colorD8D8D8.withAlphaComponent(0.1)
@@ -84,7 +82,6 @@ class DTRouteRowCell: DTBaseTableViewCell {
         radiusView.addSubview(self.rateImageView)
         radiusView.addSubview(lineView)
         radiusView.addSubview(self.connectButton)
-        radiusView.addSubview(activity)
         
         radiusView.snp.makeConstraints { (make) in
             make.edges.equalTo(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
@@ -119,11 +116,6 @@ class DTRouteRowCell: DTBaseTableViewCell {
             make.right.equalTo(-15)
             make.bottom.equalTo(-1)
             make.height.equalTo(1)
-        }
-        
-        activity.snp.makeConstraints { (make) in
-            make.centerY.equalTo(self.radiusView)
-            make.right.equalTo(-124)
         }
         
         self.connectButton.snp.makeConstraints { (make) in
@@ -181,13 +173,4 @@ class DTRouteRowCell: DTBaseTableViewCell {
         connectButton.setBackgroundImage(UIImage(named: "icon_common_select"), for: .selected)
         return connectButton
     }()
-    
-    
-    private lazy var activity: UIActivityIndicatorView = {
-        let activity = UIActivityIndicatorView(style: .medium)
-        activity.color = .white
-        activity.hidesWhenStopped = true
-        return activity
-    }()
-    
 }

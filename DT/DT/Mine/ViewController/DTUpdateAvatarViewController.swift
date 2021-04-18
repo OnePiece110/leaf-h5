@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import TZImagePickerController
+import ZLPhotoBrowser
 
 class DTUpdateAvatarViewController: DTBaseViewController, Routable {
 
@@ -57,8 +57,10 @@ extension DTUpdateAvatarViewController: DTSelectViewDelegate {
             imageVC.delegate = self
             break
         case "从手机相册选择":
-            let albumVc = Router.presentAlbumVC()
-            albumVc?.maxImagesCount = 1
+            Router.presentAlbumVC(target: self, maxSelectCount: 1, assets: []) { [weak self] (images, assets, isOriginal) in
+                guard let weakSelf = self else { return }
+                weakSelf.avatarImageView.image = images[0]
+            }
             break
         default:
             debugPrint("error item")
@@ -75,10 +77,4 @@ extension DTUpdateAvatarViewController: UIImagePickerControllerDelegate,UINaviga
         
     }
     
-}
-
-extension DTUpdateAvatarViewController: TZImagePickerControllerDelegate {
-    func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingPhotos photos: [UIImage]!, sourceAssets assets: [Any]!, isSelectOriginalPhoto: Bool) {
-        self.avatarImageView.image = photos[0]
-    }
 }
