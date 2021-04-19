@@ -60,6 +60,7 @@ class DTLinkViewController: DTBaseViewController {
             if let model = selectRouter.kj.model(DTServerVOItemData.self) {
                 self.selectModel = model
                 self.linkNameLabel.text = model.name
+                self.changeRipple(ping: model.ping)
             }
         }
         
@@ -73,8 +74,10 @@ class DTLinkViewController: DTBaseViewController {
     }
     
     @objc private func proxyModeChange() {
-        self.isChangeProxyMode = true
-        DTVpnManager.shared.stopVPN()
+        if DTVpnManager.shared.vpnStatus == .on {
+            self.isChangeProxyMode = true
+            DTVpnManager.shared.stopVPN()
+        }
     }
     
     // 匿名登录,第一版本处理
@@ -203,14 +206,13 @@ class DTLinkViewController: DTBaseViewController {
             }
         } else {
             self.rippleView.resetPulsingColor(type: .initial)
-            self.rateImageView.image = UIImage(named: "icon_link_rate_unlink")
             DTVpnManager.shared.stopVPN()
             self.disConnect()
         }
     }
     
     private func disConnect() {
-        self.rateLabel.textColor = .white
+        
     }
     
     private func connectVPN() {
@@ -220,7 +222,9 @@ class DTLinkViewController: DTBaseViewController {
             }
             self.isStartConnect = true
             self.isConnected = false
-            DTProgress.showProgress(in: self)
+            if !self.rippleView.isAnimation {
+                self.rippleView.startAnimation()
+            }
             debugPrint("开始连接")
             self.viewModel.connect(id: model.itemId).subscribe { [weak self] (json) in
                 guard let weakSelf = self else { return }
@@ -229,9 +233,6 @@ class DTLinkViewController: DTBaseViewController {
                 weakSelf.selectProtocolDetail = json.entry
                 weakSelf.isStartConnect = false
                 weakSelf.isConnected = true
-                if !weakSelf.rippleView.isAnimation {
-                    weakSelf.rippleView.startAnimation()
-                }
                 
                 weakSelf.createConfig(model: weakSelf.viewModel.serverData)
                 DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
@@ -438,16 +439,16 @@ extension DTLinkViewController: DTVPNListViewControllerDelegate {
         }
         self.isStartConnect = true
         self.isConnected = false
-        DTProgress.showProgress(in: self)
+        if !self.rippleView.isAnimation {
+            self.rippleView.startAnimation()
+        }
         self.viewModel.smartConnect().subscribe { [weak self] (json) in
             guard let weakSelf = self else { return }
             DTProgress.dismiss(in: weakSelf)
             weakSelf.selectProtocolDetail = json.entry
             weakSelf.isStartConnect = false
             weakSelf.isConnected = true
-            if !weakSelf.rippleView.isAnimation {
-                weakSelf.rippleView.startAnimation()
-            }
+            
             weakSelf.createConfig(model: weakSelf.viewModel.serverData)
             DTVpnManager.shared.startVPN(weakSelf.viewModel.serverData)
             let jsonString = json.entry.kj.JSONString()
