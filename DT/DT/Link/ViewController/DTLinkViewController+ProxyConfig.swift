@@ -115,6 +115,11 @@ extension DTLinkViewController {
             }
         }
         
+        if mode == .proxy {
+            let direct = DTTunnelOutbounds(proto: .direct)
+            conf.outbounds.append(direct)
+        }
+        
         ruleChange(mode: mode, conf: conf)
     }
     
@@ -138,31 +143,29 @@ extension DTLinkViewController {
         var rules = [DTTunnelRule]()
         
         let domainFailover = self.addRule(withType: .domain, fileName: "domain_failover", target: "failover_out")
-        let domainDirect = self.addRule(withType: .domain, fileName: "domain_direct", target: "direct_out")
-        rules.append(contentsOf: [domainFailover, domainDirect])
+        rules.append(contentsOf: [domainFailover])
 
-        let domianSuffixDirect = self.addRule(withType: .domainSuffix, fileName: "domain_suffix_direct", target: "direct_out")
         let domianSuffixFailover = self.addRule(withType: .domainSuffix, fileName: "domain_suffix_failover", target: "failover_out")
-        rules.append(contentsOf: [domianSuffixFailover, domianSuffixDirect])
+        rules.append(contentsOf: [domianSuffixFailover])
 
-        let domianKeywordDirect = self.addRule(withType: .domainKeyword, fileName: "domain_keyword_direct", target: "direct_out")
         let domianKeywordFailover = self.addRule(withType: .domainKeyword, fileName: "domain_keyword_failover", target: "failover_out")
-        rules.append(contentsOf: [domianKeywordFailover, domianKeywordDirect])
+        rules.append(contentsOf: [domianKeywordFailover])
 
-        let ipDirect = self.addRule(withType: .ip, fileName: "domain_ip_direct", target: "direct_out")
         let ipFailover = self.addRule(withType: .ip, fileName: "domain_ip_failover", target: "failover_out")
-        rules.append(contentsOf: [ipFailover, ipDirect])
-
-        let external = DTTunnelRule()
-        external.addRule(["site:cn"], type: .external, target: "direct_out")
-
-        let externalMMDB = DTTunnelRule()
-        externalMMDB.addRule(["mmdb:cn"], type: .external, target: "direct_out")
-
-        rules.append(contentsOf: [external, externalMMDB])
+        rules.append(contentsOf: [ipFailover])
         
         if mode == .smart {
             conf.rules = rules
+        } else {
+            var tempRules = [DTTunnelRule]()
+            let external = DTTunnelRule()
+            external.addRule(["site:cn"], type: .external, target: "direct_out")
+
+            let externalMMDB = DTTunnelRule()
+            externalMMDB.addRule(["mmdb:cn"], type: .external, target: "direct_out")
+
+            tempRules.append(contentsOf: [external, externalMMDB])
+            conf.rules = tempRules
         }
         do {
             try conf.kj.JSONString().write(to: configUrl, atomically: false, encoding: .utf8)
